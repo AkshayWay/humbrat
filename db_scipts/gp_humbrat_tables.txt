@@ -1,0 +1,14 @@
+/* news panel table from home page
+Created: 04/07/2020
+*/
+CREATE TABLE `db_gp_humbrat`.`tbl_news_panel` (
+  `tbl_news_id` INT NOT NULL AUTO_INCREMENT,
+  `tbl_news_title` VARCHAR(100) NOT NULL,
+  `tbl_news_desciption` VARCHAR(10000) NOT NULL,
+  `tbl_news_created_date` DATE NULL,
+  `tbl_news_is_active` VARCHAR(10) BINARY NOT NULL,
+  PRIMARY KEY (`tbl_news_id`));
+  
+ALTER TABLE `db_gp_humbrat`.`tbl_news_panel` 
+ADD COLUMN `tbl_news_updated_date` DATE NULL AFTER `tbl_news_is_active`,
+ADD COLUMN `tbl_news_is_deleted` VARCHAR(10) BINARY NOT NULL AFTER `tbl_news_updated_date`;
