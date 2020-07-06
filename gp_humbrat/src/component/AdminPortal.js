@@ -5,22 +5,166 @@ import {
   Link,
   hashHistory,
 } from "react-router-dom";
+import Moment from "react-moment";
+import axios from "axios";
+import { Modal, Button, Form, Col } from "react-bootstrap";
 
+const NewsList = (props) => (
+  <tr>
+    <td>{props.NewsInfo.tbl_news_id}</td>
+    <td>{props.NewsInfo.tbl_news_title}</td>
+    <td>{props.NewsInfo.tbl_news_desciption}</td>
+    <td>
+      <Moment format="DD/MM/YYYY">
+        {props.NewsInfo.tbl_news_created_date}
+      </Moment>
+    </td>
+    <td>
+      <input
+        type="radio"
+        value={props.NewsInfo.tbl_news_is_active}
+        name="active_news"
+        checked={props.NewsInfo.tbl_news_is_active == 1 ? true : false}
+      />
+    </td>
+    <td>
+      <Moment format="DD/MM/YYYY">
+        {props.NewsInfo.tbl_news_updated_date}
+      </Moment>
+    </td>
+    <td>{props.NewsInfo.tbl_news_is_deleted}</td>
+
+    <td>
+      {/* <Link
+        className="glyphicon glyphicon-pencil"
+        to={"/editNews/" + props.NewsInfo.tbl_news_id}
+      >
+        Edit
+      </Link> */}
+      <EditNews variant={props.NewsInfo}></EditNews>
+    </td>
+  </tr>
+);
+
+function EditNews(props) {
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <label>{props.variant.tbl_news_created_date}</label>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGroupNewsTitle">
+                <Form.Label>शीर्षक</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={props.variant.tbl_news_title}
+                  // onChange={this.onNameChange}
+                  placeholder="शीर्षक"
+                />
+              </Form.Group>
+              <Form.Group as={Col} controlId="formGroupNewsDescription">
+                <Form.Label>सविस्तर माहिती</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows="3"
+                  value={props.variant.tbl_news_desciption}
+                  // onChange={this.onDescriptionChane}
+                  placeholder="सविस्तर माहिती"
+                />
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formNewsCrtDate">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={props.variant.tbl_news_created_date}
+                  // onChange={this.onDateChange}
+                />
+              </Form.Group>
+              <Form.Group as={Col} controlId="formNewsUpdateDate">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={props.variant.tbl_news_updated_date}
+                  // onChange={this.onDateChange}
+                />
+              </Form.Group>
+            </Form.Row>
+
+            <Button variant="primary" value="Edit news" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
-
+    this.onSubmit = this.onSubmit.bind(this);
     this.state = {
+      newsInformation: [],
+      newsId: 0,
       newsTitle: "",
+      newsDesp: "",
+      newsCrtDate: "",
+      newsIsActive: false,
+      newsUpdDate: "",
     };
   }
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:4500/humbrat/news_panel")
+      .then((response) => {
+        this.setState({
+          newsInformation: response.data,
+        });
+      })
+      .catch(function (err) {
+        console.log("Error: " + err);
+      });
+  }
+  NewsAlertList() {
+    console.log("log :" + this.state.isCheckedOne);
+    return this.state.newsInformation.map(function (currentNewsInfo, i) {
+      return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
+    });
+  }
+  onSubmit = (e) => {
+    e.preventDefault();
+  };
   render() {
     return (
       <div>
         <h1>Admin page</h1>
         <p>
           <button
-            class="btn btn-primary"
+            className="btn btn-primary"
             type="button"
             data-toggle="collapse"
             data-target="#collapseNewsDiv"
@@ -30,9 +174,32 @@ export default class AdminPortal extends Component {
             सूचना
           </button>
         </p>
-        <div class="collapse" id="collapseNewsDiv">
-          <div class="card card-body">
-            <form>
+        <div className="collapse" id="collapseNewsDiv">
+          <div className="card card-body">
+            <table
+              className="table table-striped"
+              style={{ marginTop: 20 }}
+              id="SelectListExcel"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>शीर्षक</th>
+                  <th>सविस्तर माहिती</th>
+                  <th>दिनांक</th>
+                  <th>सक्रिय आहे</th>
+                  <th>शेवटची बदलाची तारीख</th>
+                  <th>अस्तित्वात</th>
+                </tr>
+              </thead>
+              <tbody>{this.NewsAlertList()}</tbody>
+            </table>
+            <input
+              type="radio"
+              name="active_newsTwo"
+              checked={this.state.isCheckedTwo}
+            />
+            {/* <form>
               <div className="form-group">
                 <label for="newsTitle">शीर्षक</label>
                 <input
@@ -42,8 +209,8 @@ export default class AdminPortal extends Component {
                   placeholder="शीर्षक"
                   value={this.state.newsTitle}
                 />
-              </div>
-              {/* <div className="form-group">
+              </div> 
+              <div className="form-group">
                 <label for="exampleFormControlSelect1">Example select</label>
                 <select className="form-control" id="exampleFormControlSelect1">
                   <option>1</option>
@@ -78,8 +245,8 @@ export default class AdminPortal extends Component {
                   id="exampleFormControlTextarea1"
                   rows="3"
                 ></textarea>
-              </div> */}
-            </form>
+              </div> 
+            </form>*/}
           </div>
         </div>
       </div>

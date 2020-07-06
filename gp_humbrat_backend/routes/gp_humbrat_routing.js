@@ -11,4 +11,17 @@ Router.get("/news_panel", (req, res) => {
     }
   });
 });
+Router.get("/news_panel/:id", (req, res) => {
+  mySqlConnection.query(
+    "select * from tbl_news_panel where tbl_news_id=?",
+    [req.params.id],
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
 module.exports = Router;
