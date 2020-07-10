@@ -21,9 +21,10 @@ const NewsList = (props) => (
     </td>
     <td>
       <input
-        type="radio"
+        type="checkbox"
         value={props.NewsInfo.tbl_news_is_active}
         name="active_news"
+        readOnly
         checked={props.NewsInfo.tbl_news_is_active == 1 ? true : false}
       />
     </td>
@@ -35,97 +36,96 @@ const NewsList = (props) => (
     <td>{props.NewsInfo.tbl_news_is_deleted}</td>
 
     <td>
-      {/* <Link
+      <Link
         className="glyphicon glyphicon-pencil"
         to={"/editNews/" + props.NewsInfo.tbl_news_id}
       >
         Edit
-      </Link> */}
-      <EditNews variant={props.NewsInfo}></EditNews>
+      </Link>
     </td>
   </tr>
 );
 
-function EditNews(props) {
-  const [show, setShow] = React.useState(false);
+// function EditNews(props) {
+// const [show, setShow] = React.useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+// const handleClose = () => setShow(false);
+// const handleShow = () => setShow(true);
 
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
+//   return (
+//     <>
+// <Button variant="primary" onClick={handleShow}>
+//   Launch demo modal
+// </Button>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <label>{props.variant.tbl_news_created_date}</label>
-          <Form>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGroupNewsTitle">
-                <Form.Label>शीर्षक</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={props.variant.tbl_news_title}
-                  // onChange={this.onNameChange}
-                  placeholder="शीर्षक"
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formGroupNewsDescription">
-                <Form.Label>सविस्तर माहिती</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows="3"
-                  value={props.variant.tbl_news_desciption}
-                  // onChange={this.onDescriptionChane}
-                  placeholder="सविस्तर माहिती"
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formNewsCrtDate">
-                <Form.Label>Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={props.variant.tbl_news_created_date}
-                  // onChange={this.onDateChange}
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formNewsUpdateDate">
-                <Form.Label>Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={props.variant.tbl_news_updated_date}
-                  // onChange={this.onDateChange}
-                />
-              </Form.Group>
-            </Form.Row>
+// <Modal show={show} onHide={handleClose}>
+//   <Modal.Header closeButton>
+//     <Modal.Title>Modal heading</Modal.Title>
+//   </Modal.Header>
+//   <Modal.Body>
+//     <label></label>
+// <Form>
+//   <Form.Row>
+//     <Form.Group as={Col} controlId="formGroupNewsTitle">
+//       <Form.Label>शीर्षक</Form.Label>
+//       <Form.Control
+//         type="text"
+//         value={props.variant.tbl_news_title}
+//         // onChange={this.onNameChange}
+//         placeholder="शीर्षक"
+//       />
+//     </Form.Group>
+//     <Form.Group as={Col} controlId="formGroupNewsDescription">
+//       <Form.Label>सविस्तर माहिती</Form.Label>
+//       <Form.Control
+//         as="textarea"
+//         rows="3"
+//         value={props.variant.tbl_news_desciption}
+//         // onChange={this.onDescriptionChane}
+//         placeholder="सविस्तर माहिती"
+//       />
+//     </Form.Group>
+//   </Form.Row>
+//   <Form.Row>
+//     <Form.Group as={Col} controlId="formNewsCrtDate">
+//       <Form.Label>Date</Form.Label>
+//       <Form.Control
+//         type="date"
+//         value={props.variant.tbl_news_created_date}
+//         // onChange={this.onDateChange}
+//       />
+//     </Form.Group>
+//     <Form.Group as={Col} controlId="formNewsUpdateDate">
+//       <Form.Label>Date</Form.Label>
+//       <Form.Control
+//         type="date"
+//         value={props.variant.tbl_news_updated_date}
+//         // onChange={this.onDateChange}
+//       />
+//     </Form.Group>
+//   </Form.Row>
 
-            <Button variant="primary" value="Edit news" type="submit">
-              Submit
-            </Button>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//   <Button variant="primary" value="Edit news" type="submit">
+//     Submit
+//   </Button>
+// </Form>
+//   </Modal.Body>
+//   <Modal.Footer>
+//     <Button variant="secondary" onClick={handleClose}>
+//       Close
+//     </Button>
+//     <Button variant="primary" onClick={handleClose}>
+//       Save Changes
+//     </Button>
+//   </Modal.Footer>
+// </Modal>
+//     </>
+//   );
+// }
 export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
+
     this.state = {
       newsInformation: [],
       newsId: 0,
@@ -150,18 +150,15 @@ export default class AdminPortal extends Component {
       });
   }
   NewsAlertList() {
-    console.log("log :" + this.state.isCheckedOne);
     return this.state.newsInformation.map(function (currentNewsInfo, i) {
       return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
     });
   }
-  onSubmit = (e) => {
-    e.preventDefault();
-  };
+
   render() {
     return (
       <div>
-        <h1>Admin page</h1>
+        <h1>प्रशासक</h1>
         <p>
           <button
             className="btn btn-primary"
@@ -174,7 +171,7 @@ export default class AdminPortal extends Component {
             सूचना
           </button>
         </p>
-        <div className="collapse" id="collapseNewsDiv">
+        <div className="collapse show" id="collapseNewsDiv">
           <div className="card card-body">
             <table
               className="table table-striped"
@@ -194,11 +191,7 @@ export default class AdminPortal extends Component {
               </thead>
               <tbody>{this.NewsAlertList()}</tbody>
             </table>
-            <input
-              type="radio"
-              name="active_newsTwo"
-              checked={this.state.isCheckedTwo}
-            />
+
             {/* <form>
               <div className="form-group">
                 <label for="newsTitle">शीर्षक</label>
