@@ -26,6 +26,7 @@ export default class EditNews extends Component {
       newsIsActive: false,
       newsUpdate: "",
       newsIsDeleted: "",
+      datesDisplay: "inherit",
     };
   }
 
@@ -39,47 +40,43 @@ export default class EditNews extends Component {
       newsDescp: e.target.value,
     });
   }
-  // onCreateDateChange(e) {
-  //   this.setState({
-  //     newsCreated: e.target.value,
-  //   });
-  // }
-  // onUpdatedDateChange(e) {
-  //   this.setState({
-  //     newsUpdate: e.target.value,
-  //   });
-  // }
   onNewsActiveChange(e) {
     this.setState({
       newsIsActive: e.target.checked,
     });
   }
   componentDidMount() {
-    axios
-      .get(
-        "http://localhost:4500/humbrat/news_panel/" + this.props.match.params.id
-      )
-      .then((response) => {
-        this.setState({
-          //newsInformation: response.data,
-          newsID: response.data[0].tbl_news_id,
-          newsTitle: response.data[0].tbl_news_title,
-          newsDescp: response.data[0].tbl_news_desciption,
-          newsCreated: response.data[0].tbl_news_created_date,
-          newsUpdate: response.data[0].tbl_news_updated_date,
-          newsIsActive: response.data[0].tbl_news_is_active,
+    if (this.props.match.params.id != 0) {
+      axios
+        .get(
+          "http://localhost:4500/humbrat/news_panel/" +
+            this.props.match.params.id
+        )
+        .then((response) => {
+          this.setState({
+            //newsInformation: response.data,
+            newsID: response.data[0].tbl_news_id,
+            newsTitle: response.data[0].tbl_news_title,
+            newsDescp: response.data[0].tbl_news_desciption,
+            newsCreated: response.data[0].tbl_news_created_date,
+            newsUpdate: response.data[0].tbl_news_updated_date,
+            newsIsActive: response.data[0].tbl_news_is_active,
+          });
+          var formatCreatedDate = this.state.newsCreated.split("T");
+          var formatUpdatedDate = this.state.newsUpdate.split("T");
+          this.setState({
+            newsCreated: formatCreatedDate[0],
+            newsUpdate: formatUpdatedDate[0],
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-        var formatCreatedDate = this.state.newsCreated.split("T");
-        var formatUpdatedDate = this.state.newsUpdate.split("T");
-        this.setState({
-          newsCreated: formatCreatedDate[0],
-          newsUpdate: formatUpdatedDate[0],
-        });
-        console.log("Formatted date:" + this.state.newsUpdate);
-      })
-      .catch(function (error) {
-        console.log(error);
+    } else {
+      this.setState({
+        datesDisplay: "none",
       });
+    }
   }
   onSubmit = (e) => {
     e.preventDefault();
@@ -104,6 +101,7 @@ export default class EditNews extends Component {
       });
   };
   render() {
+    var displayNone = this.state.datesDisplay;
     return (
       <div>
         <h1>माहिती बदल</h1>
@@ -141,7 +139,7 @@ export default class EditNews extends Component {
               />
             </Form.Group>
           </Form.Row>
-          <Form.Row>
+          <Form.Row style={{ display: this.state.datesDisplay }}>
             <Form.Group as={Col} controlId="formNewsCrtDate">
               <Form.Label>दिनांक</Form.Label>
               <Form.Control
@@ -157,6 +155,7 @@ export default class EditNews extends Component {
                 type="date"
                 value={this.state.newsUpdate}
                 disabled
+
                 //onChange={this.onUpdatedDateChange}
               />
             </Form.Group>

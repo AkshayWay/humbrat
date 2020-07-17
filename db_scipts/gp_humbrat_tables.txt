@@ -24,6 +24,10 @@ USE `db_gp_humbrat`;
 DROP procedure IF EXISTS `sp_newsAddUpdate`;
 
 DELIMITER $$
+USE `db_gp_humbrat`;
+DROP procedure IF EXISTS `sp_newsAddUpdate`;
+
+DELIMITER $$
 USE `db_gp_humbrat`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_newsAddUpdate`(
 IN _tbl_news_id INT,
@@ -46,9 +50,10 @@ if _tbl_news_is_active=1 then
 `tbl_news_desciption`,
 `tbl_news_created_date`,
 `tbl_news_is_active`,
-`tbl_news_updated_date`)
+`tbl_news_updated_date`,
+`tbl_news_is_deleted`)
 VALUES
-(_tbl_news_title,_tbl_news_desciption,createdUpdatedDate,_tbl_news_is_active,createdUpdatedDate);
+(_tbl_news_title,_tbl_news_desciption,createdUpdatedDate,_tbl_news_is_active,createdUpdatedDate,0);
 else
 set createdUpdatedDate=(SELECT CURDATE());
 UPDATE tbl_news_panel 
@@ -61,9 +66,28 @@ WHERE
     tbl_news_id = _tbl_news_id;
 
 end if;
-END
+END$$
 
 DELIMITER ;
+
+DELIMITER ;
+
+/* delete news from panel
+17/07/2020*/
+USE `db_gp_humbrat`;
+DROP procedure IF EXISTS `sp_deleteNewsInfo`;
+
+DELIMITER $$
+USE `db_gp_humbrat`$$
+CREATE PROCEDURE `sp_deleteNewsInfo` (
+IN _tbl_news_id int
+)
+BEGIN
+	update tbl_news_panel set tbl_news_is_deleted=1 where tbl_news_id=_tbl_news_id;
+END$$
+
+DELIMITER ;
+
 
 
 

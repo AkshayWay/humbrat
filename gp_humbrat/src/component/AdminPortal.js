@@ -43,9 +43,51 @@ const NewsList = (props) => (
         Edit
       </Link>
     </td>
+    <td>
+      <DeleteNewsInfo variant={props.NewsInfo} />
+    </td>
   </tr>
 );
 
+function DeleteNewsInfo(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    console.log("delete id: " + props.variant.tbl_news_id);
+    axios
+      .post(
+        "http://localhost:4000/expensemanagerdb/delete/" + props.variant._id
+      )
+      .then((res) => console.log(res.data));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        काढून टाका
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>सूचना काढून टाका</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          तुम्ही नक्की '<b>{props.variant.tbl_news_title}</b>' हि सूचना काढून
+          टाकू इच्चीता?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+          <Button variant="primary" onClick={deleteAndClose}>
+            काढून टाका
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 // function EditNews(props) {
 // const [show, setShow] = React.useState(false);
 
@@ -173,6 +215,13 @@ export default class AdminPortal extends Component {
         </p>
         <div className="collapse show" id="collapseNewsDiv">
           <div className="card card-body">
+            <Link
+              type="button"
+              className="btn btn-outline-primary"
+              to={"/editNews/0"}
+            >
+              नवीन सूचना
+            </Link>
             <table
               className="table table-striped"
               style={{ marginTop: 20 }}

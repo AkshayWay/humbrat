@@ -2,6 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const mySqlConnection = require("../db_connection");
 
+//News section start
 Router.get("/news_panel", (req, res) => {
   mySqlConnection.query("select * from tbl_news_panel", (err, rows) => {
     if (!err) {
@@ -26,10 +27,6 @@ Router.get("/news_panel/:id", (req, res) => {
 });
 Router.post("/news_panel/addEdit/:id", (req, res) => {
   let newsObj = req.body;
-  console.log(newsObj.tbl_news_id);
-  console.log(newsObj.tbl_news_title);
-  console.log(newsObj.tbl_news_desciption);
-  console.log(newsObj.tbl_news_is_active);
   var sqlQuery =
     "SET @tbl_news_id=?; SET @tbl_news_title=?; SET @tbl_news_desciption=?; " +
     "SET @tbl_news_is_active=?;" +
@@ -52,4 +49,18 @@ Router.post("/news_panel/addEdit/:id", (req, res) => {
     }
   );
 });
+Router.put("/news_panel/delete/:id", (req, res) => {
+  let deleteId = req.body;
+  console.log(deleteId.tbl_news_id);
+  var sqlQuery = "SET @tbl_news_id=?; CALL sp_deleteNewsInfo(@tbl_news_id)";
+  mySqlConnection.query(sqlQuery, [deleteId.tbl_news_id], (err, rows) => {
+    if (!err) {
+      // console.log("Deleted successfully");
+      res.send(rows);
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+// News section end
 module.exports = Router;
