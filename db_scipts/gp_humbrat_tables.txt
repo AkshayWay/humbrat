@@ -73,20 +73,24 @@ DELIMITER ;
 DELIMITER ;
 
 /* delete news from panel
-17/07/2020*/
+17/07/2020
+18/07/2020
+*/
 USE `db_gp_humbrat`;
 DROP procedure IF EXISTS `sp_deleteNewsInfo`;
 
 DELIMITER $$
 USE `db_gp_humbrat`$$
-CREATE PROCEDURE `sp_deleteNewsInfo` (
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_deleteNewsInfo`(
 IN _tbl_news_id int
 )
 BEGIN
 	update tbl_news_panel set tbl_news_is_deleted=1 where tbl_news_id=_tbl_news_id;
+    update tbl_news_panel set tbl_news_is_active=0 where tbl_news_id=_tbl_news_id;
 END$$
 
 DELIMITER ;
+
 
 
 
