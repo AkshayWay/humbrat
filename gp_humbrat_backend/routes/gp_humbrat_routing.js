@@ -49,11 +49,11 @@ Router.post("/news_panel/addEdit/:id", (req, res) => {
     }
   );
 });
-Router.put("/news_panel/delete/:id", (req, res) => {
+Router.post("/news_panel/delete/:id", (req, res) => {
   let deleteId = req.body;
-  console.log(deleteId.tbl_news_id);
+  console.log(req.params.id);
   var sqlQuery = "SET @tbl_news_id=?; CALL sp_deleteNewsInfo(@tbl_news_id)";
-  mySqlConnection.query(sqlQuery, [deleteId.tbl_news_id], (err, rows) => {
+  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
     if (!err) {
       // console.log("Deleted successfully");
       res.send(rows);

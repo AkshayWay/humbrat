@@ -56,4 +56,9 @@ footer {
   text-align: center;
   color: white;
 }
-
+.hscroll {
+  overflow-x: auto; /* Horizontal */
+}
+.table-responsive {
+  /* max-height:300px; */
+}

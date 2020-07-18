@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Moment from "react-moment";
 import axios from "axios";
+import AppCSS from "../App.css";
 import { Modal, Button, Form, Col } from "react-bootstrap";
 
 const NewsList = (props) => (
@@ -37,10 +38,10 @@ const NewsList = (props) => (
 
     <td>
       <Link
-        className="glyphicon glyphicon-pencil"
+        className="btn btn-primary"
         to={"/editNews/" + props.NewsInfo.tbl_news_id}
       >
-        Edit
+        माहिती बदल
       </Link>
     </td>
     <td>
@@ -215,32 +216,35 @@ export default class AdminPortal extends Component {
         </p>
         <div className="collapse show" id="collapseNewsDiv">
           <div className="card card-body">
-            <Link
-              type="button"
-              className="btn btn-outline-primary"
-              to={"/editNews/0"}
-            >
-              नवीन सूचना
-            </Link>
-            <table
-              className="table table-striped"
-              style={{ marginTop: 20 }}
-              id="SelectListExcel"
-            >
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>शीर्षक</th>
-                  <th>सविस्तर माहिती</th>
-                  <th>दिनांक</th>
-                  <th>सक्रिय आहे</th>
-                  <th>शेवटची बदलाची तारीख</th>
-                  <th>अस्तित्वात</th>
-                </tr>
-              </thead>
-              <tbody>{this.NewsAlertList()}</tbody>
-            </table>
-
+            <p>
+              <Link
+                type="button"
+                className="btn btn-outline-primary"
+                to={"/editNews/0"}
+              >
+                नवीन सूचना
+              </Link>
+            </p>  
+            <div className="table-responsive">
+              <table
+                className="table table-striped"
+                style={{ marginTop: 20 }}
+                id="SelectListExcel"
+              >
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>शीर्षक</th>
+                    <th>सविस्तर माहिती</th>
+                    <th>दिनांक</th>
+                    <th>सक्रिय आहे</th>
+                    <th>शेवटची बदलाची तारीख</th>
+                    <th>अस्तित्वात</th>
+                  </tr>
+                </thead>
+                <tbody>{this.NewsAlertList()}</tbody>
+              </table>
+            </div>
             {/* <form>
               <div className="form-group">
                 <label for="newsTitle">शीर्षक</label>
