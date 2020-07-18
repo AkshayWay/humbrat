@@ -58,9 +58,10 @@ function DeleteNewsInfo(props) {
     console.log("delete id: " + props.variant.tbl_news_id);
     axios
       .post(
-        "http://localhost:4000/expensemanagerdb/delete/" + props.variant._id
+        "http://localhost:4500/humbrat/news_panel/delete/" +
+          props.variant.tbl_news_id
       )
-      .then((res) => console.log(res.data));
+      .then((res) => console.log(res.data), window.location.reload(true));
     setShow(false);
   };
   return (
@@ -224,7 +225,7 @@ export default class AdminPortal extends Component {
               >
                 नवीन सूचना
               </Link>
-            </p>  
+            </p>
             <div className="table-responsive">
               <table
                 className="table table-striped"
@@ -240,6 +241,7 @@ export default class AdminPortal extends Component {
                     <th>सक्रिय आहे</th>
                     <th>शेवटची बदलाची तारीख</th>
                     <th>अस्तित्वात</th>
+                    <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
                 <tbody>{this.NewsAlertList()}</tbody>

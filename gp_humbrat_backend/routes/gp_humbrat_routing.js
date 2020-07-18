@@ -4,13 +4,16 @@ const mySqlConnection = require("../db_connection");
 
 //News section start
 Router.get("/news_panel", (req, res) => {
-  mySqlConnection.query("select * from tbl_news_panel", (err, rows) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("Error :" + err);
+  mySqlConnection.query(
+    "select * from tbl_news_panel where tbl_news_is_deleted <> 1 order by tbl_news_id desc;",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
     }
-  });
+  );
 });
 Router.get("/news_panel/:id", (req, res) => {
   mySqlConnection.query(
@@ -51,7 +54,7 @@ Router.post("/news_panel/addEdit/:id", (req, res) => {
 });
 Router.post("/news_panel/delete/:id", (req, res) => {
   let deleteId = req.body;
-  console.log(req.params.id);
+  //console.log(req.params.id);
   var sqlQuery = "SET @tbl_news_id=?; CALL sp_deleteNewsInfo(@tbl_news_id)";
   mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
     if (!err) {
