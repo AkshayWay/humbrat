@@ -57,11 +57,12 @@ export default class EditNews extends Component {
             //newsInformation: response.data,
             newsID: response.data[0].tbl_news_id,
             newsTitle: response.data[0].tbl_news_title,
-            newsDescp: response.data[0].tbl_news_desciption,
+            newsDescp: response.data[0].tbl_news_description,
             newsCreated: response.data[0].tbl_news_created_date,
             newsUpdate: response.data[0].tbl_news_updated_date,
             newsIsActive: response.data[0].tbl_news_is_active,
           });
+          console.log("News desc: ", this.state.newsDescp);
           var formatCreatedDate = this.state.newsCreated.split("T");
           var formatUpdatedDate = this.state.newsUpdate.split("T");
           this.setState({
@@ -83,7 +84,7 @@ export default class EditNews extends Component {
     const obj = {
       tbl_news_id: this.state.newsID,
       tbl_news_title: this.state.newsTitle,
-      tbl_news_desciption: this.state.newsDescp,
+      tbl_news_description: this.state.newsDescp,
       tbl_news_is_active: this.state.newsIsActive,
     };
     axios

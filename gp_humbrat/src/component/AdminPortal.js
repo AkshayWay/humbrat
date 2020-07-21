@@ -194,9 +194,18 @@ export default class AdminPortal extends Component {
       });
   }
   NewsAlertList() {
-    return this.state.newsInformation.map(function (currentNewsInfo, i) {
-      return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
-    });
+    console.log("Mews information", this.state.newsInformation.length);
+    if (this.state.newsInformation.length > 0) {
+      return this.state.newsInformation.map(function (currentNewsInfo, i) {
+        return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan="8">माहिती उपलब्ध नाही</td>
+        </tr>
+      );
+    }
   }
 
   render() {

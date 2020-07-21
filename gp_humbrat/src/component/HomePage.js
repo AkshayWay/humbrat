@@ -10,12 +10,46 @@ import gp_population from "../assets/images/gp_population.png";
 import gp_connectivity from "../assets/images/gp_connectivity.png";
 import gp_literacy from "../assets/images/gp_literacy.png";
 import AppCSS from "../App.css";
+import axios from "axios";
+import Moment from "react-moment";
 
-class HomePage extends Component {
+export default class HomePage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newsTitle: "",
+      newsDesc: "",
+      newsLastUpdate: "",
+      newsAvailable: "none",
+    };
+  }
+  componentDidMount() {
+    axios
+      .get("http://localhost:4500/humbrat/home/news_panel")
+      .then((response) => {
+        console.log("Length of data: ", response.data.length);
+        if (response.data.length > 0) {
+          this.setState({
+            newsAvailable: "block",
+            newsTitle: response.data[0].tbl_news_title,
+            newsDesc: response.data[0].tbl_news_description,
+            newsLastUpdate: response.data[0].tbl_news_updated_date,
+          });
+        } else {
+          this.setState({
+            newsAvailable: "none",
+          });
+        }
+      })
+      .catch(function (err) {
+        console.log("Error: " + err);
+      });
+  }
   render() {
     const marginBottom = {
       marginBottom: "25px",
     };
+    var newsDate = this.state.newsLastUpdate;
 
     return (
       <div>
@@ -34,19 +68,17 @@ class HomePage extends Component {
         </marquee>
         <div
           className="card mb-3 shadow-sm p-3 mb-5 bg-white rounded"
-          style={{ maxWidth: 100 + "%" }}
+          style={{ maxWidth: 100 + "%", display: this.state.newsAvailable }}
         >
           <div className="row no-gutters">
             <div className="col-md-12">
               <div className="card-body">
-                <h5 className="card-title">सूचना</h5>
+                <h5 className="card-title">{this.state.newsTitle}</h5>
+                <p className="card-text">{this.state.newsDesc}</p>
                 <p className="card-text">
-                  साबणानी हाथ धुवा, जीवनातून रोग मिटवा | सतत धुवूया 2० सेकंद हात
-                  कोरोनाचा होईल त्यामुळे घात | ठेवूया 1 मीटर सुरक्षित अंतर
-                  कोरोना होवूदे छूमंतर.
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">Last updated 3 mins ago</small>
+                  <small className="text-muted">
+                    <Moment format="DD/MM/YYYY">{newsDate}</Moment>
+                  </small>
                 </p>
               </div>
             </div>
@@ -142,5 +174,3 @@ class HomePage extends Component {
     );
   }
 }
-
-export default HomePage;
