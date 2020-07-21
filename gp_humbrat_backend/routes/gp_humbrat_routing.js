@@ -31,15 +31,15 @@ Router.get("/news_panel/:id", (req, res) => {
 Router.post("/news_panel/addEdit/:id", (req, res) => {
   let newsObj = req.body;
   var sqlQuery =
-    "SET @tbl_news_id=?; SET @tbl_news_title=?; SET @tbl_news_desciption=?; " +
+    "SET @tbl_news_id=?; SET @tbl_news_title=?; SET @tbl_news_description=?; " +
     "SET @tbl_news_is_active=?;" +
-    "CALL sp_newsAddUpdate(@tbl_news_id,@tbl_news_title,@tbl_news_desciption,@tbl_news_is_active);";
+    "CALL sp_newsAddUpdate(@tbl_news_id,@tbl_news_title,@tbl_news_description,@tbl_news_is_active);";
   mySqlConnection.query(
     sqlQuery,
     [
       newsObj.tbl_news_id,
       newsObj.tbl_news_title,
-      newsObj.tbl_news_desciption,
+      newsObj.tbl_news_description,
       newsObj.tbl_news_is_active,
     ],
     (err, rows) => {
@@ -64,6 +64,19 @@ Router.post("/news_panel/delete/:id", (req, res) => {
       console.log("Error :" + err);
     }
   });
+});
+Router.get("/home/news_panel", (req, res) => {
+  console.log("Inside home news");
+  mySqlConnection.query(
+    "select tbl_news_id,tbl_news_title, tbl_news_description, tbl_news_updated_date from tbl_news_panel where tbl_news_is_active and tbl_news_is_deleted<>1;",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
 });
 // News section end
 module.exports = Router;
