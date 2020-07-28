@@ -178,6 +178,7 @@ export default class AdminPortal extends Component {
       newsCrtDate: "",
       newsIsActive: false,
       newsUpdDate: "",
+      selectedFile: null,
     };
   }
 
@@ -194,7 +195,6 @@ export default class AdminPortal extends Component {
       });
   }
   NewsAlertList() {
-    console.log("Mews information", this.state.newsInformation.length);
     if (this.state.newsInformation.length > 0) {
       return this.state.newsInformation.map(function (currentNewsInfo, i) {
         return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
@@ -207,7 +207,15 @@ export default class AdminPortal extends Component {
       );
     }
   }
-
+  onBannerUpload = (e) => {
+    e.preventDefault();
+    console.log("E:", e.body);
+  };
+  onBannerChange = (event) => {
+    this.setState({
+      selectedFile: event.target.files[0],
+    });
+  };
   render() {
     return (
       <div>
@@ -256,54 +264,51 @@ export default class AdminPortal extends Component {
                 <tbody>{this.NewsAlertList()}</tbody>
               </table>
             </div>
-            {/* <form>
+          </div>
+        </div>
+
+        {/* Dashboard banner*/}
+
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseBannerDiv"
+            aria-expanded="false"
+            aria-controls="collapseBannerDiv"
+          >
+            मुख्य पृष्ठ छायाचित्र
+          </button>
+        </p>
+        <div className="collapse show" id="collapseBannerDiv">
+          <div className="card card-body">
+            <form onSubmit={this.onBannerUpload}>
               <div className="form-group">
-                <label for="newsTitle">शीर्षक</label>
                 <input
-                  type="text"
-                  className="form-control"
-                  id="newsTitle"
-                  placeholder="शीर्षक"
-                  value={this.state.newsTitle}
+                  type="file"
+                  className="form-control-file"
+                  id="exampleFormControlFile1"
+                  onChange={this.onBannerChange}
                 />
-              </div> 
-              <div className="form-group">
-                <label for="exampleFormControlSelect1">Example select</label>
-                <select className="form-control" id="exampleFormControlSelect1">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
               </div>
-              <div className="form-group">
-                <label for="exampleFormControlSelect2">
-                  Example multiple select
-                </label>
-                <select
-                  multiple
-                  className="form-control"
-                  id="exampleFormControlSelect2"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label for="exampleFormControlTextarea1">
-                  Example textarea
-                </label>
-                <textarea
-                  className="form-control"
-                  id="exampleFormControlTextarea1"
-                  rows="3"
-                ></textarea>
-              </div> 
-            </form>*/}
+              <Button type="submit">संक्रमित करा </Button>
+            </form>
+            {/* <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>शीर्षक</th>
+                    <th>छायाचित्र</th>
+                    <th>सक्रिय आहे</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+    */}
           </div>
         </div>
       </div>

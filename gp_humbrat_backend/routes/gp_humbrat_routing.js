@@ -66,7 +66,6 @@ Router.post("/news_panel/delete/:id", (req, res) => {
   });
 });
 Router.get("/home/news_panel", (req, res) => {
-  console.log("Inside home news");
   mySqlConnection.query(
     "select tbl_news_id,tbl_news_title, tbl_news_description, tbl_news_updated_date from tbl_news_panel where tbl_news_is_active and tbl_news_is_deleted<>1;",
     (err, rows) => {
@@ -79,4 +78,31 @@ Router.get("/home/news_panel", (req, res) => {
   );
 });
 // News section end
+//Adding banner to dashboard
+Router.post("/dashboard_banner", (req, res) => {
+  let newBanner = req.body;
+  var sqlQuery =
+    "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
+    "SET @tbl_banner_is_deleted=?; CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
+    "@tbl_banner_is_active, @tbl_banner_is_deleted)";
+
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      newBanner.tbl_banner_title,
+      newBanner.tbl_banner_src,
+      newBanner.tbl_banner_is_active,
+      newBanner.tbl_banner_is_deleted,
+    ],
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+        console.log(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Adding banner end
 module.exports = Router;
