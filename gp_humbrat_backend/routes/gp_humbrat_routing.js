@@ -1,6 +1,29 @@
 const express = require("express");
 const Router = express.Router();
 const mySqlConnection = require("../db_connection");
+//Multer for file upload
+const multer = require("multer");
+//const img=require("../uploads")
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
+  },
+});
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Message: Wrong file type"), false);
+  }
+};
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 //News section start
 Router.get("/news_panel", (req, res) => {
@@ -79,8 +102,10 @@ Router.get("/home/news_panel", (req, res) => {
 });
 // News section end
 //Adding banner to dashboard
-Router.post("/dashboard_banner", (req, res) => {
-  let newBanner = req.body;
+Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
+  console.log(req.file);
+  let newBanner = req.file;
+  //console.log("Data ", req.body);
   var sqlQuery =
     "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
     "SET @tbl_banner_is_deleted=?; CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
@@ -88,16 +113,25 @@ Router.post("/dashboard_banner", (req, res) => {
 
   mySqlConnection.query(
     sqlQuery,
-    [
-      newBanner.tbl_banner_title,
-      newBanner.tbl_banner_src,
-      newBanner.tbl_banner_is_active,
-      newBanner.tbl_banner_is_deleted,
-    ],
+    [newBanner.originalname, newBanner.path, 1, 0],
     (err, rows) => {
       if (!err) {
-        res.send(rows);
+        // res.send(rows);
         console.log(rows);
+        res.status(201).json({
+          message: "Created product successfully",
+          createdImage: {
+            id: rows.tbl_banner_id,
+            name: rows.tbl_banner_title,
+            src: rows.tbl_banner_src,
+            isActive: rows.tbl_banner_is_active,
+            isDeleted: rows.tbl_banner_is_deleted,
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/products/" + rows._id,
+            },
+          },
+        });
       } else {
         console.log("Error :" + err);
       }

@@ -209,7 +209,14 @@ export default class AdminPortal extends Component {
   }
   onBannerUpload = (e) => {
     e.preventDefault();
-    console.log("E:", e.body);
+    const fd = new FormData();
+    fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
+    console.log("fd:", this.state.selectedFile);
+    axios
+      .post("http://localhost:4500/humbrat/dashboard_banner", fd)
+      .then((res) => {
+        console.log(res);
+      });
   };
   onBannerChange = (event) => {
     this.setState({
