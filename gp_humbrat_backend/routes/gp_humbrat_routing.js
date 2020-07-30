@@ -103,17 +103,20 @@ Router.get("/home/news_panel", (req, res) => {
 // News section end
 //Adding banner to dashboard
 Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
-  console.log(req.file);
+  console.log(req.body.imageDesciption);
   let newBanner = req.file;
+  // let bannerDesc = req.file.bannerImgDesc;
+  // console.log(req.body.abc);
   //console.log("Data ", req.body);
   var sqlQuery =
     "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
-    "SET @tbl_banner_is_deleted=?; CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
-    "@tbl_banner_is_active, @tbl_banner_is_deleted)";
+    "SET @tbl_banner_is_deleted=?;SET @tbl_banner_img_desc=?;" +
+    "CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
+    "@tbl_banner_is_active, @tbl_banner_is_deleted, @tbl_banner_img_desc)";
 
   mySqlConnection.query(
     sqlQuery,
-    [newBanner.originalname, newBanner.path, 1, 0],
+    [newBanner.filename, newBanner.path, 1, 0, req.body.imageDesciption],
     (err, rows) => {
       if (!err) {
         // res.send(rows);
@@ -139,4 +142,15 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
   );
 });
 //Adding banner end
+//Displaying all banner image
+Router.get("/dashboard_banner/all_img", (req, res) => {
+  mySqlConnection.query("select * from tbl_dashboard_banner", (err, rows) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//End displaying banner image
 module.exports = Router;
