@@ -1,4 +1,4 @@
-import React, { component, Component } from "react";
+import React, { component, Component, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,6 +9,11 @@ import Moment from "react-moment";
 import axios from "axios";
 import AppCSS from "../App.css";
 import { Modal, Button, Form, Col } from "react-bootstrap";
+
+const rowBorder =
+  {
+    border: "2px solid green",
+  } | null;
 
 const NewsList = (props) => (
   <tr>
@@ -24,7 +29,7 @@ const NewsList = (props) => (
       <input
         type="checkbox"
         value={props.NewsInfo.tbl_news_is_active}
-        name="active_banner"
+        name="active_news"
         readOnly
         checked={props.NewsInfo.tbl_news_is_active == 1 ? true : false}
       />
@@ -51,7 +56,8 @@ const NewsList = (props) => (
 );
 
 const BannerInfo = (props) => (
-  <tr>
+  //let styleTr=props.BannerInfo.tbl_banner_is_active === 1 ? rowBorder : "null";
+  <tr style={{ rowBorder: "2px Solid green" }}>
     <td>{props.BannerInfo.tbl_banner_img_desc}</td>
     <td>
       <img
@@ -62,7 +68,7 @@ const BannerInfo = (props) => (
     </td>
     <td>
       <input
-        type="checkbox"
+        type="radio"
         value={props.BannerInfo.tbl_banner_is_active}
         name="active_banner"
         readOnly
@@ -71,7 +77,7 @@ const BannerInfo = (props) => (
       />
     </td>
     <td>
-      <ViewBanner variant={props.BannerInfo} />
+      <ViewBanner variant={props.BannerInfo} changeDesc={props.handleChange} />
     </td>
     <td>dELETE PROFILE</td>
   </tr>
@@ -82,41 +88,93 @@ function ViewBanner(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const deleteAndClose = () => {
-    console.log("delete id: " + props.variant.tbl_news_id);
+  const [imgDescInput, setimgDescInput] = useState(
+    props.variant.tbl_banner_img_desc
+  );
+  var isActiveChecked = props.variant.tbl_banner_is_active == 1 ? true : false;
+  const [imgIsActiveInput, setimgIsActiveInput] = useState(isActiveChecked);
+  //props.variant.bannerImgDesc = props.variant.tbl_banner_img_desc;
+
+  const changeDescHandler = (e) => {
+    setimgDescInput(e.target.value);
+  };
+  const changeIsActiveHandler = (e) => {
+    setimgIsActiveInput(e.target.checked);
+  };
+
+  // const deleteAndClose = () => {
+  //   console.log("delete id: " + props.variant.tbl_news_id);
+  //   axios
+  //     .post(
+  //       "http://localhost:4500/humbrat/news_panel/delete/" +
+  //         props.variant.tbl_news_id
+  //     )
+  //     .then((res) => console.log(res.data), window.location.reload(true));
+  //   setShow(false);
+  // };
+  const editBanner = () => {
+    const obj = {
+      tbl_banner_id: props.variant.tbl_banner_id,
+      tbl_banner_is_active: imgIsActiveInput,
+      tbl_banner_img_desc: imgDescInput,
+    };
     axios
-      .post(
-        "http://localhost:4500/humbrat/news_panel/delete/" +
-          props.variant.tbl_news_id
+      .put(
+        "http://localhost:4500/humbrat/dashboard_banner/edit/" +
+          props.variant.tbl_banner_id,
+        obj
       )
       .then((res) => console.log(res.data), window.location.reload(true));
-    setShow(false);
   };
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        View Banner
+        माहिती बदल
       </Button>
 
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Banner Image</Modal.Title>
+          <Modal.Title>छायाचित्र माहिती व बदल</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
+          <div className="form-group">
             <img
               src={"uploads/" + props.variant.tbl_banner_title}
               alt={props.variant.tbl_banner_title}
               style={{ width: 100 + "%" }}
             ></img>
           </div>
+          <div className="form-group">
+            <input
+              type="checkbox"
+              checked={imgIsActiveInput}
+              onChange={changeIsActiveHandler}
+            ></input>
+            <label> सक्रिय आहे </label>
+          </div>
+          {/* <div>
+            <textarea
+              value={imgDescInput}
+              onChange={changeDescHandler}
+            ></textarea>
+          </div> */}
+          <div className="form-group">
+            <label>छायाचित्र माहिती</label>
+            <textarea
+              className="form-control"
+              id="imageDescription"
+              value={imgDescInput}
+              onChange={changeDescHandler}
+              rows="3"
+            ></textarea>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             बंद करा
           </Button>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
+          <Button variant="primary" onClick={editBanner}>
+            माहिती बदल
           </Button>
         </Modal.Footer>
       </Modal>
@@ -182,7 +240,7 @@ export default class AdminPortal extends Component {
       selectedFile: null,
       bannerImgDesc: "",
       bannerImages: [],
-      bannerIsActive: false,
+      bannerIsActive: "",
       selectedBanner: "",
     };
   }
@@ -229,7 +287,7 @@ export default class AdminPortal extends Component {
           <BannerInfo
             BannerInfo={bannerInfo}
             key={i}
-            // handleChange={e}
+            handleChange={e}
           ></BannerInfo>
         );
       });
@@ -244,7 +302,7 @@ export default class AdminPortal extends Component {
   onBannerUpload = (e) => {
     e.preventDefault();
     const bannerImg = new FormData();
-    console.log("Description " + this.state.bannerImgDesc);
+    // console.log("Description " + this.state.bannerImgDesc);
     bannerImg.append(
       "bannerImg",
       this.state.selectedFile,
@@ -271,9 +329,16 @@ export default class AdminPortal extends Component {
     });
   };
   onActiveBannerChange = (e) => {
+    let setValue = 0;
+    if (this.state.bannerIsActive == 1) {
+      setValue = 0;
+    } else {
+      setValue = 1;
+    }
     this.setState({
-      bannerIsActive: e.target.value,
+      bannerIsActive: setValue,
     });
+    alert("Change " + this.state.bannerIsActive);
   };
 
   render() {
@@ -376,8 +441,8 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                {/* <tbody>{this.bannerList(this.onActiveBannerChange)}</tbody> */}
-                <tbody>{this.bannerList(this.onActiveBannerChange)}</tbody>
+                {/* <tbody>{this.bannerList()}</tbody> */}
+                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
               </table>
             </div>
           </div>

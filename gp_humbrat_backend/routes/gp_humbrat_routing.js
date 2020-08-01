@@ -103,7 +103,7 @@ Router.get("/home/news_panel", (req, res) => {
 // News section end
 //Adding banner to dashboard
 Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
-  console.log(req.body.imageDesciption);
+  //console.log(req.body.imageDesciption);
   let newBanner = req.file;
   // let bannerDesc = req.file.bannerImgDesc;
   // console.log(req.body.abc);
@@ -151,6 +151,39 @@ Router.get("/dashboard_banner/all_img", (req, res) => {
       console.log("Error :" + err);
     }
   });
+});
+
+Router.put("/dashboard_banner/edit/:id", (req, res) => {
+  let newObj = req.body;
+  console.log(
+    req.body.tbl_banner_id,
+    req.body.tbl_banner_img_desc,
+    req.body.tbl_banner_is_active
+  );
+
+  var sqlQuery =
+    "SET @tbl_banner_id=?; SET @tbl_banner_img_desc=?;SET @tbl_banner_is_active=?;" +
+    "CALL sp_dashboard_banner_edit(@tbl_banner_id,@tbl_banner_img_desc," +
+    "@tbl_banner_is_active)";
+
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      newObj.tbl_banner_id,
+      newObj.tbl_banner_img_desc,
+      newObj.tbl_banner_is_active,
+    ],
+    (err, rows) => {
+      if (!err) {
+        //  console.log(rows);
+        res.status(201).json({
+          message: "Banner info updated successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
 });
 //End displaying banner image
 module.exports = Router;
