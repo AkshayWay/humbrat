@@ -144,23 +144,20 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
 //Adding banner end
 //Displaying all banner image
 Router.get("/dashboard_banner/all_img", (req, res) => {
-  mySqlConnection.query("select * from tbl_dashboard_banner", (err, rows) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("Error :" + err);
+  mySqlConnection.query(
+    "select * from tbl_dashboard_banner where tbl_banner_is_deleted<>1",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
     }
-  });
+  );
 });
 
 Router.put("/dashboard_banner/edit/:id", (req, res) => {
   let newObj = req.body;
-  console.log(
-    req.body.tbl_banner_id,
-    req.body.tbl_banner_img_desc,
-    req.body.tbl_banner_is_active
-  );
-
   var sqlQuery =
     "SET @tbl_banner_id=?; SET @tbl_banner_img_desc=?;SET @tbl_banner_is_active=?;" +
     "CALL sp_dashboard_banner_edit(@tbl_banner_id,@tbl_banner_img_desc," +
@@ -186,4 +183,20 @@ Router.put("/dashboard_banner/edit/:id", (req, res) => {
   );
 });
 //End displaying banner image
+// Delete banner image
+Router.put("/dashboard_banner/delete/:id", (req, res) => {
+  var sqlQuery =
+    "SET @tbl_banner_id=?;CALL sp_dashboard_banner_delete(@tbl_banner_id)";
+  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
+    if (!err) {
+      //  console.log(rows);
+      res.status(201).json({
+        message: "Banner info deleted successfully",
+      });
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Delete banner image end
 module.exports = Router;

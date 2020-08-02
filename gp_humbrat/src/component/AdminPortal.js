@@ -56,8 +56,11 @@ const NewsList = (props) => (
 );
 
 const BannerInfo = (props) => (
-  //let styleTr=props.BannerInfo.tbl_banner_is_active === 1 ? rowBorder : "null";
-  <tr style={{ rowBorder: "2px Solid green" }}>
+  <tr
+    className={
+      props.BannerInfo.tbl_banner_is_active == 1 ? "table-success" : "null"
+    }
+  >
     <td>{props.BannerInfo.tbl_banner_img_desc}</td>
     <td>
       <img
@@ -66,7 +69,7 @@ const BannerInfo = (props) => (
         style={{ width: 80, height: 60 }}
       ></img>
     </td>
-    <td>
+    {/* <td>
       <input
         type="radio"
         value={props.BannerInfo.tbl_banner_is_active}
@@ -75,13 +78,57 @@ const BannerInfo = (props) => (
         //onChange={props.handleChange}
         checked={props.BannerInfo.tbl_banner_is_active == 1 ? true : false}
       />
-    </td>
+    </td> */}
     <td>
       <ViewBanner variant={props.BannerInfo} changeDesc={props.handleChange} />
     </td>
-    <td>dELETE PROFILE</td>
+    <td>
+      <DeleteBanner variant={props.BannerInfo} />
+    </td>
   </tr>
 );
+//Delete banner info
+function DeleteBanner(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    axios
+      .put(
+        "http://localhost:4500/humbrat/dashboard_banner/delete/" +
+          props.variant.tbl_banner_id
+      )
+      .then((res) => console.log(res.data), window.location.reload(true));
+    //.then((res) => console.log(res.data));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        काढून टाका
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          तुम्ही नक्की '<b>{props.variant.tbl_banner_img_desc}</b>' हे छायाचित्र
+          काढून टाकू इच्चीता?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deleteAndClose}>
+            काढून टाका
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+//Delete banner info end
 //View Banner Image and make changes
 function ViewBanner(props) {
   const [show, setShow] = React.useState(false);
@@ -101,17 +148,6 @@ function ViewBanner(props) {
   const changeIsActiveHandler = (e) => {
     setimgIsActiveInput(e.target.checked);
   };
-
-  // const deleteAndClose = () => {
-  //   console.log("delete id: " + props.variant.tbl_news_id);
-  //   axios
-  //     .post(
-  //       "http://localhost:4500/humbrat/news_panel/delete/" +
-  //         props.variant.tbl_news_id
-  //     )
-  //     .then((res) => console.log(res.data), window.location.reload(true));
-  //   setShow(false);
-  // };
   const editBanner = () => {
     const obj = {
       tbl_banner_id: props.variant.tbl_banner_id,
@@ -129,7 +165,7 @@ function ViewBanner(props) {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        माहिती बदल
+        छायाचित्र माहिती व बदल
       </Button>
 
       <Modal show={show} onHide={handleClose} animation={false}>
@@ -150,7 +186,7 @@ function ViewBanner(props) {
               checked={imgIsActiveInput}
               onChange={changeIsActiveHandler}
             ></input>
-            <label> सक्रिय आहे </label>
+            <label> : सक्रिय आहे </label>
           </div>
           {/* <div>
             <textarea
@@ -170,11 +206,11 @@ function ViewBanner(props) {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
           <Button variant="primary" onClick={editBanner}>
             माहिती बदल
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
           </Button>
         </Modal.Footer>
       </Modal>
@@ -182,9 +218,9 @@ function ViewBanner(props) {
   );
 }
 //View Banner Image end
-function editBanner(e) {
-  // alert("Inside function" + e);
-}
+// function editBanner(e) {
+//   // alert("Inside function" + e);
+// }
 function DeleteNewsInfo(props) {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -437,7 +473,7 @@ export default class AdminPortal extends Component {
                   <tr>
                     <th>माहिती</th>
                     <th>छायाचित्र</th>
-                    <th>सक्रिय आहे</th>
+                    {/* <th>सक्रिय आहे</th> */}
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
