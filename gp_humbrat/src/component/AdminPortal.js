@@ -8,7 +8,7 @@ import {
 import Moment from "react-moment";
 import axios from "axios";
 import AppCSS from "../App.css";
-import { Modal, Button, Form, Col } from "react-bootstrap";
+import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 
 const rowBorder =
   {
@@ -69,16 +69,7 @@ const BannerInfo = (props) => (
         style={{ width: 80, height: 60 }}
       ></img>
     </td>
-    {/* <td>
-      <input
-        type="radio"
-        value={props.BannerInfo.tbl_banner_is_active}
-        name="active_banner"
-        readOnly
-        //onChange={props.handleChange}
-        checked={props.BannerInfo.tbl_banner_is_active == 1 ? true : false}
-      />
-    </td> */}
+
     <td>
       <ViewBanner variant={props.BannerInfo} changeDesc={props.handleChange} />
     </td>
@@ -188,12 +179,6 @@ function ViewBanner(props) {
             ></input>
             <label> : सक्रिय आहे </label>
           </div>
-          {/* <div>
-            <textarea
-              value={imgDescInput}
-              onChange={changeDescHandler}
-            ></textarea>
-          </div> */}
           <div className="form-group">
             <label>छायाचित्र माहिती</label>
             <textarea
@@ -217,10 +202,6 @@ function ViewBanner(props) {
     </>
   );
 }
-//View Banner Image end
-// function editBanner(e) {
-//   // alert("Inside function" + e);
-// }
 function DeleteNewsInfo(props) {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -298,8 +279,6 @@ export default class AdminPortal extends Component {
         this.setState({
           bannerImages: response.data,
         });
-
-        //console.log("Banner images ", this.state.bannerImages);
       });
   }
   NewsAlertList() {
@@ -338,12 +317,12 @@ export default class AdminPortal extends Component {
   onBannerUpload = (e) => {
     e.preventDefault();
     const bannerImg = new FormData();
-    // console.log("Description " + this.state.bannerImgDesc);
     bannerImg.append(
       "bannerImg",
       this.state.selectedFile,
       this.state.selectedFile.name
     );
+
     bannerImg.append("imageDesciption", this.state.bannerImgDesc);
 
     axios
@@ -381,6 +360,7 @@ export default class AdminPortal extends Component {
     return (
       <div>
         <h1>प्रशासक</h1>
+
         <p>
           <button
             className="btn btn-primary"
@@ -451,6 +431,7 @@ export default class AdminPortal extends Component {
                   className="form-control-file"
                   id="bannerImageUpload"
                   onChange={this.onBannerChange}
+                  required
                 />
 
                 <div className="form-group">
@@ -461,6 +442,7 @@ export default class AdminPortal extends Component {
                     value={this.state.bannerImgDesc}
                     onChange={this.onBannerDescChange}
                     rows="3"
+                    required
                   ></textarea>
                 </div>
               </div>

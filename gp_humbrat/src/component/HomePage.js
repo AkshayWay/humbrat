@@ -21,29 +21,88 @@ export default class HomePage extends Component {
       newsDesc: "",
       newsLastUpdate: "",
       newsAvailable: "none",
+      bannerImgScr: "",
+      bannerImgAlt: "Nothing",
     };
   }
-  componentDidMount() {
-    axios
-      .get("http://localhost:4500/humbrat/home/news_panel")
-      .then((response) => {
-        console.log("Length of data: ", response.data.length);
-        if (response.data.length > 0) {
-          this.setState({
-            newsAvailable: "block",
-            newsTitle: response.data[0].tbl_news_title,
-            newsDesc: response.data[0].tbl_news_description,
-            newsLastUpdate: response.data[0].tbl_news_updated_date,
-          });
-        } else {
-          this.setState({
-            newsAvailable: "none",
-          });
-        }
-      })
-      .catch(function (err) {
-        console.log("Error: " + err);
-      });
+  // componentDidMount() {
+  //   axios
+  //     .get("http://localhost:4500/humbrat/home/news_panel")
+  //     .then((response) => {
+  //       if (response.data.length > 0) {
+  //         this.setState({
+  //           newsAvailable: "block",
+  //           newsTitle: response.data[0].tbl_news_title,
+  //           newsDesc: response.data[0].tbl_news_description,
+  //           newsLastUpdate: response.data[0].tbl_news_updated_date,
+  //         });
+  //       } else {
+  //         this.setState({
+  //           newsAvailable: "none",
+  //         });
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       console.log("Error: " + err);
+  //     });
+  // }
+  async componentDidMount() {
+    try {
+      const newsPanel = await axios
+        .get("http://localhost:4500/humbrat/home/news_panel")
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.setState({
+              newsAvailable: "block",
+              newsTitle: response.data[0].tbl_news_title,
+              newsDesc: response.data[0].tbl_news_description,
+              newsLastUpdate: response.data[0].tbl_news_updated_date,
+            });
+          } else {
+            this.setState({
+              newsAvailable: "none",
+            });
+          }
+        });
+
+      const bannerImage = await axios
+        .get("http://localhost:4500/humbrat/dashboard_banner/getbanner")
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.setState({
+              bannerImgScr: response.data[0].tbl_banner_title,
+              bannerImgAlt: response.data[0].tbl_banner_img_desc,
+            });
+          } else {
+            this.setState({
+              bannerImgScr: "none",
+              bannerImgAlt: "Network issue",
+            });
+          }
+        });
+
+      return newsPanel, bannerImage;
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+
+    // .then((response) => {
+    //   if (response.data.length > 0) {
+    //     this.setState({
+    //       newsAvailable: "block",
+    //       newsTitle: response.data[0].tbl_news_title,
+    //       newsDesc: response.data[0].tbl_news_description,
+    //       newsLastUpdate: response.data[0].tbl_news_updated_date,
+    //     });
+    //   } else {
+    //     this.setState({
+    //       newsAvailable: "none",
+    //     });
+    //   }
+    // })
+    // .catch(function (err) {
+    //   console.log("Error: " + err);
+    // });
   }
   render() {
     const marginBottom = {
@@ -55,9 +114,9 @@ export default class HomePage extends Component {
       <div>
         <div>
           <img
-            src={gp_banner}
+            src={"uploads/" + this.state.bannerImgScr}
+            alt={this.state.bannerImgAlt}
             className="img-fluid rounded rounded shadow p-3 mb-5 bg-white rounded"
-            alt="Responsive image"
           />
         </div>
 

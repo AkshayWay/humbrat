@@ -155,7 +155,21 @@ Router.get("/dashboard_banner/all_img", (req, res) => {
     }
   );
 });
-
+//Display all bannner end
+//Display banner on dashboard
+Router.get("/dashboard_banner/getbanner", (req, res) => {
+  mySqlConnection.query(
+    "select tbl_banner_title,tbl_banner_img_desc from tbl_dashboard_banner where tbl_banner_is_active=1",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Display banner on dashboard end
 Router.put("/dashboard_banner/edit/:id", (req, res) => {
   let newObj = req.body;
   var sqlQuery =
