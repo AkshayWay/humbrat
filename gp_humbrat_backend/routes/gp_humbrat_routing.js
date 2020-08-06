@@ -213,4 +213,32 @@ Router.put("/dashboard_banner/delete/:id", (req, res) => {
   });
 });
 //Delete banner image end
+//Add or edit running instructions
+Router.post("/instructions", (req, res) => {
+  let newObj = req.body;
+  var sqlQuery =
+    "SET @tbl_instructions_id=?;SET @tbl_instructions_msg=?;SET @tbl_instructions_is_active=?;" +
+    "SET @tbl_instructions_is_delete=?;CALL sp_instructions_add_edit(@tbl_instructions_id,@tbl_instructions_msg," +
+    "@tbl_instructions_is_active,@tbl_instructions_is_delete) ";
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      newObj.tbl_instructions_id,
+      newObj.tbl_instructions_msg,
+      newObj.tbl_instructions_is_active,
+      newObj.tbl_instructions_is_delete,
+    ],
+    (err, rows) => {
+      if (!err) {
+        //res.send(rows);
+        res.status(201).json({
+          message: "Instuctions added/updated successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Add or edit running instructions end
 module.exports = Router;

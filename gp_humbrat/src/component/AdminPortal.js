@@ -10,11 +10,6 @@ import axios from "axios";
 import AppCSS from "../App.css";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 
-const rowBorder =
-  {
-    border: "2px solid green",
-  } | null;
-
 const NewsList = (props) => (
   <tr>
     <td>{props.NewsInfo.tbl_news_id}</td>
@@ -262,24 +257,28 @@ export default class AdminPortal extends Component {
     };
   }
 
-  componentDidMount() {
-    axios
-      .get("http://localhost:4500/humbrat/news_panel")
-      .then((response) => {
-        this.setState({
-          newsInformation: response.data,
+  async componentDidMount() {
+    try {
+      const newsPanel = await axios
+        .get("http://localhost:4500/humbrat/news_panel")
+        .then((response) => {
+          this.setState({
+            newsInformation: response.data,
+          });
         });
-      })
-      .catch(function (err) {
-        console.log("Error: " + err);
-      });
-    axios
-      .get("http://localhost:4500/humbrat/dashboard_banner/all_img")
-      .then((response) => {
-        this.setState({
-          bannerImages: response.data,
+
+      const bannerImage = await axios
+        .get("http://localhost:4500/humbrat/dashboard_banner/all_img")
+        .then((response) => {
+          this.setState({
+            bannerImages: response.data,
+          });
         });
-      });
+
+      return newsPanel, bannerImage;
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   }
   NewsAlertList() {
     if (this.state.newsInformation.length > 0) {
@@ -435,7 +434,7 @@ export default class AdminPortal extends Component {
                 />
 
                 <div className="form-group">
-                  <label>Banner Desciption</label>
+                  <label>छायाचित्र माहिती</label>
                   <textarea
                     className="form-control"
                     id="imageDescription"
@@ -461,6 +460,36 @@ export default class AdminPortal extends Component {
                 </thead>
                 {/* <tbody>{this.bannerList()}</tbody> */}
                 <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseInstructionDiv"
+            aria-expanded="false"
+            aria-controls="collapseInstructionDiv"
+          >
+            सूचना
+          </button>
+        </p>
+
+        <div className="collapse show" id="collapseInstructionDiv">
+          <div className="card card-body">
+            <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>सूचना</th>
+                    <th>अस्तित्वात</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
               </table>
             </div>
           </div>
