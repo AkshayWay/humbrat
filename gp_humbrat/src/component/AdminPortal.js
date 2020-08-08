@@ -73,6 +73,30 @@ const BannerInfo = (props) => (
     </td>
   </tr>
 );
+//List of all instructions
+const Instruction = (props) => (
+  <tr
+    className={
+      props.instructionInfo.tbl_instructions_is_active == 1
+        ? "table-success"
+        : "null"
+    }
+  >
+    <td>{props.instructionInfo.tbl_instructions_msg}</td>
+    <td>
+      {" "}
+      <Link
+        className="btn btn-primary"
+        to={"/instruction/" + props.instructionInfo.tbl_instructions_id}
+      >
+        माहिती बदल
+      </Link>
+    </td>
+    <td>Delete</td>
+  </tr>
+);
+
+//List of all instructions end
 //Delete banner info
 function DeleteBanner(props) {
   const [show, setShow] = React.useState(false);
@@ -254,6 +278,7 @@ export default class AdminPortal extends Component {
       bannerImages: [],
       bannerIsActive: "",
       selectedBanner: "",
+      instructionArr: [],
     };
   }
 
@@ -275,7 +300,15 @@ export default class AdminPortal extends Component {
           });
         });
 
-      return newsPanel, bannerImage;
+      const instruction = await axios
+        .get("http://localhost:4500/humbrat/instructions")
+        .then((response) => {
+          this.setState({
+            instructionArr: response.data,
+          });
+        });
+
+      return newsPanel, bannerImage, instruction;
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -303,6 +336,22 @@ export default class AdminPortal extends Component {
             key={i}
             handleChange={e}
           ></BannerInfo>
+        );
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan="5">माहिती उपलब्ध नाही</td>
+        </tr>
+      );
+    }
+  }
+
+  instructionList() {
+    if (this.state.instructionArr.length > 0) {
+      return this.state.instructionArr.map(function (instructionInfo, i) {
+        return (
+          <Instruction instructionInfo={instructionInfo} key={i}></Instruction>
         );
       });
     } else {
@@ -369,7 +418,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseNewsDiv"
           >
-            सूचना
+            बातम्या
           </button>
         </p>
         <div className="collapse show" id="collapseNewsDiv">
@@ -380,7 +429,7 @@ export default class AdminPortal extends Component {
                 className="btn btn-outline-primary"
                 to={"/editNews/0"}
               >
-                नवीन सूचना
+                नवीन बातमी
               </Link>
             </p>
             <div className="table-responsive">
@@ -480,16 +529,24 @@ export default class AdminPortal extends Component {
 
         <div className="collapse show" id="collapseInstructionDiv">
           <div className="card card-body">
+            <p>
+              <Link
+                type="button"
+                className="btn btn-outline-primary"
+                to={"/instruction/0"}
+              >
+                नवीन सूचना
+              </Link>
+            </p>
             <div className="table-responsive">
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
                   <tr>
                     <th>सूचना</th>
-                    <th>अस्तित्वात</th>
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>{this.instructionList()}</tbody>
               </table>
             </div>
           </div>

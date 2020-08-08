@@ -216,6 +216,7 @@ Router.put("/dashboard_banner/delete/:id", (req, res) => {
 //Add or edit running instructions
 Router.post("/instructions", (req, res) => {
   let newObj = req.body;
+  console.log(newObj);
   var sqlQuery =
     "SET @tbl_instructions_id=?;SET @tbl_instructions_msg=?;SET @tbl_instructions_is_active=?;" +
     "SET @tbl_instructions_is_delete=?;CALL sp_instructions_add_edit(@tbl_instructions_id,@tbl_instructions_msg," +
@@ -241,4 +242,30 @@ Router.post("/instructions", (req, res) => {
   );
 });
 //Add or edit running instructions end
+//Get all instructions
+Router.get("/instructions", (req, res) => {
+  mySqlConnection.query("select * from tbl_instructions", (err, rows) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Get all instructions end
+//Get data of selected instruction
+Router.get("/instructions/:id", (req, res) => {
+  mySqlConnection.query(
+    "select * from tbl_instructions where tbl_instructions_id=?",
+    [req.params.id],
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Get data of selected instruction end
 module.exports = Router;
