@@ -41,7 +41,7 @@ const NewsList = (props) => (
         className="btn btn-primary"
         to={"/editNews/" + props.NewsInfo.tbl_news_id}
       >
-        माहिती बदल
+        बातमी बदल
       </Link>
     </td>
     <td>
@@ -92,7 +92,9 @@ const Instruction = (props) => (
         माहिती बदल
       </Link>
     </td>
-    <td>Delete</td>
+    <td>
+      <DeleteInstructionInfo variant={props.instructionInfo} />
+    </td>
   </tr>
 );
 
@@ -243,18 +245,59 @@ function DeleteNewsInfo(props) {
 
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>सूचना काढून टाका</Modal.Title>
+          <Modal.Title>बातमी काढून टाका</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_news_title}</b>' हि सूचना काढून
+          तुम्ही नक्की '<b>{props.variant.tbl_news_title}</b>' हि बातमी काढून
           टाकू इच्चीता?
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="primary" onClick={deleteAndClose}>
+            काढून टाका
+          </Button>
           <Button variant="secondary" onClick={handleClose}>
             बंद करा
           </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+function DeleteInstructionInfo(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    console.log("delete id: " + props.variant.tbl_instructions_id);
+    axios
+      .put(
+        "http://localhost:4500/humbrat/instructions/delete/" +
+          props.variant.tbl_instructions_id
+      )
+      .then((res) => console.log(res.data), window.location.reload(true));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        काढून टाका
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>सूचना काढून टाका</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          तुम्ही नक्की '<b>{props.variant.tbl_instructions_msg}</b>' हि सूचना
+          काढून टाकू इच्चीता?
+        </Modal.Body>
+        <Modal.Footer>
           <Button variant="primary" onClick={deleteAndClose}>
             काढून टाका
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
           </Button>
         </Modal.Footer>
       </Modal>

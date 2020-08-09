@@ -23,6 +23,8 @@ export default class HomePage extends Component {
       newsAvailable: "none",
       bannerImgScr: "",
       bannerImgAlt: "Nothing",
+      // instructionAvailable: "none",
+      instructionMsg: "",
     };
   }
   // componentDidMount() {
@@ -81,7 +83,24 @@ export default class HomePage extends Component {
           }
         });
 
-      return newsPanel, bannerImage;
+      const instructionMarquee = await axios
+        .get("http://localhost:4500/humbrat/get_instructions")
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.setState({
+              // instructionAvailable: "inherit",
+              instructionMsg: response.data[0].tbl_instructions_msg,
+            });
+            console.log("instructionMsg success", this.state.instructionMsg);
+          } else {
+            console.log("instructionMsg failed", this.state.instructionMsg);
+            this.setState({
+              //   instructionAvailable: "none",
+            });
+          }
+        });
+
+      return newsPanel, bannerImage, instructionMarquee;
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -120,10 +139,11 @@ export default class HomePage extends Component {
           />
         </div>
 
-        <marquee scrollamount="7">
-          साबणानी हाथ धुवा, जीवनातून रोग मिटवा | सतत धुवूया 2० सेकंद हात
-          कोरोनाचा होईल त्यामुळे घात | ठेवूया 1 मीटर सुरक्षित अंतर कोरोना होवूदे
-          छूमंतर
+        <marquee
+          scrollamount="7"
+          //style={{ display: this.state.instructionAvailable }}
+        >
+          {this.state.instructionMsg}
         </marquee>
         <div
           className="card mb-3 shadow-sm p-3 mb-5 bg-white rounded"

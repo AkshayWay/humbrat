@@ -105,7 +105,7 @@ export default class EditNews extends Component {
     var displayNone = this.state.datesDisplay;
     return (
       <div>
-        <h1>माहिती बदल</h1>
+        <h1>बातमी बदल</h1>
         <Form onSubmit={this.onSubmit}>
           <Form.Row>
             <Form.Group as={Col} controlId="formNewsIsActive">
@@ -124,19 +124,19 @@ export default class EditNews extends Component {
                 type="text"
                 value={this.state.newsTitle}
                 onChange={this.onTitleChange}
-                placeholder="शीर्षक"
+                //  placeholder="शीर्षक"
               />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} controlId="formGroupNewsDescription">
-              <Form.Label>सविस्तर माहिती</Form.Label>
+              <Form.Label>सविस्तर बातमी </Form.Label>
               <Form.Control
                 as="textarea"
                 rows="3"
                 value={this.state.newsDescp}
                 onChange={this.onDescriptionChane}
-                placeholder="सविस्तर माहिती"
+                // placeholder="सविस्तर माहिती"
               />
             </Form.Group>
           </Form.Row>

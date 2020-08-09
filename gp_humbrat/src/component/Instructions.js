@@ -24,7 +24,29 @@ export default class Instructions extends Component {
       instruction: e.target.value,
     });
   }
-
+  componentDidMount() {
+    if (this.props.match.params.id != 0) {
+      axios
+        .get(
+          "http://localhost:4500/humbrat/instructions/" +
+            this.props.match.params.id
+        )
+        .then((response) => {
+          this.setState({
+            instructionId: response.data[0].tbl_instructions_id,
+            instruction: response.data[0].tbl_instructions_msg,
+            instructionIsActive: response.data[0].tbl_instructions_is_active,
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      this.setState({
+        datesDisplay: "none",
+      });
+    }
+  }
   onSubmit = (e) => {
     e.preventDefault();
     const obj = {

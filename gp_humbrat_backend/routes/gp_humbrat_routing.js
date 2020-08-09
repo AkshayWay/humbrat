@@ -120,7 +120,6 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
     (err, rows) => {
       if (!err) {
         // res.send(rows);
-        console.log(rows);
         res.status(201).json({
           message: "Created product successfully",
           createdImage: {
@@ -216,7 +215,6 @@ Router.put("/dashboard_banner/delete/:id", (req, res) => {
 //Add or edit running instructions
 Router.post("/instructions", (req, res) => {
   let newObj = req.body;
-  console.log(newObj);
   var sqlQuery =
     "SET @tbl_instructions_id=?;SET @tbl_instructions_msg=?;SET @tbl_instructions_is_active=?;" +
     "SET @tbl_instructions_is_delete=?;CALL sp_instructions_add_edit(@tbl_instructions_id,@tbl_instructions_msg," +
@@ -244,13 +242,16 @@ Router.post("/instructions", (req, res) => {
 //Add or edit running instructions end
 //Get all instructions
 Router.get("/instructions", (req, res) => {
-  mySqlConnection.query("select * from tbl_instructions", (err, rows) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("Error :" + err);
+  mySqlConnection.query(
+    "select * from tbl_instructions where tbl_instructions_is_delete<>1",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
     }
-  });
+  );
 });
 //Get all instructions end
 //Get data of selected instruction
@@ -268,4 +269,33 @@ Router.get("/instructions/:id", (req, res) => {
   );
 });
 //Get data of selected instruction end
+//Delete instruction
+Router.put("/instructions/delete/:id", (req, res) => {
+  var sqlQuery =
+    "SET @tbl_instructions_id=?;CALL sp_delete_instruction(@tbl_instructions_id)";
+  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
+    if (!err) {
+      res.status(201).json({
+        message: "Instruction info deleted successfully",
+      });
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Delete instruction end
+//Instruction at home page
+Router.get("/get_instructions", (req, res) => {
+  mySqlConnection.query(
+    "select * from tbl_instructions where tbl_instructions_is_active=1",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Instruction at home page end
 module.exports = Router;
