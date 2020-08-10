@@ -47,6 +47,11 @@ class Navigation extends Component {
                 अधिकारी
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/WorkPost" className="nav-link">
+                ग्रामपंचायत कार्य
+              </Link>
+            </li>
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"

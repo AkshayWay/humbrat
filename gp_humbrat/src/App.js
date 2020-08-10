@@ -30,6 +30,8 @@ import Officers from "./component/Officer";
 import AdminPortal from "./component/AdminPortal";
 import EditNews from "./component/EditNews";
 import Instruction from "./component/Instructions";
+import WorkPost from "./component/WorkPost";
+import WorkDetails from "./component/WorkDetails";
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
           <Route path="/adminPortal" component={AdminPortal}></Route>
           <Route path="/editNews/:id" component={EditNews}></Route>
           <Route path="/instruction/:id" component={Instruction}></Route>
+          <Route path="/WorkPost" component={WorkPost}></Route>
+          <Route path="/WorkDetails" component={WorkDetails}></Route>
         </div>
         <Footer />
       </div>

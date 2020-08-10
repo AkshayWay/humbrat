@@ -16,6 +16,19 @@ const storage = multer.diskStorage({
     );
   },
 });
+
+//Work images with multiple files
+const storage_post = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./work/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
+  },
+});
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
     cb(null, true);
@@ -23,7 +36,18 @@ const fileFilter = (req, file, cb) => {
     cb(new Error("Message: Wrong file type"), false);
   }
 };
+const fileFilter_work = (req, file, cb) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Message: Wrong file type"), false);
+  }
+};
 const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload_work = multer({
+  storage: storage_post,
+  fileFilter: fileFilter_work,
+});
 
 //News section start
 Router.get("/news_panel", (req, res) => {
@@ -141,6 +165,55 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
   );
 });
 //Adding banner end
+//Add images and their description for post
+Router.post(
+  "/work_details",
+  upload_work.array("workImages", 10),
+  (req, res) => {
+    // upload_work(req, res, function (err) {
+
+    //   if (err) {
+    //     //  return res.end("Error uploading file. " + err);
+    //     console.log("File upload error");
+    //   }
+    //   // res.end("File is uploaded");
+    //   console.log("File uploaded successfully");
+    // });
+
+    //console.log(req.body.imageDesciption);
+    let newWork = req.files;
+    // let bannerDesc = req.file.bannerImgDesc;
+    // console.log(req.body.abc);
+    console.log("newWork ", newWork);
+    const reqFiles = [];
+    const url = req.protocol + "://" + req.get("host");
+    for (var i = 0; i < req.files.length; i++) {
+      reqFiles.push(req.files[i].filename);
+    }
+    console.log("File name array", reqFiles);
+
+    var sqlQuery =
+      "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;SET @tbl_work_is_deleted=?;@tbl_work_date=?;" +
+      "CALL sp_work_add_edit(@tbl_work_id,@tbl_work_title,@tbl_work_details,@tbl_work_is_deleted,@tbl_work_date)";
+
+    mySqlConnection.query(
+      sqlQuery,
+      [0, reqFiles.toString(), "req.body.imageDesciption", 0],
+      (err, rows) => {
+        if (!err) {
+          // res.send(rows);
+          res.status(201).json({
+            message: "Created post successfully",
+          });
+        } else {
+          console.log("Error :" + err);
+        }
+      }
+    );
+  }
+);
+//Add images and their description for post
+
 //Displaying all banner image
 Router.get("/dashboard_banner/all_img", (req, res) => {
   mySqlConnection.query(
@@ -298,4 +371,5 @@ Router.get("/get_instructions", (req, res) => {
   );
 });
 //Instruction at home page end
+
 module.exports = Router;

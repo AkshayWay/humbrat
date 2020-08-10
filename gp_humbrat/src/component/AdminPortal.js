@@ -308,6 +308,10 @@ export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
 
+    this.onBannerChange = this.onBannerChange.bind(this);
+    this.onWorkDescChange = this.onWorkDescChange.bind(this);
+    this.onWorkTitleChange = this.onWorkTitleChange.bind(this);
+    this.onWorkDateChange = this.onWorkDateChange.bind(this);
     this.state = {
       newsInformation: [],
       newsId: 0,
@@ -317,11 +321,15 @@ export default class AdminPortal extends Component {
       newsIsActive: false,
       newsUpdDate: "",
       selectedFile: null,
+      selectedFiles: [],
       bannerImgDesc: "",
       bannerImages: [],
       bannerIsActive: "",
       selectedBanner: "",
       instructionArr: [],
+      workImgDesc: "",
+      workTitle: "",
+      workDate: "",
     };
   }
 
@@ -423,17 +431,56 @@ export default class AdminPortal extends Component {
         window.location.reload(true);
       });
   };
+  onWorkImageUpload = (e) => {
+    e.preventDefault();
+    const workImgs = new FormData();
+    workImgs.append(
+      "workImages",
+      this.state.selectedFiles,
+      this.state.selectedFiles.name
+    );
+
+    workImgs.append("imageDesciption", this.state.workImgDesc);
+    workImgs.append("workDate", this.state.workDate);
+    console.log("Work Image", workImgs);
+    // axios
+    //   .post("http://localhost:4500/humbrat/dashboard_banner", bannerImg)
+    //   .then((res) => {
+    //     console.log(res);
+    //     window.location.reload(true);
+    //   });
+  };
   onBannerChange = (event) => {
     this.setState({
       selectedFile: event.target.files[0],
     });
   };
-
+  onWorkDescChange = (e) => {
+    this.setState({
+      workImgDesc: e.target.value,
+    });
+  };
+  onWorkTitleChange = (e) => {
+    this.setState({
+      workTitle: e.target.value,
+    });
+  };
+  onWorkImageChange = (event) => {
+    this.setState({
+      selectedFiles: [...this.state.files, ...e.target.files],
+    });
+  };
+  onWorkDateChange = (e) => {
+    this.setState({
+      workDate: e.target.value,
+    });
+  };
   onBannerDescChange = (event) => {
     this.setState({
       bannerImgDesc: event.target.value,
     });
   };
+
   onActiveBannerChange = (e) => {
     let setValue = 0;
     if (this.state.bannerIsActive == 1) {
@@ -444,7 +491,6 @@ export default class AdminPortal extends Component {
     this.setState({
       bannerIsActive: setValue,
     });
-    alert("Change " + this.state.bannerIsActive);
   };
 
   render() {
@@ -483,7 +529,6 @@ export default class AdminPortal extends Component {
               >
                 <thead>
                   <tr>
-                    <th></th>
                     <th>शीर्षक</th>
                     <th>सविस्तर माहिती</th>
                     <th>दिनांक</th>
@@ -592,6 +637,83 @@ export default class AdminPortal extends Component {
                 <tbody>{this.instructionList()}</tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseWorkPostDiv"
+            aria-expanded="false"
+            aria-controls="collapseWorkPostDiv"
+          >
+            ग्रामपंचायत कार्य
+          </button>
+        </p>
+        <div className="collapse show" id="collapseWorkPostDiv">
+          <div className="card card-body">
+            <form onSubmit={this.onWorkImageUpload}>
+              <div className="form-row">
+                <div className="form-group col-md-6">
+                  <label>शीर्षक </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    required
+                    value={this.state.workTitle}
+                    onChange={this.onWorkTitleChange}
+                  />
+                </div>
+                <div className="form-group col-md-6">
+                  <label for="inputPassword4">दिनांक</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    required
+                    value={this.state.workDate}
+                    onChange={this.onWorkDateChange}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <input
+                  type="file"
+                  className="form-control-file"
+                  id="workPostImages"
+                  multiple
+                  onChange={this.onWorkImageChange}
+                  required
+                />
+
+                <div className="form-group">
+                  <label>सविस्तर माहिती</label>
+                  <textarea
+                    className="form-control"
+                    id="imageDescription"
+                    value={this.state.workImgDesc}
+                    onChange={this.onWorkDescChange}
+                    rows="4"
+                    multiple
+                    required
+                  ></textarea>
+                </div>
+              </div>
+              <Button type="submit">संक्रमित करा </Button>
+            </form>
+            {/* <img src="uploads/2020-07-30T15-34-36.338Z-road_inauguration.jpeg" /> */}
+            {/* <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>माहिती</th>
+                    <th>छायाचित्र</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+              </table>
+            </div> */}
           </div>
         </div>
       </div>

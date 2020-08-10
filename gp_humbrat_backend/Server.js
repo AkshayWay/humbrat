@@ -9,6 +9,7 @@ var cors = require("cors");
 var app = express();
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
+app.use("/work", express.static("work"));
 app.use(bodyParser.json());
 app.use("/humbrat", Gp_Humbrat_Route);
 
