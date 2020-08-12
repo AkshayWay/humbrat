@@ -181,13 +181,13 @@ Router.post(
     // });
 
     //console.log(req.body.imageDesciption);
-    let newWork = req.files;
-    console.log("newWork ", newWork);
+    //let newWork = req.files;
+    // console.log("newWork ", newWork);
     const reqFiles = [];
     for (var i = 0; i < req.files.length; i++) {
       reqFiles.push(req.files[i].filename);
     }
-    console.log("Work date", req.body.workDate);
+    //console.log("Work date", req.body.workDate);
 
     var sqlQuery =
       "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;SET @tbl_work_is_deleted=?;" +
@@ -376,5 +376,19 @@ Router.get("/get_instructions", (req, res) => {
   );
 });
 //Instruction at home page end
+//Thumbnil to work post
+Router.get("/work_thumbnails", (req, res) => {
+  mySqlConnection.query(
+    "select tbl_work_id, tbl_work_title,tbl_work_date,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Thumbnil to work post end
 
 module.exports = Router;

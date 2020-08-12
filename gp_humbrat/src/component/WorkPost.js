@@ -18,6 +18,7 @@ export default class WorkPost extends Component {
             <Card.Img
               variant="top"
               src={"uploads/2020-07-30T15-34-36.338Z-road_inauguration.jpeg"}
+              className="img-thumbnail"
             />
             <Card.Body>
               <Card.Title>अनंतवाडी रास्ता रुंदीकरण</Card.Title>
