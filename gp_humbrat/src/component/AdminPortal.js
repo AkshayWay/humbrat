@@ -9,7 +9,7 @@ import Moment from "react-moment";
 import axios from "axios";
 import AppCSS from "../App.css";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
-
+import * as $ from "jquery";
 const NewsList = (props) => (
   <tr>
     <td>{props.NewsInfo.tbl_news_id}</td>
@@ -312,6 +312,7 @@ export default class AdminPortal extends Component {
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
     this.onWorkTitleChange = this.onWorkTitleChange.bind(this);
     this.onWorkDateChange = this.onWorkDateChange.bind(this);
+    this.onWorkImageChange = this.onWorkImageChange.bind(this);
     this.state = {
       newsInformation: [],
       newsId: 0,
@@ -321,7 +322,7 @@ export default class AdminPortal extends Component {
       newsIsActive: false,
       newsUpdDate: "",
       selectedFile: null,
-      selectedFiles: [],
+      selectedFiles: "",
       bannerImgDesc: "",
       bannerImages: [],
       bannerIsActive: "",
@@ -434,21 +435,36 @@ export default class AdminPortal extends Component {
   onWorkImageUpload = (e) => {
     e.preventDefault();
     const workImgs = new FormData();
-    workImgs.append(
-      "workImages",
-      this.state.selectedFiles,
-      this.state.selectedFiles.name
-    );
+    var count = 0;
+    for (const key of Object.keys(this.state.selectedFiles)) {
+      workImgs.append("workImages", this.state.selectedFiles[key]);
+      count++;
+    }
+    if (count > 10) {
+      alert("Maximum 10 files allowed");
+    } else {
+      workImgs.append(
+        "workImages",
+        // this.state.selectedFiles,
+        this.state.selectedFiles.name
+      );
+      workImgs.append("imageDesciption", this.state.workImgDesc);
+      workImgs.append("workTitle", this.state.workTitle);
+      workImgs.append("workDate", this.state.workDate);
+      axios
+        .post("http://localhost:4500/humbrat/work_details", workImgs)
+        .then((res) => {
+          console.log(res);
+          //setTimeout("alert('Successfully inserted')", 1000);
 
-    workImgs.append("imageDesciption", this.state.workImgDesc);
-    workImgs.append("workDate", this.state.workDate);
-    console.log("Work Image", workImgs);
-    // axios
-    //   .post("http://localhost:4500/humbrat/dashboard_banner", bannerImg)
-    //   .then((res) => {
-    //     console.log(res);
-    //     window.location.reload(true);
-    //   });
+          this.setState({
+            workTitle: "",
+            workImgDesc: "",
+            workDate: "",
+            selectedFiles: "",
+          });
+        });
+    }
   };
   onBannerChange = (event) => {
     this.setState({
@@ -465,9 +481,10 @@ export default class AdminPortal extends Component {
       workTitle: e.target.value,
     });
   };
-  onWorkImageChange = (event) => {
+  onWorkImageChange = (e) => {
     this.setState({
-      selectedFiles: [...this.state.files, ...e.target.files],
+      //  selectedFiles: [...this.state.files, ...e.target.files],
+      selectedFiles: e.target.files,
     });
   };
   onWorkDateChange = (e) => {
@@ -694,7 +711,6 @@ export default class AdminPortal extends Component {
                     value={this.state.workImgDesc}
                     onChange={this.onWorkDescChange}
                     rows="4"
-                    multiple
                     required
                   ></textarea>
                 </div>
@@ -714,6 +730,45 @@ export default class AdminPortal extends Component {
                 <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
               </table>
             </div> */}
+          </div>
+        </div>
+        <div
+          className="modal fade"
+          id="exampleModalCenter"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle">
+                  Modal title
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">...</div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" className="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
