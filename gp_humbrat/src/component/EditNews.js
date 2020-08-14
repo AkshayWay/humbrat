@@ -62,7 +62,7 @@ export default class EditNews extends Component {
             newsUpdate: response.data[0].tbl_news_updated_date,
             newsIsActive: response.data[0].tbl_news_is_active,
           });
-          console.log("News desc: ", this.state.newsDescp);
+          //console.log("News desc: ", this.state.newsDescp);
           var formatCreatedDate = this.state.newsCreated.split("T");
           var formatUpdatedDate = this.state.newsUpdate.split("T");
           this.setState({

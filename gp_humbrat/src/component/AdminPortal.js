@@ -735,7 +735,7 @@ export default class AdminPortal extends Component {
         <div
           className="modal fade"
           id="exampleModalCenter"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="exampleModalCenterTitle"
           aria-hidden="true"
