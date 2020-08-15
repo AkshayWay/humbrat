@@ -390,5 +390,19 @@ Router.get("/work_thumbnails", (req, res) => {
   );
 });
 //Thumbnil to work post end
+//Get details for work
+Router.get("/WorkDetails/:id", (req, res) => {
+  mySqlConnection.query(
+    "select tbl_work_id, tbl_work_title,tbl_work_date,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Get details for work end
 
 module.exports = Router;
