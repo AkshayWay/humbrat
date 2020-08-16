@@ -170,19 +170,6 @@ Router.post(
   "/work_details",
   upload_work.array("workImages", 10),
   (req, res) => {
-    // upload_work(req, res, function (err) {
-
-    //   if (err) {
-    //     //  return res.end("Error uploading file. " + err);
-    //     console.log("File upload error");
-    //   }
-    //   // res.end("File is uploaded");
-    //   console.log("File uploaded successfully");
-    // });
-
-    //console.log(req.body.imageDesciption);
-    //let newWork = req.files;
-    // console.log("newWork ", newWork);
     const reqFiles = [];
     for (var i = 0; i < req.files.length; i++) {
       reqFiles.push(req.files[i].filename);
@@ -393,7 +380,9 @@ Router.get("/work_thumbnails", (req, res) => {
 //Get details for work
 Router.get("/WorkDetails/:id", (req, res) => {
   mySqlConnection.query(
-    "select tbl_work_id, tbl_work_title,tbl_work_date,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
+    //"select * from tbl_work where tbl_work_id=?",
+    "select * from tbl_work where tbl_work_id=?",
+    [req.params.id],
     (err, rows) => {
       if (!err) {
         res.send(rows);

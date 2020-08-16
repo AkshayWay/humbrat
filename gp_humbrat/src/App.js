@@ -45,7 +45,7 @@ function App() {
           <Route path="/editNews/:id" component={EditNews}></Route>
           <Route path="/instruction/:id" component={Instruction}></Route>
           <Route path="/WorkPost" component={WorkPost}></Route>
-          <Route path="/WorkDetails" component={WorkDetails}></Route>
+          <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
         </div>
         <Footer />
       </div>

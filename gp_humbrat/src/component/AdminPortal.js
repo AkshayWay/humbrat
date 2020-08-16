@@ -683,7 +683,7 @@ export default class AdminPortal extends Component {
                   />
                 </div>
                 <div className="form-group col-md-6">
-                  <label for="inputPassword4">दिनांक</label>
+                  <label>दिनांक</label>
                   <input
                     type="date"
                     className="form-control"

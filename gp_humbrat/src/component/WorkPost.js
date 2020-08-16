@@ -6,8 +6,6 @@ import {
   Route,
   Link,
   hashHistory,
-  // Row,
-  // Container,
 } from "react-router-dom";
 //import { Container, Row } from "reactstrap";
 import WorkCard from "./WorkCard";
@@ -33,7 +31,6 @@ export default class WorkPost extends Component {
       });
   }
   render() {
-    console.log("this.state.workPostArray", this.state.workPostArray);
     let workPostList = this.state.workPostArray.map(function (workPost, i) {
       return (
         <div className="col-6 col-md-4">

@@ -10,10 +10,6 @@ export default class WorkCard extends Component {
     let day = ("0" + parseInt(today.getDate() + 1)).slice(-2);
     let month = ("0" + parseInt(today.getMonth() + 1)).slice(-2);
     let date = day + "-" + month + "-" + today.getFullYear();
-    console.log(date);
-
-    //const NewDate = moment(this.props.workPost.tbl_work_date, "DD-MM-YYYY");
-    // console.log("Inside work card", NewDate);
     return (
       <div className="card">
         <img
@@ -23,7 +19,10 @@ export default class WorkCard extends Component {
         />
         <div className="card-body">
           <h5 className="card-title">{this.props.workPost.tbl_work_title}</h5>
-          <Link to="/WorkDetails" className="nav-link">
+          <Link
+            to={"/WorkDetails/" + this.props.workPost.tbl_work_id}
+            className="nav-link"
+          >
             सविस्तर माहिती
           </Link>
           <p className="card-text">
