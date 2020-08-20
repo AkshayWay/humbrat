@@ -366,7 +366,7 @@ Router.get("/get_instructions", (req, res) => {
 //Thumbnil to work post
 Router.get("/work_thumbnails", (req, res) => {
   mySqlConnection.query(
-    "select tbl_work_id, tbl_work_title,tbl_work_date,tbl_work_details,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
+    "select tbl_work_id, tbl_work_title,tbl_work_date,tbl_work_details,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work where tbl_work_is_deleted<>1",
     (err, rows) => {
       if (!err) {
         res.send(rows);
@@ -393,7 +393,7 @@ Router.get("/WorkDetails/:id", (req, res) => {
   );
 });
 //Get details for work end
-//Update or delete work post
+//Update work post
 Router.put("/WorkDetails/add_edit/:id", (req, res) => {
   var sqlQuery =
     "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;" +
@@ -420,6 +420,21 @@ Router.put("/WorkDetails/add_edit/:id", (req, res) => {
     }
   );
 });
-//Update or delete work post end
+//Update work post end
+//Delete work post
+Router.put("/WorkDetails/delete/:id", (req, res) => {
+  var sqlQuery =
+    "Update tbl_work set tbl_work_is_deleted=1 where tbl_work_id=?";
+  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
+    if (!err) {
+      res.status(201).json({
+        message: "Work post deleted successfully",
+      });
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Delete work post end
 
 module.exports = Router;

@@ -170,10 +170,10 @@ function DeleteWork(props) {
   const deleteAndClose = () => {
     axios
       .put(
-        "http://localhost:4500/humbrat/WorkDetails/edit_delete/" +
+        "http://localhost:4500/humbrat/WorkDetails/delete/" +
           props.variant.tbl_work_id
       )
-      .then((res) => console.log(res.data), window.location.reload(true));
+      .then((res) => console.log(res.data));
     //.then((res) => console.log(res.data));
     setShow(false);
   };
@@ -388,7 +388,6 @@ function DeleteNewsInfo(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const deleteAndClose = () => {
-    console.log("delete id: " + props.variant.tbl_news_id);
     axios
       .post(
         "http://localhost:4500/humbrat/news_panel/delete/" +
@@ -429,7 +428,6 @@ function DeleteInstructionInfo(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const deleteAndClose = () => {
-    console.log("delete id: " + props.variant.tbl_instructions_id);
     axios
       .put(
         "http://localhost:4500/humbrat/instructions/delete/" +
@@ -529,10 +527,7 @@ export default class AdminPortal extends Component {
             workPostArr: response.data,
           });
         });
-      console.log(
-        "Work after did mount:",
-        this.state.workPostArr[3].tbl_work_date
-      );
+
       return newsPanel, bannerImage, instruction, work;
     } catch (error) {
       console.log("Error: ", error);
