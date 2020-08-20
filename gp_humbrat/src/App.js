@@ -31,13 +31,7 @@ import Officers from "./component/Officer";
 import AdminPortal from "./component/AdminPortal";
 import EditNews from "./component/EditNews";
 import Instruction from "./component/Instructions";
-<<<<<<< HEAD
-import WorkPost from "./component/WorkPost";
-import WorkDetails from "./component/WorkDetails";
-=======
 import Login from "./component/Login";
->>>>>>> admin_login
-
 const Main = withRouter(({ location }) => {
   return (
     <div className="container">
@@ -47,7 +41,10 @@ const Main = withRouter(({ location }) => {
       <Route path="/adminPortal" component={AdminPortal}></Route>
       <Route path="/editNews/:id" component={EditNews}></Route>
       <Route path="/instruction/:id" component={Instruction}></Route>
+      <Route path="/WorkPost" component={WorkPost}></Route>
+      <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
       <Route path="/sign_in" component={Login}></Route>
+      {location.pathname == "/sign_in" ? null : <Footer />}
     </div>
   );
 });
@@ -62,12 +59,8 @@ function App() {
           <Route path="/adminPortal" component={AdminPortal}></Route>
           <Route path="/editNews/:id" component={EditNews}></Route>
           <Route path="/instruction/:id" component={Instruction}></Route>
-<<<<<<< HEAD
           <Route path="/WorkPost" component={WorkPost}></Route>
           <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
-=======
-          <Route path="/login" component={Login}></Route>
->>>>>>> admin_login
         </div>
         <Footer />
       </div> */}
