@@ -366,7 +366,7 @@ Router.get("/get_instructions", (req, res) => {
 //Thumbnil to work post
 Router.get("/work_thumbnails", (req, res) => {
   mySqlConnection.query(
-    "select tbl_work_id, tbl_work_title,tbl_work_date,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
+    "select tbl_work_id, tbl_work_title,tbl_work_date,tbl_work_details,(SELECT SUBSTRING_INDEX(tbl_work_images_title, ',', 1) )AS tbl_work_images_title  from tbl_work",
     (err, rows) => {
       if (!err) {
         res.send(rows);
@@ -393,5 +393,33 @@ Router.get("/WorkDetails/:id", (req, res) => {
   );
 });
 //Get details for work end
+//Update or delete work post
+Router.put("/WorkDetails/add_edit/:id", (req, res) => {
+  var sqlQuery =
+    "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;" +
+    "SET @tbl_work_images_title=?;SET @tbl_work_date=? ;CALL sp_work_add_edit(@tbl_work_id,@tbl_work_title," +
+    "@tbl_work_details,@tbl_work_images_title, @tbl_work_date)";
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      req.body.tbl_work_id,
+      req.body.tbl_work_title,
+      req.body.tbl_work_details,
+      "",
+      req.body.tbl_work_date,
+    ],
+    (err, rows) => {
+      if (!err) {
+        //  console.log(rows);
+        res.status(201).json({
+          message: "Work post info Updated/Deleted successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Update or delete work post end
 
 module.exports = Router;

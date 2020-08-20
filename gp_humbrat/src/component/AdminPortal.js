@@ -73,6 +73,27 @@ const BannerInfo = (props) => (
     </td>
   </tr>
 );
+//List of all work post
+const WorkPostInfo = (props) => (
+  <tr>
+    <td>{props.WorkPostInfo.tbl_work_title}</td>
+    <td>
+      <img
+        src={"work/" + props.WorkPostInfo.tbl_work_images_title}
+        alt={props.WorkPostInfo.tbl_work_images_title}
+        style={{ width: 80, height: 60 }}
+      ></img>
+    </td>
+
+    <td>
+      <ViewWork variant={props.WorkPostInfo} changeDesc={props.handleChange} />
+    </td>
+    <td>
+      <DeleteWork variant={props.WorkPostInfo} />
+    </td>
+  </tr>
+);
+
 //List of all instructions
 const Instruction = (props) => (
   <tr
@@ -141,6 +162,48 @@ function DeleteBanner(props) {
   );
 }
 //Delete banner info end
+//Delete work post
+function DeleteWork(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    axios
+      .put(
+        "http://localhost:4500/humbrat/WorkDetails/edit_delete/" +
+          props.variant.tbl_work_id
+      )
+      .then((res) => console.log(res.data), window.location.reload(true));
+    //.then((res) => console.log(res.data));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        काढून टाका
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          तुम्ही नक्की '<b>{props.variant.tbl_work_title}</b>' हे छायाचित्र
+          काढून टाकू इच्चीता?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deleteAndClose}>
+            काढून टाका
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+//Delete work post end
 //View Banner Image and make changes
 function ViewBanner(props) {
   const [show, setShow] = React.useState(false);
@@ -204,7 +267,6 @@ function ViewBanner(props) {
             <label>छायाचित्र माहिती</label>
             <textarea
               className="form-control"
-              id="imageDescription"
               value={imgDescInput}
               onChange={changeDescHandler}
               rows="3"
@@ -223,6 +285,104 @@ function ViewBanner(props) {
     </>
   );
 }
+//Display work thumbnil and allow changes
+function ViewWork(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [imgDescInput, setimgDescInput] = useState(
+    props.variant.tbl_work_details
+  );
+
+  const [imgTitleInput, setimgTitleInput] = useState(
+    props.variant.tbl_work_title
+  );
+
+  const dateFormat = props.variant.tbl_work_date.split("T");
+  const [imgDateInput, setimgDateInput] = useState(dateFormat[0]);
+  const changeImageDate = (e) => {
+    setimgDateInput(e.target.value);
+  };
+  const changeDescHandler = (e) => {
+    setimgDescInput(e.target.value);
+  };
+  const changeImageHandler = (e) => {
+    setimgTitleInput(e.target.value);
+  };
+  const editWork = () => {
+    const obj = {
+      tbl_work_id: props.variant.tbl_work_id,
+      tbl_work_title: imgTitleInput,
+      tbl_work_details: imgDescInput,
+      tbl_work_date: imgDateInput,
+    };
+    axios
+      .put(
+        "http://localhost:4500/humbrat/WorkDetails/add_edit/" +
+          props.variant.tbl_work_id,
+        obj
+      )
+      .then((res) => console.log(res.data), window.location.reload(true));
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        कामाची माहिती व बदल
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>कामाची माहिती व बदल</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-group">
+            <img
+              src={"work/" + props.variant.tbl_work_images_title}
+              alt={props.variant.tbl_work_images_title}
+              style={{ width: 100 + "%" }}
+            ></img>
+          </div>
+          <div className="form-group">
+            <label>शीर्षक</label>
+            <input
+              type="text"
+              className="form-control"
+              value={imgTitleInput}
+              onChange={changeImageHandler}
+            ></input>
+          </div>
+          <div className="form-group">
+            <label>दिनांक </label>
+            <input
+              type="date"
+              className="form-control"
+              value={imgDateInput}
+              onChange={changeImageDate}
+            ></input>
+          </div>
+          <div className="form-group">
+            <label>छायाचित्र माहिती</label>
+            <textarea
+              className="form-control"
+              value={imgDescInput}
+              onChange={changeDescHandler}
+              rows="3"
+            ></textarea>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={editWork}>
+            माहिती बदल
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
 function DeleteNewsInfo(props) {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -328,9 +488,11 @@ export default class AdminPortal extends Component {
       bannerIsActive: "",
       selectedBanner: "",
       instructionArr: [],
+      workPostArr: [],
       workImgDesc: "",
       workTitle: "",
       workDate: "",
+      workPostImgDesc: "",
     };
   }
 
@@ -360,7 +522,18 @@ export default class AdminPortal extends Component {
           });
         });
 
-      return newsPanel, bannerImage, instruction;
+      const work = await axios
+        .get("http://localhost:4500/humbrat/work_thumbnails")
+        .then((response) => {
+          this.setState({
+            workPostArr: response.data,
+          });
+        });
+      console.log(
+        "Work after did mount:",
+        this.state.workPostArr[3].tbl_work_date
+      );
+      return newsPanel, bannerImage, instruction, work;
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -398,7 +571,26 @@ export default class AdminPortal extends Component {
       );
     }
   }
-
+  WorkPostList() {
+    //  console.log("Work before mapping", this.state.workPostArr[3].tbl_work_date);
+    if (this.state.workPostArr.length > 0) {
+      return this.state.workPostArr.map(function (workPostInfo, i) {
+        return (
+          <WorkPostInfo
+            WorkPostInfo={workPostInfo}
+            key={i}
+            //handleChange={e}
+          ></WorkPostInfo>
+        );
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan="5">माहिती उपलब्ध नाही</td>
+        </tr>
+      );
+    }
+  }
   instructionList() {
     if (this.state.instructionArr.length > 0) {
       return this.state.instructionArr.map(function (instructionInfo, i) {
@@ -497,6 +689,11 @@ export default class AdminPortal extends Component {
       bannerImgDesc: event.target.value,
     });
   };
+  // onWorkPostDescChange = (event) => {
+  //   this.setState({
+  //     workPostImgDesc: event.target.value,
+  //   });
+  // };
 
   onActiveBannerChange = (e) => {
     let setValue = 0;
@@ -591,7 +788,6 @@ export default class AdminPortal extends Component {
                   <label>छायाचित्र माहिती</label>
                   <textarea
                     className="form-control"
-                    id="imageDescription"
                     value={this.state.bannerImgDesc}
                     onChange={this.onBannerDescChange}
                     rows="3"
@@ -707,7 +903,6 @@ export default class AdminPortal extends Component {
                   <label>सविस्तर माहिती</label>
                   <textarea
                     className="form-control"
-                    id="imageDescription"
                     value={this.state.workImgDesc}
                     onChange={this.onWorkDescChange}
                     rows="4"
@@ -718,7 +913,7 @@ export default class AdminPortal extends Component {
               <Button type="submit">संक्रमित करा </Button>
             </form>
             {/* <img src="uploads/2020-07-30T15-34-36.338Z-road_inauguration.jpeg" /> */}
-            {/* <div className="table-responsive">
+            <div className="table-responsive">
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
                   <tr>
@@ -727,9 +922,10 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+                {/* <tbody>{this.WorkPostList(this.onWorkPostDescChange)}</tbody> */}
+                <tbody>{this.WorkPostList()}</tbody>
               </table>
-            </div> */}
+            </div>
           </div>
         </div>
         <div
