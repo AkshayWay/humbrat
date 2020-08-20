@@ -32,6 +32,9 @@ import AdminPortal from "./component/AdminPortal";
 import EditNews from "./component/EditNews";
 import Instruction from "./component/Instructions";
 import Login from "./component/Login";
+import WorkPost from "./component/WorkPost";
+import WorkDetails from "./component/WorkDetails";
+
 const Main = withRouter(({ location }) => {
   return (
     <div className="container">
