@@ -5,6 +5,7 @@ import {
   Link,
   hashHistory,
 } from "react-router-dom";
+import GoogleBtn from "./GoogleBtn";
 
 export default class Login extends Component {
   constructor(props) {
@@ -53,6 +54,7 @@ export default class Login extends Component {
             <label className="custom-control-label" htmlFor="customCheck1">
               Remember me
             </label>
+            <GoogleBtn />
           </div>
         </div>
         <Link to="/">Click here</Link>
