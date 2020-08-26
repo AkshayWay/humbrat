@@ -17,7 +17,29 @@ import ReactBootstrap, {
   FormGroup,
 } from "react-bootstrap";
 class Navigation extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      LoggedIn: false,
+    };
+  }
+  componentDidMount() {
+    if (localStorage.getItem("userEmail") != null) {
+      this.setState({
+        LoggedIn: true,
+      });
+    }
+  }
+
+  logout() {
+    this.setState({
+      LoggedIn: false,
+    });
+    localStorage.clear();
+  }
+
   render() {
+    const UserLoggedIn = this.state.LoggedIn ? "inherit" : "none";
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <a className="navbar-brand" href="#">
@@ -52,8 +74,13 @@ class Navigation extends Component {
                 ग्रामपंचायत कार्य
               </Link>
             </li>
-            <li className="nav-item dropdown">
-              <a
+            <li className="nav-item" style={{ display: UserLoggedIn }}>
+              <Link to="/adminPortal" className="nav-link">
+                प्रशासक
+              </Link>
+            </li>
+            <li className="nav-item">
+              {/* <a
                 className="nav-link dropdown-toggle"
                 href="#"
                 id="navbarDropdown"
@@ -63,18 +90,22 @@ class Navigation extends Component {
                 aria-expanded="false"
               >
                 Dropdown
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-                <a className="dropdown-item" href="#">
+              </a> */}
+              <div
+                className="nav-link"
+                aria-labelledby="navbarDropdown"
+                style={{ display: UserLoggedIn }}
+              >
+                <button className="dropdown-item" onClick={() => this.logout()}>
+                  Log out
+                </button>
+                {/* <a className="dropdown-item" href="#">
                   Another action
                 </a>
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" href="#">
                   Something else here
-                </a>
+                </a> */}
               </div>
             </li>
           </ul>

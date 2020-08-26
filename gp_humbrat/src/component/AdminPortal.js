@@ -495,6 +495,7 @@ export default class AdminPortal extends Component {
   }
 
   async componentDidMount() {
+    alert("User Email:" + localStorage.getItem("userEmail"));
     try {
       const newsPanel = await axios
         .get("http://localhost:4500/humbrat/news_panel")

@@ -6,6 +6,8 @@ import {
   hashHistory,
 } from "react-router-dom";
 import GoogleBtn from "./GoogleBtn";
+import SignIn from "../assets/images/akshay.JPG";
+import App from "../App.css";
 
 export default class Login extends Component {
   constructor(props) {
@@ -23,48 +25,47 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <form>
-        <h3>Sign In</h3>
-
-        <div className="form-group">
-          <label>Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Enter email"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Enter password"
-          />
-        </div>
-
-        <div className="form-group">
-          <div className="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              className="custom-control-input"
-              id="customCheck1"
-            />
-            <label className="custom-control-label" htmlFor="customCheck1">
-              Remember me
+      <div className="wrapper fadeInDown">
+        <div id="formContent">
+          <div className="fadeIn first">
+            <img src={SignIn} id="icon" alt="User Icon" className="rounded" />
+          </div>
+          <form>
+            {/* <input
+              type="text"
+              id="login"
+              className="fadeIn second"
+              name="login"
+              placeholder="login"
+            /> */}
+            <label id="login_title" className="fadeIn second" name="login">
+              <h1>ग्रामपंचायत हुंबरट</h1>
             </label>
-            <GoogleBtn />
+            <label id="login_subtitle" className="fadeIn second" name="login">
+              <h3>सहर्ष स्वागत करत आहे </h3>
+            </label>
+            <GoogleBtn className="fadeIn fourth" />
+            {/* <input type="submit" className="fadeIn fourth" value="Log In" /> */}
+          </form>
+
+          <div id="formFooter">
+            <a className="underlineHover">
+              ह्या वेबसाईटचे सर्व अधिकार ग्रामपंचायत हुंबरट यांचं कडे आहेत
+            </a>
           </div>
         </div>
-        <Link to="/">Click here</Link>
-        <button type="submit" className="btn btn-primary btn-block">
-          Submit
-        </button>
-        <p className="forgot-password text-right">
-          Forgot <a href="#">password?</a>
-        </p>
-      </form>
+      </div>
+      // <div className="text-center">
+      //   <img
+      //     src={SignIn}
+      //     alt="gif"
+      //     className="rounded"
+      //     style={{ zIndex: "-1" }}
+      //   ></img>
+      //   <div>
+      //     <GoogleBtn />
+      //   </div>
+      // </div>
     );
   }
 }

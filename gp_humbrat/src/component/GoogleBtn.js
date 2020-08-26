@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { Redirect } from "react-router-dom";
 import { Route } from "react-router";
-
+import { browserHistory } from "react-router";
 //import { hashHistory } from "react-router";
 import { HashRouter } from "react-router-dom";
+import App from "../App.css";
 
-import home from "./HomePage";
+import Admin from "./AdminPortal";
 
 const CLIENT_ID =
   "970882172543-f75muk11713q0f5tg6e7dof1ol68vc5v.apps.googleusercontent.com";
@@ -14,8 +15,9 @@ const CLIENT_ID =
 const AuthRoute = (props) => {
   return (
     <HashRouter>
-      <Route path="/" component={home} />
+      <Route path="/adminPortal" component={Admin} />
     </HashRouter>
+    //browserHistory.push("/home")
   );
 };
 class GoogleBtn extends Component {
@@ -42,6 +44,7 @@ class GoogleBtn extends Component {
       console.log("Email:", response.profileObj.email);
       if (response.profileObj.email == "waingankar.akshay95@gmail.com") {
         {
+          localStorage.setItem("userEmail", response.profileObj.email);
           this.setState({ redirect: true });
         }
 
@@ -77,7 +80,7 @@ class GoogleBtn extends Component {
   render() {
     return (
       <div>
-        {this.state.redirect ? <Redirect push to="/" /> : null}
+        {this.state.redirect ? <Redirect push to="/AdminPortal" /> : null}
         {this.state.isLogined ? (
           <GoogleLogout
             clientId={CLIENT_ID}
@@ -88,7 +91,7 @@ class GoogleBtn extends Component {
         ) : (
           <GoogleLogin
             clientId={CLIENT_ID}
-            buttonText="Login"
+            buttonText="LOG IN"
             onSuccess={this.login}
             onFailure={this.handleLoginFailure}
             cookiePolicy={"single_host_origin"}

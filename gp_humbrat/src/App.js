@@ -41,7 +41,9 @@ const Main = withRouter(({ location }) => {
       {location.pathname == "/sign_in" ? null : <Navigation />}
       <Route path="/" exact component={HomePage}></Route>
       <Route path="/officer" component={Officers}></Route>
-      <Route path="/adminPortal" component={AdminPortal}></Route>
+      {localStorage.getItem("userEmail") != null ? (
+        <Route path="/adminPortal" component={AdminPortal}></Route>
+      ) : null}
       <Route path="/editNews/:id" component={EditNews}></Route>
       <Route path="/instruction/:id" component={Instruction}></Route>
       <Route path="/WorkPost" component={WorkPost}></Route>
