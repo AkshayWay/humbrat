@@ -21,10 +21,14 @@ class Navigation extends Component {
     super(props);
     this.state = {
       LoggedIn: false,
+      redirect: false,
     };
   }
   componentDidMount() {
-    if (localStorage.getItem("userEmail") != null) {
+    if (
+      localStorage.getItem("userEmail") != null &&
+      localStorage.getItem("isLoggedIn") == 1
+    ) {
       this.setState({
         LoggedIn: true,
       });

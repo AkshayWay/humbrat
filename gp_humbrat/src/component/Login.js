@@ -16,13 +16,7 @@ export default class Login extends Component {
       workPostArray: [],
     };
   }
-  componentDidMount() {
-    //  document.getElementById('navigation-bar')!.style.display = "none";
-  }
 
-  componentWillUnmount() {
-    //document.getElementById('navigation-bar')!.style.display = "flex";
-  }
   render() {
     return (
       <div className="wrapper fadeInDown">

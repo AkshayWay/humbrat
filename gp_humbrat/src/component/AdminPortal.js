@@ -5,6 +5,7 @@ import {
   Link,
   hashHistory,
 } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Moment from "react-moment";
 import axios from "axios";
 import AppCSS from "../App.css";
@@ -105,7 +106,6 @@ const Instruction = (props) => (
   >
     <td>{props.instructionInfo.tbl_instructions_msg}</td>
     <td>
-      {" "}
       <Link
         className="btn btn-primary"
         to={"/instruction/" + props.instructionInfo.tbl_instructions_id}
@@ -491,11 +491,26 @@ export default class AdminPortal extends Component {
       workTitle: "",
       workDate: "",
       workPostImgDesc: "",
+      redirect: false,
     };
   }
 
   async componentDidMount() {
-    alert("User Email:" + localStorage.getItem("userEmail"));
+    alert("userEmail" + localStorage.getItem("userEmail"));
+    if (
+      localStorage.getItem("userEmail") != null &&
+      localStorage.getItem("isLoggedIn") == 1
+    ) {
+      this.setState({
+        //   LoggedIn: true,
+        redirect: false,
+      });
+    } else {
+      this.setState({
+        //LoggedIn: false,
+        redirect: true,
+      });
+    }
     try {
       const newsPanel = await axios
         .get("http://localhost:4500/humbrat/news_panel")
@@ -706,6 +721,7 @@ export default class AdminPortal extends Component {
   render() {
     return (
       <div>
+        {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
         <h1>प्रशासक</h1>
 
         <p>

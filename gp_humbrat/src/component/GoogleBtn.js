@@ -5,6 +5,8 @@ import { Route } from "react-router";
 import { browserHistory } from "react-router";
 //import { hashHistory } from "react-router";
 import { HashRouter } from "react-router-dom";
+import axios from "axios";
+
 import App from "../App.css";
 
 import Admin from "./AdminPortal";
@@ -42,17 +44,32 @@ class GoogleBtn extends Component {
     if (response.accessToken) {
       console.log("Response:", response.profileObj);
       console.log("Email:", response.profileObj.email);
-      if (response.profileObj.email == "waingankar.akshay95@gmail.com") {
-        {
-          localStorage.setItem("userEmail", response.profileObj.email);
-          this.setState({ redirect: true });
-        }
+      var obj = { tbl_user_email: response.profileObj.email };
+      axios
+        .post("http://localhost:4500/humbrat/check_user", obj)
+        .then((res) => {
+          console.log("Is user there:", res.data.message);
+          if (res.data.message == 1) {
+            localStorage.setItem("userEmail", response.profileObj.email);
+            localStorage.setItem("isLoggedIn", 1);
+            this.setState({ redirect: true });
+          } else {
+            localStorage.setItem("userEmail", null);
+            localStorage.setItem("isLoggedIn", 0);
+            alert("Check your email id or password");
+          }
+        });
+      // if (response.profileObj.email == "waingankar.akshay95@gmail.com") {
+      //   {
+      //     localStorage.setItem("userEmail", response.profileObj.email);
+      //     //this.setState({ redirect: true });
+      //   }
 
-        //  history.push("/adminPortal");
-        // this.props.router.push("/adminPortal");
-      } else {
-        return alert("Unsuccessfull");
-      }
+      //   //  history.push("/adminPortal");
+      //   // this.props.router.push("/adminPortal");
+      // } else {
+      //   return alert("Unsuccessfull");
+      // }
       // this.setState((state) => ({
       //   isLogined: true,
       //   accessToken: response.accessToken,

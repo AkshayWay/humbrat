@@ -436,5 +436,23 @@ Router.put("/WorkDetails/delete/:id", (req, res) => {
   });
 });
 //Delete work post end
-
+//Check user login
+Router.post("/check_user", (req, res) => {
+  var user = req.body;
+  // console.log("user", user);
+  var sqlQuery = "SET @tbl_user_email=?; CALL sp_check_user(@tbl_user_email);";
+  mySqlConnection.query(sqlQuery, [user.tbl_user_email], (err, rows) => {
+    if (!err) {
+      res.status(201).json({
+        message: JSON.stringify(rows[1][0].User),
+      });
+      // res.send(rows);
+      // console.log("rows ", JSON.stringify(rows[1]));
+      // console.log("rows ", JSON.stringify(rows[1][0].User));
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Check user login end
 module.exports = Router;
