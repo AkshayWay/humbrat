@@ -16,7 +16,18 @@ const storage = multer.diskStorage({
     );
   },
 });
-
+//Upload features image
+const storage_features = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./feature/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
+  },
+});
 //Work images with multiple files
 const storage_post = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,6 +47,13 @@ const fileFilter = (req, file, cb) => {
     cb(new Error("Message: Wrong file type"), false);
   }
 };
+const fileFilter_feature = (req, file, cb) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Message: Wrong file type"), false);
+  }
+};
 const fileFilter_work = (req, file, cb) => {
   if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
     cb(null, true);
@@ -44,6 +62,10 @@ const fileFilter_work = (req, file, cb) => {
   }
 };
 const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload_featues = multer({
+  storage: storage_features,
+  fileFilter: fileFilter_feature,
+});
 const upload_work = multer({
   storage: storage_post,
   fileFilter: fileFilter_work,
@@ -454,4 +476,44 @@ Router.post("/check_user", (req, res) => {
   });
 });
 //Check user login end
+//Village features
+Router.post(
+  "/village_features",
+  upload_featues.single("featureImg"),
+  (req, res) => {
+    let newBanner = req.file;
+    // var sqlQuery =
+    //   "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
+    //   "SET @tbl_banner_is_deleted=?;SET @tbl_banner_img_desc=?;" +
+    //   "CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
+    //   "@tbl_banner_is_active, @tbl_banner_is_deleted, @tbl_banner_img_desc)";
+
+    // mySqlConnection.query(
+    //   sqlQuery,
+    //   [newBanner.filename, newBanner.path, 1, 0, req.body.imageDesciption],
+    //   (err, rows) => {
+    //     if (!err) {
+    //       // res.send(rows);
+    //       res.status(201).json({
+    //         message: "Created product successfully",
+    //         createdImage: {
+    //           id: rows.tbl_banner_id,
+    //           name: rows.tbl_banner_title,
+    //           src: rows.tbl_banner_src,
+    //           isActive: rows.tbl_banner_is_active,
+    //           isDeleted: rows.tbl_banner_is_deleted,
+    //           request: {
+    //             type: "GET",
+    //             url: "http://localhost:3000/products/" + rows._id,
+    //           },
+    //         },
+    //       });
+    //     } else {
+    //       console.log("Error :" + err);
+    //     }
+    //   }
+    // );
+  }
+);
+//Village features end
 module.exports = Router;

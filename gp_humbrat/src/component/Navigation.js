@@ -78,6 +78,11 @@ class Navigation extends Component {
                 ग्रामपंचायत कार्य
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/features" className="nav-link">
+                वैशिष्ठे
+              </Link>
+            </li>
             <li className="nav-item" style={{ display: UserLoggedIn }}>
               <Link to="/adminPortal" className="nav-link">
                 प्रशासक

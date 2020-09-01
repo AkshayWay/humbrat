@@ -941,43 +941,65 @@ export default class AdminPortal extends Component {
             </div>
           </div>
         </div>
-        <div
-          className="modal fade"
-          id="exampleModalCenter"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalCenterTitle"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLongTitle">
-                  Modal title
-                </h5>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseFeatureDiv"
+            aria-expanded="false"
+            aria-controls="collapseFeatureDiv"
+          >
+            वैशिष्ठे
+          </button>
+        </p>
+        <div className="collapse show" id="collapseFeatureDiv">
+          <div className="card card-body">
+            {/* <form onSubmit={this.onBannerUpload}> */}
+            <form>
+              <div className="form-group">
+                <input
+                  type="file"
+                  className="form-control-file"
+                  id="featureImageUpload"
+                  //onChange={this.onBannerChange}
+                  // required
+                />
+                <div className="form-group">
+                  <label>शीर्षक </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    required
+                    value={this.state.workTitle}
+                    onChange={this.onWorkTitleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>माहिती</label>
+                  <textarea
+                    className="form-control"
+                    // value={this.state.bannerImgDesc}
+                    // onChange={this.onBannerDescChange}
+                    rows="3"
+                    required
+                  ></textarea>
+                </div>
               </div>
-              <div className="modal-body">...</div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Save changes
-                </button>
-              </div>
-            </div>
+              <Button type="submit">संक्रमित करा </Button>
+            </form>
+            {/* <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>माहिती</th>
+                    <th>छायाचित्र</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+              </table>
+            </div> */}
           </div>
         </div>
       </div>
