@@ -83,36 +83,17 @@ class Navigation extends Component {
                 प्रशासक
               </Link>
             </li>
-            <li className="nav-item">
-              {/* <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a> */}
-              <div
-                className="nav-link"
-                aria-labelledby="navbarDropdown"
-                style={{ display: UserLoggedIn }}
-              >
-                <button className="dropdown-item" onClick={() => this.logout()}>
-                  Log out
-                </button>
-                {/* <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a> */}
-              </div>
-            </li>
           </ul>
+          <form className="form-inline my-2 my-lg-0">
+            <button
+              className="btn btn-outline-light my-2 my-sm-0"
+              type="submit"
+              onClick={() => this.logout()}
+              style={{ display: UserLoggedIn }}
+            >
+              Log out
+            </button>
+          </form>
         </div>
       </nav>
     );

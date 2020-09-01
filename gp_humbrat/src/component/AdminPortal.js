@@ -322,7 +322,7 @@ function ViewWork(props) {
           props.variant.tbl_work_id,
         obj
       )
-      .then((res) => console.log(res.data), window.location.reload(true));
+      .then((res) => window.location.reload(true));
   };
   return (
     <>
@@ -496,7 +496,7 @@ export default class AdminPortal extends Component {
   }
 
   async componentDidMount() {
-    alert("userEmail" + localStorage.getItem("userEmail"));
+    // alert("userEmail" + localStorage.getItem("userEmail"));
     if (
       localStorage.getItem("userEmail") != null &&
       localStorage.getItem("isLoggedIn") == 1
@@ -657,7 +657,7 @@ export default class AdminPortal extends Component {
       axios
         .post("http://localhost:4500/humbrat/work_details", workImgs)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           //setTimeout("alert('Successfully inserted')", 1000);
 
           this.setState({
@@ -666,6 +666,7 @@ export default class AdminPortal extends Component {
             workDate: "",
             selectedFiles: "",
           });
+          window.location.reload(true);
         });
     }
   };
@@ -720,7 +721,7 @@ export default class AdminPortal extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ minHeight: 510 + "px" }}>
         {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
         <h1>प्रशासक</h1>
 

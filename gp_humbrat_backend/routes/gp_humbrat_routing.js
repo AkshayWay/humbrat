@@ -177,9 +177,9 @@ Router.post(
     //console.log("Work date", req.body.workDate);
 
     var sqlQuery =
-      "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;SET @tbl_work_is_deleted=?;" +
+      "SET @tbl_work_id=?; SET @tbl_work_title=?; SET @tbl_work_details=?;" +
       "SET @tbl_work_images_title=?; SET @tbl_work_date=?; CALL sp_work_add_edit(@tbl_work_id,@tbl_work_title," +
-      "@tbl_work_details,@tbl_work_is_deleted,@tbl_work_images_title, @tbl_work_date)";
+      "@tbl_work_details,@tbl_work_images_title, @tbl_work_date)";
 
     mySqlConnection.query(
       sqlQuery,
@@ -187,7 +187,6 @@ Router.post(
         0,
         req.body.workTitle,
         req.body.imageDesciption,
-        0,
         reqFiles.toString(),
         req.body.workDate,
       ],

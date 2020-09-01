@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import GoogleBtn from "./GoogleBtn";
 import SignIn from "../assets/images/akshay.JPG";
-import App from "../App.css";
+import login from "../login.css";
 
 export default class Login extends Component {
   constructor(props) {

@@ -52,7 +52,7 @@ class Office extends Component {
     }
 
     return (
-      <div style={{ marginTop: 20 + "px" }}>
+      <div style={{ marginTop: 20 + "px", minHeight: 490 + "px" }}>
         <div id="Members">
           <div style={{ textAlign: "center" }}>
             <h4>सदस्य</h4>
