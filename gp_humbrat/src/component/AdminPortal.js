@@ -480,10 +480,11 @@ export default class AdminPortal extends Component {
       newsIsActive: false,
       newsUpdDate: "",
       selectedFile: null,
+      selectedFeatureFile: null,
       selectedFiles: "",
       bannerImgDesc: "",
       bannerImages: [],
-      bannerIsActive: "",
+      //  bannerIsActive: "",
       selectedBanner: "",
       instructionArr: [],
       workPostArr: [],
@@ -492,6 +493,8 @@ export default class AdminPortal extends Component {
       workDate: "",
       workPostImgDesc: "",
       redirect: false,
+      featureTitle: "",
+      featureDesc: "",
     };
   }
 
@@ -670,6 +673,29 @@ export default class AdminPortal extends Component {
         });
     }
   };
+  onFeatureUpload = (e) => {
+    e.preventDefault();
+    const featureImg = new FormData();
+    featureImg.append(
+      "featureImg",
+      this.state.selectedFeatureFile,
+      this.state.selectedFeatureFile.name
+    );
+
+    featureImg.append("feature_title", this.state.featureTitle);
+    featureImg.append("feature_desc", this.state.featureDesc);
+    axios
+      .post("http://localhost:4500/humbrat/village_features", featureImg)
+      .then((res) => {
+        console.log(res);
+        //window.location.reload(true);
+        this.setState({
+          featureTitle: "",
+          featureDesc: "",
+          selectedFeatureFile: "",
+        });
+      });
+  };
   onBannerChange = (event) => {
     this.setState({
       selectedFile: event.target.files[0],
@@ -701,23 +727,32 @@ export default class AdminPortal extends Component {
       bannerImgDesc: event.target.value,
     });
   };
-  // onWorkPostDescChange = (event) => {
-  //   this.setState({
-  //     workPostImgDesc: event.target.value,
-  //   });
-  // };
-
-  onActiveBannerChange = (e) => {
-    let setValue = 0;
-    if (this.state.bannerIsActive == 1) {
-      setValue = 0;
-    } else {
-      setValue = 1;
-    }
+  onFeatureTitleChange = (e) => {
     this.setState({
-      bannerIsActive: setValue,
+      featureTitle: e.target.value,
     });
   };
+  onFeatureDescChange = (e) => {
+    this.setState({
+      featureDesc: e.target.value,
+    });
+  };
+  onFeatureImgChange = (event) => {
+    this.setState({
+      selectedFeatureFile: event.target.files[0],
+    });
+  };
+  // onActiveBannerChange = (e) => {
+  //   let setValue = 0;
+  //   if (this.state.bannerIsActive == 1) {
+  //     setValue = 0;
+  //   } else {
+  //     setValue = 1;
+  //   }
+  //   this.setState({
+  //     bannerIsActive: setValue,
+  //   });
+  // };
 
   render() {
     return (
@@ -955,15 +990,13 @@ export default class AdminPortal extends Component {
         </p>
         <div className="collapse show" id="collapseFeatureDiv">
           <div className="card card-body">
-            {/* <form onSubmit={this.onBannerUpload}> */}
-            <form>
+            <form onSubmit={this.onFeatureUpload}>
               <div className="form-group">
                 <input
                   type="file"
                   className="form-control-file"
                   id="featureImageUpload"
-                  //onChange={this.onBannerChange}
-                  // required
+                  onChange={this.onFeatureImgChange}
                 />
                 <div className="form-group">
                   <label>शीर्षक </label>
@@ -971,16 +1004,16 @@ export default class AdminPortal extends Component {
                     type="text"
                     className="form-control"
                     required
-                    value={this.state.workTitle}
-                    onChange={this.onWorkTitleChange}
+                    value={this.state.featureTitle}
+                    onChange={this.onFeatureTitleChange}
                   />
                 </div>
                 <div className="form-group">
                   <label>माहिती</label>
                   <textarea
                     className="form-control"
-                    // value={this.state.bannerImgDesc}
-                    // onChange={this.onBannerDescChange}
+                    value={this.state.featureDesc}
+                    onChange={this.onFeatureDescChange}
                     rows="3"
                     required
                   ></textarea>

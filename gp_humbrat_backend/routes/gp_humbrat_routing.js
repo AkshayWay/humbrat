@@ -187,6 +187,38 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
   );
 });
 //Adding banner end
+//Village features
+Router.post(
+  "/village_features",
+  upload_featues.single("featureImg"),
+  (req, res) => {
+    let newFeature = req.file;
+    console.log("File Name" + newFeature.filename);
+    console.log("Inside" + newFeature.path);
+    console.log("Title " + req.body.feature_title);
+    console.log("Desc " + req.body.feature_desc);
+    var sqlQuery =
+      "SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
+      "CALL sp_features_add(@tbl_features_file_name,@tbl_features_title," +
+      "@tbl_features_description)";
+
+    mySqlConnection.query(
+      sqlQuery,
+      [newFeature.filename, req.body.feature_title, req.body.feature_desc],
+      (err, rows) => {
+        if (!err) {
+          // res.send(rows);
+          res.status(201).json({
+            message: "Feature created successfully",
+          });
+        } else {
+          console.log("Error :" + err);
+        }
+      }
+    );
+  }
+);
+//Village features end
 //Add images and their description for post
 Router.post(
   "/work_details",
@@ -476,44 +508,5 @@ Router.post("/check_user", (req, res) => {
   });
 });
 //Check user login end
-//Village features
-Router.post(
-  "/village_features",
-  upload_featues.single("featureImg"),
-  (req, res) => {
-    let newBanner = req.file;
-    // var sqlQuery =
-    //   "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
-    //   "SET @tbl_banner_is_deleted=?;SET @tbl_banner_img_desc=?;" +
-    //   "CALL sp_new_dashboard_banner(@tbl_banner_title,@tbl_banner_src," +
-    //   "@tbl_banner_is_active, @tbl_banner_is_deleted, @tbl_banner_img_desc)";
 
-    // mySqlConnection.query(
-    //   sqlQuery,
-    //   [newBanner.filename, newBanner.path, 1, 0, req.body.imageDesciption],
-    //   (err, rows) => {
-    //     if (!err) {
-    //       // res.send(rows);
-    //       res.status(201).json({
-    //         message: "Created product successfully",
-    //         createdImage: {
-    //           id: rows.tbl_banner_id,
-    //           name: rows.tbl_banner_title,
-    //           src: rows.tbl_banner_src,
-    //           isActive: rows.tbl_banner_is_active,
-    //           isDeleted: rows.tbl_banner_is_deleted,
-    //           request: {
-    //             type: "GET",
-    //             url: "http://localhost:3000/products/" + rows._id,
-    //           },
-    //         },
-    //       });
-    //     } else {
-    //       console.log("Error :" + err);
-    //     }
-    //   }
-    // );
-  }
-);
-//Village features end
 module.exports = Router;
