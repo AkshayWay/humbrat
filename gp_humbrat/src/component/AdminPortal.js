@@ -75,6 +75,27 @@ const BannerInfo = (props) => (
   </tr>
 );
 //List of all work post
+//List of features
+const FeatureInfo = (props) => (
+  <tr>
+    <td>{props.FeatureInfo.tbl_features_title}</td>
+    <td>
+      <img
+        src={"feature/" + props.FeatureInfo.tbl_features_file_name}
+        alt={props.FeatureInfo.tbl_features_title}
+        style={{ width: 80, height: 60 }}
+      ></img>
+    </td>
+
+    <td>
+      <ViewFeature variant={props.FeatureInfo} />
+    </td>
+    <td>
+      <DeleteFeature variant={props.FeatureInfo} />
+    </td>
+  </tr>
+);
+//List of features end
 const WorkPostInfo = (props) => (
   <tr>
     <td>{props.WorkPostInfo.tbl_work_title}</td>
@@ -173,7 +194,7 @@ function DeleteWork(props) {
         "http://localhost:4500/humbrat/WorkDetails/delete/" +
           props.variant.tbl_work_id
       )
-      .then((res) => console.log(res.data));
+      .then((res) => console.log(res.data), window.location.reload(true));
     //.then((res) => console.log(res.data));
     setShow(false);
   };
@@ -204,6 +225,54 @@ function DeleteWork(props) {
   );
 }
 //Delete work post end
+//Delete village feature start
+function DeleteFeature(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const deleteAndClose = () => {
+    const obj = {
+      tbl_features_id: props.variant.tbl_features_id,
+      tbl_features_title: null,
+      tbl_features_description: null,
+      tbl_features_is_deleted: 1,
+    };
+    axios
+      .put(
+        "http://localhost:4500/humbrat/village_features/" +
+          props.variant.tbl_features_id,
+        obj
+      )
+      .then((res) => console.log(res.data));
+    setShow(false);
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        काढून टाका
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>वैशिष्ठ काढून टाका</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          तुम्ही नक्की '<b>{props.variant.tbl_features_title}</b>' हे वैशिष्ठ
+          काढून टाकू इच्चीता?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deleteAndClose}>
+            काढून टाका
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+//Delete village feature end
 //View Banner Image and make changes
 function ViewBanner(props) {
   const [show, setShow] = React.useState(false);
@@ -275,6 +344,91 @@ function ViewBanner(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={editBanner}>
+            माहिती बदल
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            बंद करा
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+//View Feature image and make changes
+function ViewFeature(props) {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [imgDescInput, setimgDescInput] = useState(
+    props.variant.tbl_features_description
+  );
+  const [imgTitleInput, setImgTitleInput] = useState(
+    props.variant.tbl_features_title
+  );
+  const changeDescHandler = (e) => {
+    setimgDescInput(e.target.value);
+  };
+
+  const changeTitleHandler = (e) => {
+    setImgTitleInput(e.target.value);
+  };
+
+  const editFeature = () => {
+    const obj = {
+      tbl_features_id: props.variant.tbl_features_id,
+      tbl_features_title: imgTitleInput,
+      tbl_features_description: imgDescInput,
+      tbl_features_is_deleted: null,
+    };
+    axios
+      .put(
+        "http://localhost:4500/humbrat/village_features/" +
+          props.variant.tbl_features_id,
+        obj
+      )
+      .then((res) => console.log(res.data));
+  };
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        छायाचित्र माहिती व बदल
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>वैशिष्ठे माहिती व बदल</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-group">
+            <img
+              src={"feature/" + props.variant.tbl_features_file_name}
+              alt={props.variant.tbl_features_file_name}
+              style={{ width: 100 + "%" }}
+            ></img>
+          </div>
+          <div className="form-group">
+            <label>शीर्षक</label>
+            <input
+              type="text"
+              className="form-control"
+              value={imgTitleInput}
+              required
+              onChange={changeTitleHandler}
+            ></input>
+          </div>
+          <div className="form-group">
+            <label>छायाचित्र माहिती</label>
+            <textarea
+              className="form-control"
+              value={imgDescInput}
+              onChange={changeDescHandler}
+              rows="3"
+            ></textarea>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={editFeature}>
             माहिती बदल
           </Button>
           <Button variant="secondary" onClick={handleClose}>
@@ -488,6 +642,7 @@ export default class AdminPortal extends Component {
       selectedBanner: "",
       instructionArr: [],
       workPostArr: [],
+      featureArr: [],
       workImgDesc: "",
       workTitle: "",
       workDate: "",
@@ -547,7 +702,14 @@ export default class AdminPortal extends Component {
           });
         });
 
-      return newsPanel, bannerImage, instruction, work;
+      const features = await axios
+        .get("http://localhost:4500/humbrat/village_features")
+        .then((response) => {
+          this.setState({
+            featureArr: response.data,
+          });
+        });
+      return newsPanel, bannerImage, instruction, work, features;
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -581,6 +743,19 @@ export default class AdminPortal extends Component {
       return (
         <tr>
           <td colSpan="5">माहिती उपलब्ध नाही</td>
+        </tr>
+      );
+    }
+  }
+  featureList() {
+    if (this.state.featureArr.length > 0) {
+      return this.state.featureArr.map(function (featureInfo, i) {
+        return <FeatureInfo FeatureInfo={featureInfo} key={i}></FeatureInfo>;
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan="4">माहिती उपलब्ध नाही</td>
         </tr>
       );
     }
@@ -845,7 +1020,6 @@ export default class AdminPortal extends Component {
               </div>
               <Button type="submit">संक्रमित करा </Button>
             </form>
-            {/* <img src="uploads/2020-07-30T15-34-36.338Z-road_inauguration.jpeg" /> */}
             <div className="table-responsive">
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
@@ -960,7 +1134,6 @@ export default class AdminPortal extends Component {
               </div>
               <Button type="submit">संक्रमित करा </Button>
             </form>
-            {/* <img src="uploads/2020-07-30T15-34-36.338Z-road_inauguration.jpeg" /> */}
             <div className="table-responsive">
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
@@ -970,7 +1143,6 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                {/* <tbody>{this.WorkPostList(this.onWorkPostDescChange)}</tbody> */}
                 <tbody>{this.WorkPostList()}</tbody>
               </table>
             </div>
@@ -1021,18 +1193,18 @@ export default class AdminPortal extends Component {
               </div>
               <Button type="submit">संक्रमित करा </Button>
             </form>
-            {/* <div className="table-responsive">
+            <div className="table-responsive">
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
                   <tr>
-                    <th>माहिती</th>
+                    <th>शीर्षक</th>
                     <th>छायाचित्र</th>
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+                <tbody>{this.featureList()}</tbody>
               </table>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

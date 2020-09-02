@@ -193,18 +193,24 @@ Router.post(
   upload_featues.single("featureImg"),
   (req, res) => {
     let newFeature = req.file;
-    console.log("File Name" + newFeature.filename);
-    console.log("Inside" + newFeature.path);
-    console.log("Title " + req.body.feature_title);
-    console.log("Desc " + req.body.feature_desc);
+    // console.log("File Name" + newFeature.filename);
+    // console.log("Inside" + newFeature.path);
+    // console.log("Title " + req.body.feature_title);
+    // console.log("Desc " + req.body.feature_desc);
     var sqlQuery =
-      "SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
-      "CALL sp_features_add(@tbl_features_file_name,@tbl_features_title," +
-      "@tbl_features_description)";
+      "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
+      "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
+      "@tbl_features_description,@tbl_features_is_deleted)";
 
     mySqlConnection.query(
       sqlQuery,
-      [newFeature.filename, req.body.feature_title, req.body.feature_desc],
+      [
+        0,
+        newFeature.filename,
+        req.body.feature_title,
+        req.body.feature_desc,
+        null,
+      ],
       (err, rows) => {
         if (!err) {
           // res.send(rows);
@@ -499,14 +505,53 @@ Router.post("/check_user", (req, res) => {
       res.status(201).json({
         message: JSON.stringify(rows[1][0].User),
       });
-      // res.send(rows);
-      // console.log("rows ", JSON.stringify(rows[1]));
-      // console.log("rows ", JSON.stringify(rows[1][0].User));
     } else {
       console.log("Error :" + err);
     }
   });
 });
 //Check user login end
+//Features of the villages
+Router.get("/village_features", (req, res) => {
+  mySqlConnection.query(
+    "SELECT * FROM db_gp_humbrat.tbl_features where tbl_features_is_deleted<>1;",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Features of the village end
+//Feature of the village edit
+Router.put("/village_features/:id", (req, res) => {
+  var sqlQuery =
+    "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
+    "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
+    "@tbl_features_description,@tbl_features_is_deleted)";
+
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      req.body.tbl_features_id,
+      null,
+      req.body.tbl_features_title,
+      req.body.tbl_features_description,
+      req.body.tbl_features_is_deleted,
+    ],
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({
+          message: "Feature edited/deleted successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Feature of the village edit end
 
 module.exports = Router;
