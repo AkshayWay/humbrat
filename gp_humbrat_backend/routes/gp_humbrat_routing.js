@@ -192,11 +192,12 @@ Router.post(
   "/village_features",
   upload_featues.single("featureImg"),
   (req, res) => {
-    let newFeature = req.file;
-    // console.log("File Name" + newFeature.filename);
-    // console.log("Inside" + newFeature.path);
-    // console.log("Title " + req.body.feature_title);
-    // console.log("Desc " + req.body.feature_desc);
+    var FileName = "";
+    if (req.file !== undefined) {
+      let newFeature = req.file;
+      FileName = newFeature.filename;
+    }
+
     var sqlQuery =
       "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
       "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
@@ -204,13 +205,7 @@ Router.post(
 
     mySqlConnection.query(
       sqlQuery,
-      [
-        0,
-        newFeature.filename,
-        req.body.feature_title,
-        req.body.feature_desc,
-        null,
-      ],
+      [0, FileName, req.body.feature_title, req.body.feature_desc, null],
       (err, rows) => {
         if (!err) {
           // res.send(rows);

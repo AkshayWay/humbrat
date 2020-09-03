@@ -83,7 +83,11 @@ const FeatureInfo = (props) => (
       <img
         src={"feature/" + props.FeatureInfo.tbl_features_file_name}
         alt={props.FeatureInfo.tbl_features_title}
-        style={{ width: 80, height: 60 }}
+        style={{
+          width: 80,
+          height: 60,
+          display: props.FeatureInfo.tbl_features_file_name ? "inline" : "none",
+        }}
       ></img>
     </td>
 
@@ -750,7 +754,12 @@ export default class AdminPortal extends Component {
   featureList() {
     if (this.state.featureArr.length > 0) {
       return this.state.featureArr.map(function (featureInfo, i) {
-        return <FeatureInfo FeatureInfo={featureInfo} key={i}></FeatureInfo>;
+        return (
+          <FeatureInfo
+            FeatureInfo={featureInfo}
+            key={featureInfo.tbl_features_id}
+          ></FeatureInfo>
+        );
       });
     } else {
       return (
@@ -850,26 +859,45 @@ export default class AdminPortal extends Component {
   };
   onFeatureUpload = (e) => {
     e.preventDefault();
-    const featureImg = new FormData();
-    featureImg.append(
-      "featureImg",
-      this.state.selectedFeatureFile,
-      this.state.selectedFeatureFile.name
-    );
-
-    featureImg.append("feature_title", this.state.featureTitle);
-    featureImg.append("feature_desc", this.state.featureDesc);
-    axios
-      .post("http://localhost:4500/humbrat/village_features", featureImg)
-      .then((res) => {
-        console.log(res);
-        //window.location.reload(true);
-        this.setState({
-          featureTitle: "",
-          featureDesc: "",
-          selectedFeatureFile: "",
+    if (this.state.selectedFeatureFile == undefined) {
+      //  console.log("File not selected");
+      const featureImg = new FormData();
+      featureImg.append("feature_title", this.state.featureTitle);
+      featureImg.append("feature_desc", this.state.featureDesc);
+      axios
+        .post("http://localhost:4500/humbrat/village_features", featureImg)
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            featureTitle: "",
+            featureDesc: "",
+            selectedFeatureFile: "",
+          });
+          window.location.reload(true);
         });
-      });
+    } else {
+      const featureImg = new FormData();
+      featureImg.append(
+        "featureImg",
+        this.state.selectedFeatureFile,
+        this.state.selectedFeatureFile.name
+      );
+
+      featureImg.append("feature_title", this.state.featureTitle);
+      featureImg.append("feature_desc", this.state.featureDesc);
+      axios
+        .post("http://localhost:4500/humbrat/village_features", featureImg)
+        .then((res) => {
+          console.log(res);
+          //window.location.reload(true);
+          this.setState({
+            featureTitle: "",
+            featureDesc: "",
+            selectedFeatureFile: "",
+          });
+        });
+      window.location.reload(true);
+    }
   };
   onBannerChange = (event) => {
     this.setState({
@@ -1164,6 +1192,7 @@ export default class AdminPortal extends Component {
           <div className="card card-body">
             <form onSubmit={this.onFeatureUpload}>
               <div className="form-group">
+                <label>छायाचित्र (पर्यायी)</label>
                 <input
                   type="file"
                   className="form-control-file"

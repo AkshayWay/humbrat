@@ -26,15 +26,17 @@ export default class Features extends Component {
       i
     ) {
       return (
-        // <div className="col-6 col-md-4">
-        //   <WorkCard workPost={workPost} key={i} />
-        // </div>
         <div className="card mb-3" style={{ maxWidth: 100 + "%" }}>
           <div className="row no-gutters">
-            <div className="col-md-4">
+            <div
+              className="col-md-4"
+              style={{
+                display: features.tbl_features_file_name ? "inline" : "none",
+              }}
+            >
               <img
                 src={"feature/" + features.tbl_features_file_name}
-                class="card-img"
+                className="card-img"
                 alt={features.tbl_features_file_name}
               />
             </div>
