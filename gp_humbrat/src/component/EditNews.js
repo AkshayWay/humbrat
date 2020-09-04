@@ -102,7 +102,6 @@ export default class EditNews extends Component {
       });
   };
   render() {
-    var displayNone = this.state.datesDisplay;
     return (
       <div>
         <h1>बातमी बदल</h1>

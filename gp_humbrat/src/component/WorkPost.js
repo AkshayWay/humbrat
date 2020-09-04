@@ -39,7 +39,7 @@ export default class WorkPost extends Component {
       );
     });
     return (
-      <div>
+      <div style={{ minHeight: "calc(100vh - 70px)" }}>
         <h2>Work post here</h2>
         <div className="container">
           <div className="row">{workPostList}</div>

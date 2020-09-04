@@ -130,7 +130,7 @@ export default class HomePage extends Component {
     var newsDate = this.state.newsLastUpdate;
 
     return (
-      <div>
+      <div style={{ minHeight: "calc(100vh - 70px)" }}>
         <div>
           <img
             src={"uploads/" + this.state.bannerImgScr}

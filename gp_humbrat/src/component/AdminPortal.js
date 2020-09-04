@@ -247,7 +247,7 @@ function DeleteFeature(props) {
           props.variant.tbl_features_id,
         obj
       )
-      .then((res) => console.log(res.data));
+      .then((res) => console.log(res.data), window.location.reload(true));
     setShow(false);
   };
   return (
@@ -391,7 +391,7 @@ function ViewFeature(props) {
           props.variant.tbl_features_id,
         obj
       )
-      .then((res) => console.log(res.data));
+      .then((res) => console.log(res.data), window.location.reload(true));
   };
   return (
     <>
@@ -959,7 +959,7 @@ export default class AdminPortal extends Component {
 
   render() {
     return (
-      <div style={{ minHeight: 510 + "px" }}>
+      <div style={{ minHeight: "calc(100vh - 70px)" }}>
         {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
         <h1>प्रशासक</h1>
 

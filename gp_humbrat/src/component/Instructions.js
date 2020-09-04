@@ -67,7 +67,7 @@ export default class Instructions extends Component {
   };
   render() {
     return (
-      <div>
+      <div style={{ minHeight: "calc(100vh - 70px)" }}>
         <h2>सूचना</h2>
         <Form onSubmit={this.onSubmit}>
           <Form.Row>
