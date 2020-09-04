@@ -131,7 +131,7 @@ export default class HomePage extends Component {
 
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <div>
+        <div style={{ textAlign: "center" }}>
           <img
             src={"uploads/" + this.state.bannerImgScr}
             alt={this.state.bannerImgAlt}
