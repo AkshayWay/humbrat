@@ -6,7 +6,7 @@ import {
   hashHistory,
 } from "react-router-dom";
 import GoogleBtn from "./GoogleBtn";
-import SignIn from "../assets/images/akshay.JPG";
+import SignIn from "../assets/images/Sign_In_Image.png";
 import login from "../login.css";
 
 export default class Login extends Component {

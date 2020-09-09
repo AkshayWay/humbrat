@@ -13,7 +13,6 @@ import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 const NewsList = (props) => (
   <tr>
-    <td>{props.NewsInfo.tbl_news_id}</td>
     <td>{props.NewsInfo.tbl_news_title}</td>
     <td>{props.NewsInfo.tbl_news_desciption}</td>
     <td>

@@ -6,9 +6,10 @@ import {
   hashHistory,
 } from "react-router-dom";
 import gp_banner from "../assets/images/gp_banner.jpg";
-import gp_population from "../assets/images/gp_population.png";
-import gp_connectivity from "../assets/images/gp_connectivity.png";
-import gp_literacy from "../assets/images/gp_literacy.png";
+import gp_population from "../assets/images/Population_Card.png";
+import gp_connectivity from "../assets/images/Connectivity_Card.png";
+import gp_literacy from "../assets/images/Literacy_card.png";
+import gp_bachatgath from "../assets/images/Bachatgath_Card.png";
 import AppCSS from "../App.css";
 import axios from "axios";
 import Moment from "react-moment";
@@ -139,12 +140,7 @@ export default class HomePage extends Component {
           />
         </div>
 
-        <marquee
-          scrollamount="7"
-          //style={{ display: this.state.instructionAvailable }}
-        >
-          {this.state.instructionMsg}
-        </marquee>
+        <marquee scrollamount="7">{this.state.instructionMsg}</marquee>
         <div
           className="card mb-3 shadow-sm p-3 mb-5 bg-white rounded"
           style={{ maxWidth: 100 + "%", display: this.state.newsAvailable }}
@@ -208,7 +204,7 @@ export default class HomePage extends Component {
         </div>
         <div className="card-deck">
           <div className="card" style={marginBottom}>
-            <img src={gp_population} className="card-img-top" alt="..." />
+            <img src={gp_bachatgath} className="card-img-top" alt="..." />
             <div className="card-body">
               <h5 className="card-title">बचतगट</h5>
               <p className="card-text">

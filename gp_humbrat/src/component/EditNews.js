@@ -103,7 +103,7 @@ export default class EditNews extends Component {
   };
   render() {
     return (
-      <div>
+      <div style={{ minHeight: "calc(100vh - 70px)" }}>
         <h1>बातमी बदल</h1>
         <Form onSubmit={this.onSubmit}>
           <Form.Row>
