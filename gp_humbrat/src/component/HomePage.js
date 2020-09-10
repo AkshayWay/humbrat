@@ -127,6 +127,9 @@ export default class HomePage extends Component {
   render() {
     const marginBottom = {
       marginBottom: "25px",
+      border: "solid",
+      borderColor: "#00cccc",
+      //  boxShadow: "5px 5px #e6ffff",
     };
     var newsDate = this.state.newsLastUpdate;
 
