@@ -12,29 +12,23 @@ import AppCSS from "../App.css";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 const NewsList = (props) => (
-  <tr>
+  <tr
+    className={
+      props.NewsInfo.tbl_news_is_active == 1 ? "table-success" : "null"
+    }
+  >
     <td>{props.NewsInfo.tbl_news_title}</td>
-    <td>{props.NewsInfo.tbl_news_desciption}</td>
     <td>
       <Moment format="DD/MM/YYYY">
         {props.NewsInfo.tbl_news_created_date}
       </Moment>
     </td>
-    <td>
-      <input
-        type="checkbox"
-        value={props.NewsInfo.tbl_news_is_active}
-        name="active_news"
-        readOnly
-        checked={props.NewsInfo.tbl_news_is_active == 1 ? true : false}
-      />
-    </td>
+
     <td>
       <Moment format="DD/MM/YYYY">
         {props.NewsInfo.tbl_news_updated_date}
       </Moment>
     </td>
-    <td>{props.NewsInfo.tbl_news_is_deleted}</td>
 
     <td>
       <Link
@@ -994,11 +988,8 @@ export default class AdminPortal extends Component {
                 <thead>
                   <tr>
                     <th>शीर्षक</th>
-                    <th>सविस्तर माहिती</th>
                     <th>दिनांक</th>
-                    <th>सक्रिय आहे</th>
                     <th>शेवटची बदलाची तारीख</th>
-                    <th>अस्तित्वात</th>
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
