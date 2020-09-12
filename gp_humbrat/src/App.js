@@ -35,6 +35,7 @@ import Login from "./component/Login";
 import WorkPost from "./component/WorkPost";
 import WorkDetails from "./component/WorkDetails";
 import Features from "./component/Features";
+import AddOfficers from "./component/AddOfficers";
 
 const Main = withRouter(({ location }) => {
   return (
@@ -51,6 +52,7 @@ const Main = withRouter(({ location }) => {
       <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
       <Route path="/sign_in" component={Login}></Route>
       <Route path="/features" component={Features}></Route>
+      <Route path="/add_officers" component={AddOfficers}></Route>
       {location.pathname == "/sign_in" ? null : <Footer />}
     </div>
   );

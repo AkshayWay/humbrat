@@ -955,7 +955,11 @@ export default class AdminPortal extends Component {
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
         {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
         <h1>प्रशासक</h1>
-
+        <h5>
+          कोणतीही माहिती पुरवताना किंवा काढताना त्याची शहानिशा करून मगच कृती
+          करावी. पुरवलेली सर्व माहिती आपल्या संकेतस्थळावर दिसणार आहे याची नोंद
+          असावी. माहिती मोजक्या शब्दा मांडावी.
+        </h5>
         <p>
           <button
             className="btn btn-primary"
