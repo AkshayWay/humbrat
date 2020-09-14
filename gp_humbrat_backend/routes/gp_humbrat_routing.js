@@ -28,6 +28,18 @@ const storage_features = multer.diskStorage({
     );
   },
 });
+// Upload elected person image
+const storage_elected_person = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./elected_person/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
+  },
+});
 //Work images with multiple files
 const storage_post = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -54,6 +66,13 @@ const fileFilter_feature = (req, file, cb) => {
     cb(new Error("Message: Wrong file type"), false);
   }
 };
+const fileFilter_elected_person = (req, file, cb) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Message: Wrong file type"), false);
+  }
+};
 const fileFilter_work = (req, file, cb) => {
   if (file.mimetype === "image/jpeg" || file.mimetype == "image/png") {
     cb(null, true);
@@ -65,6 +84,10 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 const upload_featues = multer({
   storage: storage_features,
   fileFilter: fileFilter_feature,
+});
+const upload_elected_Person = multer({
+  storage: storage_elected_person,
+  fileFilter: fileFilter_elected_person,
 });
 const upload_work = multer({
   storage: storage_post,
@@ -220,6 +243,40 @@ Router.post(
   }
 );
 //Village features end
+//Elected person start
+Router.post(
+  "/elected_person",
+  upload_elected_Person.single("electedPersonImg"),
+  (req, res) => {
+    var FileName = req.file.fieldname;
+    console.log("File name :" + FileName);
+    // if (req.file !== undefined) {
+    //   let newFeature = req.file;
+    //   FileName = newFeature.filename;
+    // }
+
+    //   var sqlQuery =
+    //     "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
+    //     "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
+    //     "@tbl_features_description,@tbl_features_is_deleted)";
+
+    //   mySqlConnection.query(
+    //     sqlQuery,
+    //     [0, FileName, req.body.feature_title, req.body.feature_desc, null],
+    //     (err, rows) => {
+    //       if (!err) {
+    //         // res.send(rows);
+    //         res.status(201).json({
+    //           message: "Feature created successfully",
+    //         });
+    //       } else {
+    //         console.log("Error :" + err);
+    //       }
+    //     }
+    //   );
+  }
+);
+//Elected person end
 //Add images and their description for post
 Router.post(
   "/work_details",
@@ -548,5 +605,17 @@ Router.put("/village_features/:id", (req, res) => {
   );
 });
 //Feature of the village edit end
+//Designations
+Router.get("/designation", (req, res) => {
+  mySqlConnection.query("select * from tbl_designation", (err, rows) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Display all bannner end
+//Designatons end
 
 module.exports = Router;

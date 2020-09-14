@@ -60,17 +60,26 @@ export default class AddOfficers extends Component {
               ></input>
             </div>
           </div>
-          <div className="form-group">
-            <input
-              type="file"
-              className="form-control-file"
-              id="workPostImages"
-              multiple
-              //onChange={this.onWorkImageChange}
-              required
-            />
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <select class="form-control">
+                <option>Default select</option>
+              </select>
+            </div>
+            <div className="form-group col-md-6">
+              <input
+                type="file"
+                className="form-control-file"
+                id="workPostImages"
+                //multiple
+                //onChange={this.onWorkImageChange}
+                required
+              />
+            </div>
           </div>
-          <button type="submit">संक्रमित करा </button>
+          <button type="submit" class="btn btn-primary">
+            संक्रमित करा{" "}
+          </button>
         </form>
       </div>
     );
