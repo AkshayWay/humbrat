@@ -248,32 +248,40 @@ Router.post(
   "/elected_person",
   upload_elected_Person.single("electedPersonImg"),
   (req, res) => {
-    var FileName = req.file.fieldname;
+    var FileName = req.file.filename;
     console.log("File name :" + FileName);
+    console.log("Data", req.body);
     // if (req.file !== undefined) {
     //   let newFeature = req.file;
     //   FileName = newFeature.filename;
     // }
 
-    //   var sqlQuery =
-    //     "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
-    //     "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
-    //     "@tbl_features_description,@tbl_features_is_deleted)";
+    var sqlQuery =
+      "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img)";
 
-    //   mySqlConnection.query(
-    //     sqlQuery,
-    //     [0, FileName, req.body.feature_title, req.body.feature_desc, null],
-    //     (err, rows) => {
-    //       if (!err) {
-    //         // res.send(rows);
-    //         res.status(201).json({
-    //           message: "Feature created successfully",
-    //         });
-    //       } else {
-    //         console.log("Error :" + err);
-    //       }
-    //     }
-    //   );
+    mySqlConnection.query(
+      sqlQuery,
+      [
+        req.body.tbl_elected_person_id,
+        req.body.tbl_elected_person_fullname,
+        req.body.tbl_elected_person_designation,
+        req.body.tbl_elected_person_ward,
+        req.body.tbl_elected_person_contact_no,
+        req.body.FileName,
+      ],
+      (err, rows) => {
+        if (!err) {
+          // res.send(rows);
+          res.status(201).json({
+            message: "Elected Person added successfully",
+          });
+        } else {
+          console.log("Error :" + err);
+        }
+      }
+    );
   }
 );
 //Elected person end
@@ -607,13 +615,16 @@ Router.put("/village_features/:id", (req, res) => {
 //Feature of the village edit end
 //Designations
 Router.get("/designation", (req, res) => {
-  mySqlConnection.query("select * from tbl_designation", (err, rows) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("Error :" + err);
+  mySqlConnection.query(
+    "select * from tbl_designation order by tbl_designation_id desc",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
     }
-  });
+  );
 });
 //Display all bannner end
 //Designatons end

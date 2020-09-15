@@ -2,84 +2,193 @@ import React, { component, Component } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 
+const DesignationList = (props) => (
+  <option value={props.DesignationList.tbl_designation_id}>
+    {props.DesignationList.tbl_designation_name}
+  </option>
+);
 export default class AddOfficers extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      designationArr: [],
+      electedPersonId: 0,
+      fullName: "",
+      electedWord: "",
+      phoneNumber: "",
+      designation: 0,
+      selectedFile: null,
+    };
+  }
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:4500/humbrat/designation")
+      .then((response) => {
+        this.setState({
+          designationArr: response.data,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  Designation() {
+    if (this.state.designationArr.length > 0) {
+      return this.state.designationArr.map(function (currentDesignation, i) {
+        return (
+          <DesignationList
+            DesignationList={currentDesignation}
+            key={i}
+          ></DesignationList>
+        );
+      });
+    }
+  }
+  onFullNameChange = (e) => {
+    this.setState({
+      fullName: e.target.value,
+    });
+  };
+  onWordChange = (e) => {
+    this.setState({
+      electedWord: e.target.value,
+    });
+  };
+  onPhoneNumberChange = (e) => {
+    this.setState({
+      phoneNumber: e.target.value,
+    });
+  };
+  onDesignationChange = (e) => {
+    this.setState({
+      designation: e.target.id,
+    });
+    console.log(e.target.id);
+  };
+  onElectedPersonImageChange = (e) => {
+    this.setState({
+      //  selectedFiles: [...this.state.files, ...e.target.files],
+      selectedFile: e.target.files[0],
+    });
+  };
+  onElectedPersonUpload = (e) => {
+    e.preventDefault();
+    //  console.log("File not selected");
+    const electedPerson = new FormData();
+    electedPerson.append(
+      "electedPersonImg",
+      this.state.selectedFile,
+      this.state.selectedFile.name
+    );
+    electedPerson.append("tbl_elected_person_id", this.state.electedPersonId);
+    electedPerson.append("tbl_elected_person_fullname", this.state.fullName);
+    electedPerson.append("tbl_elected_person_ward", this.state.electedWord);
+    electedPerson.append(
+      "tbl_elected_person_designation",
+      this.state.designation
+    );
+    electedPerson.append(
+      "tbl_elected_person_contact_no",
+      this.state.phoneNumber
+    );
+    axios
+      .post("http://localhost:4500/humbrat/elected_person", electedPerson)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          electedPersonId: 0,
+          fullName: "",
+          electedWord: "",
+          phoneNumber: "",
+          designation: "",
+          selectedFile: null,
+        });
+        // window.location.reload();
+      });
+  };
+
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h1>बातमी बदल</h1>
-        <form onSubmit={this.onWorkImageUpload} style={{ padding: "20px" }}>
+        <h1>अधिकारी</h1>
+        <form onSubmit={this.onElectedPersonUpload} style={{ padding: "20px" }}>
           <div className="form-group">
             <label>संपूर्ण नाव</label>
             <input
               type="text"
               className="form-control"
               required
-              //value={this.state.workTitle}
-              //onChange={this.onWorkTitleChange}
+              value={this.state.fullName}
+              onChange={this.onFullNameChange}
             />
           </div>
-          {/* <div className="form-group col-md-6">
-              <label>दिनांक</label>
-              <input
-                type="date"
-                className="form-control"
-                required
-                value={this.state.workDate}
-                onChange={this.onWorkDateChange}
-              />
-            </div> */}
           <div className="form-row">
             <div className="form-group col-md-6">
               <label>निवडून आलेले वार्ड</label>
               <input
                 type="text"
                 className="form-control"
-                //  value={this.state.workImgDesc}
-                //  onChange={this.onWorkDescChange}
+                value={this.state.electedWard}
+                onChange={this.onWordChange}
                 required
               ></input>
             </div>
-            {/* <div className="form-group col-md-6">
-              <input
-                type="file"
-                className="form-control-file"
-                id="workPostImages"
-                multiple
-                //onChange={this.onWorkImageChange}
-                required
-              />
-              </div> */}
             <div className="form-group col-md-6">
               <label>दूरध्वनी क्रमांक</label>
               <input
                 type="text"
                 className="form-control"
-                //  value={this.state.workImgDesc}
-                //  onChange={this.onWorkDescChange}
+                value={this.state.phoneNumber}
+                onChange={this.onPhoneNumberChange}
                 required
               ></input>
             </div>
           </div>
           <div className="form-row">
             <div className="form-group col-md-6">
-              <select class="form-control">
-                <option>Default select</option>
+              <label>पद</label>
+              <select
+                className="form-control"
+                value={this.state.designation}
+                onChange={this.onDesignationChange}
+              >
+                {this.Designation()}
               </select>
             </div>
             <div className="form-group col-md-6">
+              <label>छायाचित्र</label>
               <input
                 type="file"
                 className="form-control-file"
-                id="workPostImages"
+                // value={this.state.selectedFile}
                 //multiple
-                //onChange={this.onWorkImageChange}
+                onChange={this.onElectedPersonImageChange}
                 required
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">
-            संक्रमित करा{" "}
+          <button type="submit" className="btn btn-primary">
+            संक्रमित करा
           </button>
+        </form>
+
+        <form>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                required
+                //onChange={this.onElectedPersonImageChange}
+              />
+            </div>
+            <div className="form-group col-md-6">
+              <button type="submit" className="btn btn-primary">
+                संक्रमित करा
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     );
