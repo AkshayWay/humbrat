@@ -248,18 +248,16 @@ Router.post(
   "/elected_person",
   upload_elected_Person.single("electedPersonImg"),
   (req, res) => {
-    var FileName = req.file.filename;
-    console.log("File name :" + FileName);
-    console.log("Data", req.body);
-    // if (req.file !== undefined) {
-    //   let newFeature = req.file;
-    //   FileName = newFeature.filename;
-    // }
+    var ElectedPersonImg = "";
+    if (req.file !== undefined) {
+      let newFeature = req.file;
+      ElectedPersonImg = newFeature.filename;
+    }
 
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
-      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
-      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img)";
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?; SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
 
     mySqlConnection.query(
       sqlQuery,
@@ -269,7 +267,8 @@ Router.post(
         req.body.tbl_elected_person_designation,
         req.body.tbl_elected_person_ward,
         req.body.tbl_elected_person_contact_no,
-        req.body.FileName,
+        ElectedPersonImg,
+        1,
       ],
       (err, rows) => {
         if (!err) {
@@ -626,7 +625,163 @@ Router.get("/designation", (req, res) => {
     }
   );
 });
-//Display all bannner end
 //Designatons end
+//Elected person list
+Router.get("/elected_person_list", (req, res) => {
+  mySqlConnection.query(
+    "select tbl1.tbl_elected_person_id, tbl1.tbl_elected_person_fullname,tbl2.tbl_designation_name, tbl1.tbl_elected_person_ward,tbl2.tbl_designation_id, tbl1.tbl_elected_person_contact_no,tbl1.tbl_elected_person_img" +
+      " from tbl_elected_person as tbl1" +
+      " Inner Join tbl_designation as tbl2 ON" +
+      " tbl1.tbl_elected_person_designation=tbl2.tbl_designation_id" +
+      " order by tbl2.tbl_designation_id ASC;",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Elected person list
+//Elected person edit
+Router.get("/elected_person_list/:id", (req, res) => {
+  mySqlConnection.query(
+    "SELECT * FROM tbl_elected_person where tbl_elected_person_id=?",
+    [req.params.id],
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Elected person edit
+//Edit elected person
+Router.put(
+  "/elected_person",
+  upload_elected_Person.single("electedPersonImg"),
+  (req, res) => {
+    var ElectedPersonImg = "No image";
+    // var FileName="";
+    if (req.file !== undefined) {
+      let newFeature = req.file;
+      ElectedPersonImg = newFeature.filename;
+    }
+    var sqlQuery =
+      "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
 
+    mySqlConnection.query(
+      sqlQuery,
+      [
+        req.body.tbl_elected_person_id,
+        req.body.tbl_elected_person_fullname,
+        req.body.tbl_elected_person_designation,
+        req.body.tbl_elected_person_ward,
+        req.body.tbl_elected_person_contact_no,
+        ElectedPersonImg,
+        1,
+      ],
+      (err, rows) => {
+        if (!err) {
+          // res.send(rows);
+          res.status(201).json({
+            message: "Elected Person added successfully",
+          });
+        } else {
+          console.log("Error :" + err);
+        }
+      }
+    );
+  }
+);
+//Edit elected person end
+//Add new designation
+Router.post("/new_designation", (req, res) => {
+  var newDesg = req.body;
+  console.log("req.body " + req.body.tbl_designation_name);
+  var sqlQuery =
+    "SET @tbl_designation_name=?; CALL sp_designation(@tbl_designation_name);";
+  mySqlConnection.query(
+    sqlQuery,
+    [newDesg.tbl_designation_name],
+    (err, rows) => {
+      if (!err) {
+        res.status(201).json({
+          message: "New designation added successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Add new designation end
+//Employee list
+Router.get("/employee_list", (req, res) => {
+  mySqlConnection.query("SELECT * FROM tbl_employees;", (err, rows) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log("Error :" + err);
+    }
+  });
+});
+//Employee list end
+
+//Designations for employee
+Router.get("/emp_designation", (req, res) => {
+  mySqlConnection.query(
+    "select * from tbl_designation where tbl_designaton_type>3 order by tbl_designation_id desc",
+    (err, rows) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Designatons for employee end
+//Add employee start
+Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
+  var ElectedPersonImg = "";
+  if (req.file !== undefined) {
+    let newFeature = req.file;
+    ElectedPersonImg = newFeature.filename;
+  }
+
+  var sqlQuery =
+    "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
+    "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?; SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+    "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
+
+  mySqlConnection.query(
+    sqlQuery,
+    [
+      req.body.tbl_elected_person_id,
+      req.body.tbl_elected_person_fullname,
+      req.body.tbl_elected_person_designation,
+      req.body.tbl_elected_person_ward,
+      req.body.tbl_elected_person_contact_no,
+      ElectedPersonImg,
+      1,
+    ],
+    (err, rows) => {
+      if (!err) {
+        // res.send(rows);
+        res.status(201).json({
+          message: "Elected Person added successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Add employee end
 module.exports = Router;

@@ -14,14 +14,6 @@ import Admin from "./AdminPortal";
 const CLIENT_ID =
   "970882172543-f75muk11713q0f5tg6e7dof1ol68vc5v.apps.googleusercontent.com";
 
-const AuthRoute = (props) => {
-  return (
-    <HashRouter>
-      <Route path="/adminPortal" component={Admin} />
-    </HashRouter>
-    //browserHistory.push("/home")
-  );
-};
 class GoogleBtn extends Component {
   constructor(props) {
     super(props);

@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+
+import axios from "axios";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -24,8 +27,21 @@ class Office extends Component {
     this.state = {
       memberShow: true,
       officersShow: true,
+      electedPersonArr: [],
     };
   }
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:4500/humbrat/elected_person_list")
+      .then((response) => {
+        this.setState({
+          electedPersonArr: response.data,
+        });
+      });
+    console.log("List", this.state.electedPersonArr);
+  }
+
   collapseMemberIcon(e) {
     if (e == 1) {
       this.setState({

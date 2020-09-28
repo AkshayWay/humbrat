@@ -11,6 +11,7 @@ import axios from "axios";
 import AppCSS from "../App.css";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
+import { confirm } from "../common/Confirmation";
 const NewsList = (props) => (
   <tr
     className={
@@ -93,6 +94,25 @@ const FeatureInfo = (props) => (
   </tr>
 );
 //List of features end
+//List of elected person
+const ElectedPersonInfo = (props) => (
+  <tr>
+    <td>{props.ElectedInfo.tbl_elected_person_fullname}</td>
+    <td>{props.ElectedInfo.tbl_designation_name}</td>
+    <td>{props.ElectedInfo.tbl_elected_person_ward}</td>
+    <td>{props.ElectedInfo.tbl_elected_person_contact_no}</td>
+    <td>
+      <Link
+        className="btn btn-primary"
+        to={"/edit_officers/" + props.ElectedInfo.tbl_elected_person_id}
+      >
+        माहिती बदल
+      </Link>
+    </td>
+    <td>{/* <DeleteFeature variant={props.FeatureInfo} /> */}</td>
+  </tr>
+);
+//List of elected person end
 const WorkPostInfo = (props) => (
   <tr>
     <td>{props.WorkPostInfo.tbl_work_title}</td>
@@ -473,7 +493,7 @@ function ViewWork(props) {
           props.variant.tbl_work_id,
         obj
       )
-      .then((res) => window.location.reload(true));
+      .then((res) => window.location.reload());
   };
   return (
     <>
@@ -640,6 +660,7 @@ export default class AdminPortal extends Component {
       instructionArr: [],
       workPostArr: [],
       featureArr: [],
+      electedPersonArr: [],
       workImgDesc: "",
       workTitle: "",
       workDate: "",
@@ -647,7 +668,10 @@ export default class AdminPortal extends Component {
       redirect: false,
       featureTitle: "",
       featureDesc: "",
+      newDesignation: "",
+      employeesArr: [{}],
     };
+    this.handleRemoveSpecificRow = this.handleRemoveSpecificRow.bind(this);
   }
 
   async componentDidMount() {
@@ -706,7 +730,33 @@ export default class AdminPortal extends Component {
             featureArr: response.data,
           });
         });
-      return newsPanel, bannerImage, instruction, work, features;
+
+      const elected_person = await axios
+        .get("http://localhost:4500/humbrat/elected_person_list")
+        .then((response) => {
+          this.setState({
+            electedPersonArr: response.data,
+          });
+        });
+
+      const employess = await axios
+        .get("http://localhost:4500/humbrat/employee_list")
+        .then((response) => {
+          this.setState({
+            employeesArr: response.data,
+          });
+          console.log("employess", this.state.employeesArr);
+        });
+
+      return (
+        newsPanel,
+        bannerImage,
+        instruction,
+        work,
+        features,
+        elected_person,
+        employess
+      );
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -758,6 +808,24 @@ export default class AdminPortal extends Component {
       return (
         <tr>
           <td colSpan="4">माहिती उपलब्ध नाही</td>
+        </tr>
+      );
+    }
+  }
+  electedPersonList() {
+    if (this.state.electedPersonArr.length > 0) {
+      return this.state.electedPersonArr.map(function (electedInfo, i) {
+        return (
+          <ElectedPersonInfo
+            ElectedInfo={electedInfo}
+            key={electedInfo.tbl_features_id}
+          ></ElectedPersonInfo>
+        );
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan="5">माहिती उपलब्ध नाही</td>
         </tr>
       );
     }
@@ -866,7 +934,7 @@ export default class AdminPortal extends Component {
             featureDesc: "",
             selectedFeatureFile: "",
           });
-          window.location.reload(true);
+          window.location.reload();
         });
     } else {
       const featureImg = new FormData();
@@ -938,18 +1006,37 @@ export default class AdminPortal extends Component {
       selectedFeatureFile: event.target.files[0],
     });
   };
-  // onActiveBannerChange = (e) => {
-  //   let setValue = 0;
-  //   if (this.state.bannerIsActive == 1) {
-  //     setValue = 0;
-  //   } else {
-  //     setValue = 1;
-  //   }
-  //   this.setState({
-  //     bannerIsActive: setValue,
-  //   });
-  // };
-
+  onNewDesignationChange = (e) => {
+    this.setState({
+      newDesignation: e.target.value,
+    });
+  };
+  onNewDesignationAdd = (e) => {
+    e.preventDefault();
+    console.log("this.state.newDesignation " + this.state.newDesignation);
+    var tbl_designation_name = this.state.newDesignation;
+    axios
+      .post(
+        "http://localhost:4500/humbrat/new_designation",
+        tbl_designation_name
+      )
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          newDesignation: "",
+        });
+        //window.location.reload();
+      });
+  };
+  async handleRemoveSpecificRow(idx, fullname) {
+    if (
+      await confirm("तुम्ही नक्की '" + fullname + "' काढून टाकू इच्चीता? ?")
+    ) {
+      const rows = [...this.state.employeesArr];
+      rows.splice(idx, 1);
+      this.setState({ employeesArr: rows });
+    }
+  }
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
@@ -1226,6 +1313,123 @@ export default class AdminPortal extends Component {
                   </tr>
                 </thead>
                 <tbody>{this.featureList()}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseAddOfficersDiv"
+            aria-expanded="false"
+            aria-controls="collapseAddOfficersDiv"
+          >
+            अधिकारी
+          </button>
+        </p>
+        <div className="collapse show" id="collapseAddOfficersDiv">
+          <div className="card card-body">
+            <p>
+              <Link
+                type="button"
+                className="btn btn-outline-primary"
+                to={"/add_officers/0"}
+              >
+                नवीन अधिकारी
+              </Link>
+            </p>
+            <div className="table-responsive">
+              <form onSubmit={this.onNewDesignationAdd}>
+                <div className="form-group">
+                  <label>नवीन पद </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    required
+                    value={this.state.newDesignation}
+                    onChange={this.onNewDesignationChange}
+                  />
+                </div>
+                <Button type="submit">संक्रमित करा </Button>
+              </form>
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>नाव</th>
+                    <th>पद</th>
+                    <th>निवडून आलेले वार्ड</th>
+                    <th>दूरध्वनी क्रमांक</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody>{this.electedPersonList()}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseAddOfficersDiv"
+            aria-expanded="false"
+            aria-controls="collapseAddOfficersDiv"
+          >
+            कर्मचारी
+          </button>
+        </p>
+        <div className="collapse show" id="collapseAddOfficersDiv">
+          <div className="card card-body">
+            <p>
+              <Link
+                type="button"
+                className="btn btn-outline-primary"
+                to={"/add_employee/0"}
+              >
+                नवीन कर्मचारी
+              </Link>
+            </p>
+            <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>नाव</th>
+                    <th>पद</th>
+                    <th>दूरध्वनी क्रमांक</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.employeesArr.map((item, idx) => (
+                    <tr id="addr0" key={idx}>
+                      <td>
+                        {this.state.employeesArr[idx].tbl_employee_fullName}
+                      </td>
+                      <td>
+                        {this.state.employeesArr[idx].tbl_employee_designation}
+                      </td>
+                      <td>
+                        {this.state.employeesArr[idx].tbl_employee_contact_no}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => {
+                            this.handleRemoveSpecificRow(
+                              idx,
+                              this.state.employeesArr[idx].tbl_employee_fullName
+                            );
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
