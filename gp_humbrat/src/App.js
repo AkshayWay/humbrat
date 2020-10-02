@@ -56,6 +56,7 @@ const Main = withRouter(({ location }) => {
       <Route path="/add_officers/:id" component={AddEditOfficers}></Route>
       <Route path="/edit_officers/:id" component={AddEditOfficers}></Route>
       <Route path="/add_employee/:id" component={AddEditEmployees}></Route>
+      <Route path="/edit_employee/:id" component={AddEditEmployees}></Route>
       {location.pathname == "/sign_in" ? null : <Footer />}
     </div>
   );

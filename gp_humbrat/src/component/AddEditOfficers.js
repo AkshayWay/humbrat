@@ -19,7 +19,6 @@ export default class AddEditOfficers extends Component {
       designation: 0,
       designation: 0,
       selectedFile: null,
-      electedPersonArr: [],
       ElectedPersonImg: "",
       imgDisplay: "none",
     };
@@ -45,7 +44,6 @@ export default class AddEditOfficers extends Component {
         )
         .then((response) => {
           this.setState({
-            electedPersonArr: response.data,
             electedPersonId: response.data[0].tbl_elected_person_id,
             fullName: response.data[0].tbl_elected_person_fullname,
             electedWord: response.data[0].tbl_elected_person_ward,
@@ -132,7 +130,6 @@ export default class AddEditOfficers extends Component {
       "tbl_elected_person_contact_no",
       this.state.phoneNumber
     );
-    alert(this.state.electedPersonId);
     if (this.state.electedPersonId > 0) {
       axios
         .put("http://localhost:4500/humbrat/elected_person", electedPerson)

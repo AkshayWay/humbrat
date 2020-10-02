@@ -11,14 +11,13 @@ export default class AddEditEmployees extends Component {
     super();
     this.state = {
       designationArr: [],
-      electedPersonId: 0,
+      employeeId: 0,
       fullName: "",
       electedWord: "",
       phoneNumber: "",
       designation: 0,
       designation: 0,
       selectedFile: null,
-      electedPersonArr: [],
       ElectedPersonImg: "",
       imgDisplay: "none",
     };
@@ -38,18 +37,16 @@ export default class AddEditEmployees extends Component {
     if (this.props.match.params.id > 0) {
       axios
         .get(
-          "http://localhost:4500/humbrat/elected_person_list/" +
+          "http://localhost:4500/humbrat/employee_list/" +
             this.props.match.params.id
         )
         .then((response) => {
           this.setState({
-            electedPersonArr: response.data,
-            electedPersonId: response.data[0].tbl_elected_person_id,
-            fullName: response.data[0].tbl_elected_person_fullname,
-            electedWord: response.data[0].tbl_elected_person_ward,
-            phoneNumber: response.data[0].tbl_elected_person_contact_no,
-            designation: response.data[0].tbl_elected_person_designation,
-            ElectedPersonImg: response.data[0].tbl_elected_person_img,
+            employeeId: response.data[0].tbl_employee_id,
+            fullName: response.data[0].tbl_employee_fullName,
+            phoneNumber: response.data[0].tbl_employee_contact_no,
+            designation: response.data[0].tbl_employee_designation,
+            ElectedPersonImg: response.data[0].tbl_employee_img,
             imgDisplay: "inline",
           });
         })
@@ -85,6 +82,63 @@ export default class AddEditEmployees extends Component {
       designation: e.target.value,
     });
   };
+  onEmployeeImageChange = (e) => {
+    this.setState({
+      selectedFile: e.target.files[0],
+    });
+  };
+  onEmployeeUpload = (e) => {
+    e.preventDefault();
+    const employee = new FormData();
+    if (this.state.selectedFile == null) {
+      alert("selectedFile " + this.state.selectedFile);
+    }
+    if (
+      this.state.selectedFile == undefined ||
+      this.state.selectedFile == null
+    ) {
+    } else {
+      employee.append(
+        "employeeImg",
+        this.state.selectedFile,
+        this.state.selectedFile.name
+      );
+    }
+    employee.append("tbl_employee_id", this.state.employeeId);
+    employee.append("tbl_employee_fullName", this.state.fullName);
+    employee.append("tbl_employee_designation", this.state.designation);
+    employee.append("tbl_employee_contact_no", this.state.phoneNumber);
+    alert(this.state.employeeId);
+    if (this.state.employeeId > 0) {
+      axios
+        .put("http://localhost:4500/humbrat/employee", employee)
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            employeeId: this.state.employeeId,
+            fullName: this.state.fullName,
+            phoneNumber: this.state.phoneNumber,
+            designation: this.state.designation,
+            selectedFile: null,
+          });
+        });
+    } else {
+      axios
+        .post("http://localhost:4500/humbrat/employee", employee)
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            electedPersonId: 0,
+            fullName: "",
+            phoneNumber: "",
+            designation: "",
+            selectedFile: null,
+          });
+          // window.location.reload();
+        });
+    }
+  };
+
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
@@ -98,14 +152,14 @@ export default class AddEditEmployees extends Component {
             <h1>No image found</h1>
           ) : (
             <img
-              src={"/elected_person/" + this.state.ElectedPersonImg}
+              src={"/employees/" + this.state.ElectedPersonImg}
               className="rounded mx-auto d-block"
-              alt="Electer person image"
+              alt="Employees image"
               style={{ width: "300px", height: "300px" }}
             />
           )}
         </div>
-        <form onSubmit={this.onElectedPersonUpload} style={{ padding: "20px" }}>
+        <form onSubmit={this.onEmployeeUpload} style={{ padding: "20px" }}>
           <div className="form-group">
             <label>संपूर्ण नाव</label>
             <input
@@ -144,7 +198,7 @@ export default class AddEditEmployees extends Component {
               <input
                 type="file"
                 className="form-control-file"
-                //onChange={this.onElectedPersonImageChange}
+                onChange={this.onEmployeeImageChange}
               />
             </div>
           </div>

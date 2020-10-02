@@ -633,6 +633,66 @@ function DeleteInstructionInfo(props) {
     </>
   );
 }
+// function EditDesignation(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   console.log("props 01", props.editValue[0]);
+//   console.log("props 02", props.editValue[1]);
+
+//   const [descriptionTxt, setDescriptionTxt] = useState(props.editValue[1]);
+//   const changeDesciption = (e) => {
+//     setDescriptionTxt(e.target.value);
+//   };
+//   // const editDesignation = () => {
+//   // const obj = {
+//   //   tbl_features_id: props.variant.tbl_features_id,
+//   //   tbl_features_title: imgTitleInput,
+//   //   tbl_features_description: imgDescInput,
+//   //   tbl_features_is_deleted: null,
+//   // };
+//   // axios
+//   //   .put(
+//   //     "http://localhost:4500/humbrat/village_features/" +
+//   //       props.variant.tbl_features_id,
+//   //     obj
+//   //   )
+//   //   .then((res) => console.log(res.data), window.location.reload(true));
+//   //  };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         छायाचित्र माहिती व बदल
+//       </Button>
+
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>वैशिष्ठे माहिती व बदल</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           <div className="form-group">
+//             <label>शीर्षक</label>
+//             <input
+//               type="text"
+//               className="form-control"
+//               value={descriptionTxt}
+//               required
+//               onChange={changeDesciption}
+//             ></input>
+//           </div>
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={}>
+//             माहिती बदल
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
@@ -670,8 +730,15 @@ export default class AdminPortal extends Component {
       featureDesc: "",
       newDesignation: "",
       employeesArr: [{}],
+      designationArr: [],
+      designationId: 0,
+      editDesignation: false,
+      editDesignationId: 0,
+      designationIDX: 0,
     };
     this.handleRemoveSpecificRow = this.handleRemoveSpecificRow.bind(this);
+    this.removeDesignation = this.removeDesignation.bind(this);
+    // this.editDesignationFun = this.editDesignationFun.bind(this);
   }
 
   async componentDidMount() {
@@ -745,9 +812,16 @@ export default class AdminPortal extends Component {
           this.setState({
             employeesArr: response.data,
           });
-          console.log("employess", this.state.employeesArr);
         });
 
+      const designation = await axios
+        .get("http://localhost:4500/humbrat/designation")
+        .then((response) => {
+          this.setState({
+            designationArr: response.data,
+          });
+          console.log("Designatin array", this.state.designationArr);
+        });
       return (
         newsPanel,
         bannerImage,
@@ -755,7 +829,8 @@ export default class AdminPortal extends Component {
         work,
         features,
         elected_person,
-        employess
+        employess,
+        designation
       );
     } catch (error) {
       console.log("Error: ", error);
@@ -1013,29 +1088,77 @@ export default class AdminPortal extends Component {
   };
   onNewDesignationAdd = (e) => {
     e.preventDefault();
-    console.log("this.state.newDesignation " + this.state.newDesignation);
-    var tbl_designation_name = this.state.newDesignation;
-    axios
-      .post(
-        "http://localhost:4500/humbrat/new_designation",
-        tbl_designation_name
-      )
-      .then((res) => {
-        console.log(res);
-        this.setState({
-          newDesignation: "",
+    const obj = {
+      tbl_designation_name: this.state.newDesignation,
+      tbl_designation_id: this.state.editDesignationId,
+    };
+    //console.log("tbl_designation_name:" + obj.tbl_designation_name);
+    if (this.state.editDesignation == true) {
+      console.log("Edit id :" + this.state.editDesignationId);
+      axios
+        .put("http://localhost:4500/humbrat/edit_designation", obj)
+        .then((res) => {
+          console.log(res);
+          let newArray = [...this.state.designationArr];
+          newArray[this.state.designationIDX] = {
+            ...newArray[this.state.designationIDX],
+            tbl_designation_name: this.state.newDesignation,
+          };
+          this.setState({
+            designationArr: newArray,
+            newDesignation: "",
+            editDesignationId: 0,
+            editDesignation: false,
+            designationIDX: 0,
+          });
         });
-        //window.location.reload();
-      });
-  };
-  async handleRemoveSpecificRow(idx, fullname) {
-    if (
-      await confirm("तुम्ही नक्की '" + fullname + "' काढून टाकू इच्चीता? ?")
-    ) {
-      const rows = [...this.state.employeesArr];
-      rows.splice(idx, 1);
-      this.setState({ employeesArr: rows });
+    } else {
+      axios
+        .post("http://localhost:4500/humbrat/new_designation", obj)
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            newDesignation: "",
+          });
+          //window.location.reload();
+        });
     }
+  };
+
+  async handleRemoveSpecificRow(idx, designationName) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता? ?"
+      )
+    ) {
+      const rows = [...this.state.designationArr];
+      rows.splice(idx, 1);
+      this.setState({ designationArr: rows });
+    }
+  }
+  async removeDesignation(idx, designationName, editID) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता? ?"
+      )
+    ) {
+      axios
+        .delete("http://localhost:4500/humbrat/delete_designation", editID)
+        .then((res) => {
+          console.log(res);
+          const rows = [...this.state.designationArr];
+          rows.splice(idx, 1);
+          this.setState({ designationArr: rows });
+        });
+    }
+  }
+  fillEditDesignation(idx, designationName, ID) {
+    this.setState({
+      newDesignation: designationName,
+      editDesignation: true,
+      editDesignationId: ID,
+      designationIDX: idx,
+    });
   }
   render() {
     return (
@@ -1248,11 +1371,10 @@ export default class AdminPortal extends Component {
                 <thead>
                   <tr>
                     <th>माहिती</th>
-                    <th>छायाचित्र</th>
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.WorkPostList()}</tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
@@ -1341,19 +1463,6 @@ export default class AdminPortal extends Component {
               </Link>
             </p>
             <div className="table-responsive">
-              <form onSubmit={this.onNewDesignationAdd}>
-                <div className="form-group">
-                  <label>नवीन पद </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    required
-                    value={this.state.newDesignation}
-                    onChange={this.onNewDesignationChange}
-                  />
-                </div>
-                <Button type="submit">संक्रमित करा </Button>
-              </form>
               <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
                   <tr>
@@ -1409,10 +1518,22 @@ export default class AdminPortal extends Component {
                         {this.state.employeesArr[idx].tbl_employee_fullName}
                       </td>
                       <td>
-                        {this.state.employeesArr[idx].tbl_employee_designation}
+                        {this.state.employeesArr[idx].tbl_designation_name}
                       </td>
                       <td>
                         {this.state.employeesArr[idx].tbl_employee_contact_no}
+                      </td>
+
+                      <td>
+                        <Link
+                          className="btn btn-primary"
+                          to={
+                            "/edit_employee/" +
+                            this.state.employeesArr[idx].tbl_employee_id
+                          }
+                        >
+                          माहिती बदल
+                        </Link>
                       </td>
                       <td>
                         <button
@@ -1421,6 +1542,111 @@ export default class AdminPortal extends Component {
                             this.handleRemoveSpecificRow(
                               idx,
                               this.state.employeesArr[idx].tbl_employee_fullName
+                            );
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p>
+          <button
+            className="btn btn-primary"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseDesignationDiv"
+            aria-expanded="false"
+            aria-controls="collapseDesignationDiv"
+          >
+            पद
+          </button>
+        </p>
+        <div className="collapse show" id="collapseDesignationDiv">
+          <div className="card card-body">
+            <form onSubmit={this.onNewDesignationAdd}>
+              <div className="form-group">
+                {this.state.editDesignation == false ? (
+                  <label>नवीन पद </label>
+                ) : (
+                  <label>माहिती बदल</label>
+                )}
+                <input
+                  type="text"
+                  className="form-control"
+                  required
+                  value={this.state.newDesignation}
+                  onChange={this.onNewDesignationChange}
+                />
+              </div>
+              {this.state.editDesignation == false ? (
+                <Button type="submit">संक्रमित करा </Button>
+              ) : (
+                <div>
+                  <Button type="submit">जतन करा</Button>
+                  <Button
+                    onClick={(e) =>
+                      this.setState((prevState) => ({
+                        editDesignation: !prevState.editDesignation,
+                      }))
+                    }
+                    type="button"
+                  >
+                    रद्द करा
+                  </Button>
+                </div>
+              )}
+            </form>
+            <div className="table-responsive">
+              <table className="table table-striped" style={{ marginTop: 20 }}>
+                <thead>
+                  <tr>
+                    <th>पद</th>
+                    <th colSpan="2">कृती</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.designationArr.map((item, idx) => (
+                    <tr key={idx}>
+                      <td>
+                        {this.state.designationArr[idx].tbl_designation_name}
+                      </td>
+                      {/* <td>
+                        <EditDesignation
+                          editValue={[
+                            this.state.designationArr[idx].tbl_designation_id,
+                            this.state.designationArr[idx].tbl_designation_name,
+                          ]}
+                        />
+                      </td> */}
+                      <td>
+                        <button
+                          onClick={() => {
+                            this.fillEditDesignation(
+                              idx,
+                              this.state.designationArr[idx]
+                                .tbl_designation_name,
+                              this.state.designationArr[idx].tbl_designation_id
+                            );
+                          }}
+                        >
+                          माहिती बदल
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => {
+                            this.removeDesignation(
+                              idx,
+                              this.state.designationArr[idx]
+                                .tbl_designation_name,
+                              this.state.designationArr[idx].tbl_designation_id
                             );
                           }}
                         >
