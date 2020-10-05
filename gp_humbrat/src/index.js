@@ -6,7 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 // import "./assets/css/bootstrap.min.css";
 // // import "./assets/css/magnific-popup.css";
 // import "./assets/css/owl.carousel.min.css";
-
 ReactDOM.render(
   <React.StrictMode>
     <App />

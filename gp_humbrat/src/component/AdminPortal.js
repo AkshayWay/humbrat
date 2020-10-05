@@ -12,6 +12,9 @@ import AppCSS from "../App.css";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 import { confirm } from "../common/Confirmation";
+import Pagination from "react-js-pagination";
+// import "bootstrap/less/bootstrap.less";
+
 const NewsList = (props) => (
   <tr
     className={
@@ -697,11 +700,6 @@ export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
 
-    this.onBannerChange = this.onBannerChange.bind(this);
-    this.onWorkDescChange = this.onWorkDescChange.bind(this);
-    this.onWorkTitleChange = this.onWorkTitleChange.bind(this);
-    this.onWorkDateChange = this.onWorkDateChange.bind(this);
-    this.onWorkImageChange = this.onWorkImageChange.bind(this);
     this.state = {
       newsInformation: [],
       newsId: 0,
@@ -735,10 +733,22 @@ export default class AdminPortal extends Component {
       editDesignation: false,
       editDesignationId: 0,
       designationIDX: 0,
+
+      //table pagination for designation
+      currentRowData: [],
+      switchSort: false,
+      activePage: 1,
+      itemLength: 0,
     };
+    this.onBannerChange = this.onBannerChange.bind(this);
+    this.onWorkDescChange = this.onWorkDescChange.bind(this);
+    this.onWorkTitleChange = this.onWorkTitleChange.bind(this);
+    this.onWorkDateChange = this.onWorkDateChange.bind(this);
+    this.onWorkImageChange = this.onWorkImageChange.bind(this);
     this.handleRemoveSpecificRow = this.handleRemoveSpecificRow.bind(this);
     this.removeDesignation = this.removeDesignation.bind(this);
     // this.editDesignationFun = this.editDesignationFun.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
   }
 
   async componentDidMount() {
@@ -820,8 +830,25 @@ export default class AdminPortal extends Component {
           this.setState({
             designationArr: response.data,
           });
-          console.log("Designatin array", this.state.designationArr);
+
+          // console.log("Designatin array", this.state.designationArr);
+
+          // const filtered = this.state.designationArr.filter(
+          //   (month, idx) => idx < 5
+          // );
+          // const filteredTwo = this.state.designationArr.filter(
+          //   (month, idx) => idx >= 5 && idx < 10
+          // );
+          // console.log("Filtered array", filtered, filteredTwo);
+          let totalItemsCount = this.state.designationArr.length;
+          let currentRowData = this.state.designationArr.slice(0, 5);
+          this.setState({
+            currentRowData,
+            itemLength: totalItemsCount,
+          });
+          console.log("itemLength:" + this.state.itemLength);
         });
+
       return (
         newsPanel,
         bannerImage,
@@ -893,7 +920,7 @@ export default class AdminPortal extends Component {
         return (
           <ElectedPersonInfo
             ElectedInfo={electedInfo}
-            key={electedInfo.tbl_features_id}
+            key={i}
           ></ElectedPersonInfo>
         );
       });
@@ -1099,17 +1126,19 @@ export default class AdminPortal extends Component {
         .put("http://localhost:4500/humbrat/edit_designation", obj)
         .then((res) => {
           console.log(res);
-          let newArray = [...this.state.designationArr];
+          let newArray = [...this.state.currentRowData];
           newArray[this.state.designationIDX] = {
             ...newArray[this.state.designationIDX],
             tbl_designation_name: this.state.newDesignation,
           };
           this.setState({
-            designationArr: newArray,
+            //designationArr: newArray,
+            currentRowData: newArray,
             newDesignation: "",
             editDesignationId: 0,
             editDesignation: false,
             designationIDX: 0,
+            //  designationArr: newArray,
           });
         });
     } else {
@@ -1158,6 +1187,22 @@ export default class AdminPortal extends Component {
       editDesignation: true,
       editDesignationId: ID,
       designationIDX: idx,
+    });
+  }
+
+  handlePageChange(pageNumber) {
+    let upperLimit = parseInt(pageNumber) * 5;
+    let lowerLimit = upperLimit - 5;
+    let data = [];
+    console.log("On change page:" + this.state.itemLength);
+    if (upperLimit <= this.state.itemLength) {
+      data = this.state.designationArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.designationArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentRowData: data,
+      activePage: pageNumber,
     });
   }
   render() {
@@ -1611,10 +1656,10 @@ export default class AdminPortal extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.designationArr.map((item, idx) => (
+                  {this.state.currentRowData.map((item, idx) => (
                     <tr key={idx}>
                       <td>
-                        {this.state.designationArr[idx].tbl_designation_name}
+                        {this.state.currentRowData[idx].tbl_designation_name}
                       </td>
                       {/* <td>
                         <EditDesignation
@@ -1629,9 +1674,9 @@ export default class AdminPortal extends Component {
                           onClick={() => {
                             this.fillEditDesignation(
                               idx,
-                              this.state.designationArr[idx]
+                              this.state.currentRowData[idx]
                                 .tbl_designation_name,
-                              this.state.designationArr[idx].tbl_designation_id
+                              this.state.currentRowData[idx].tbl_designation_id
                             );
                           }}
                         >
@@ -1644,9 +1689,9 @@ export default class AdminPortal extends Component {
                           onClick={() => {
                             this.removeDesignation(
                               idx,
-                              this.state.designationArr[idx]
+                              this.state.currentRowData[idx]
                                 .tbl_designation_name,
-                              this.state.designationArr[idx].tbl_designation_id
+                              this.state.currentRowData[idx].tbl_designation_id
                             );
                           }}
                         >
@@ -1657,6 +1702,15 @@ export default class AdminPortal extends Component {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div>
+              <Pagination
+                activePage={this.state.activePage}
+                itemsCountPerPage={5}
+                totalItemsCount={this.state.itemLength}
+                pageRangeDisplayed={5}
+                onChange={this.handlePageChange}
+              />
             </div>
           </div>
         </div>
