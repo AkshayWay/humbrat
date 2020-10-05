@@ -13,7 +13,6 @@ import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 import { confirm } from "../common/Confirmation";
 import Pagination from "react-js-pagination";
-// import "bootstrap/less/bootstrap.less";
 
 const NewsList = (props) => (
   <tr
@@ -1131,6 +1130,11 @@ export default class AdminPortal extends Component {
             ...newArray[this.state.designationIDX],
             tbl_designation_name: this.state.newDesignation,
           };
+          let newArrayToMainArr = [...this.state.designationArr];
+          newArray[this.state.designationIDX] = {
+            ...newArray[this.state.designationIDX],
+            tbl_designation_name: this.state.newDesignation,
+          };
           this.setState({
             //designationArr: newArray,
             currentRowData: newArray,
@@ -1138,7 +1142,7 @@ export default class AdminPortal extends Component {
             editDesignationId: 0,
             editDesignation: false,
             designationIDX: 0,
-            //  designationArr: newArray,
+            designationArr: newArrayToMainArr,
           });
         });
     } else {
@@ -1710,6 +1714,8 @@ export default class AdminPortal extends Component {
                 totalItemsCount={this.state.itemLength}
                 pageRangeDisplayed={5}
                 onChange={this.handlePageChange}
+                itemClass="page-item"
+                linkClass="page-link"
               />
             </div>
           </div>
