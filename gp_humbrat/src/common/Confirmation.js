@@ -33,8 +33,8 @@ class Confirmation extends React.Component {
           <Modal.Footer>
             <Button onClick={() => proceed(false)}>{cancelLabel}</Button>
             <Button
-              className="button-l"
-              bsStyle="primary"
+              className="button-l primary"
+              // bsStyle="primary"
               onClick={() => proceed(true)}
             >
               {proceedLabel}
