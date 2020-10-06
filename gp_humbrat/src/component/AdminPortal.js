@@ -734,7 +734,7 @@ export default class AdminPortal extends Component {
       designationIDX: 0,
 
       //table pagination for designation
-      currentRowData: [],
+      currentDesignationData: [],
       switchSort: false,
       activePage: 1,
       itemLength: 0,
@@ -747,7 +747,9 @@ export default class AdminPortal extends Component {
     this.handleRemoveSpecificRow = this.handleRemoveSpecificRow.bind(this);
     this.removeDesignation = this.removeDesignation.bind(this);
     // this.editDesignationFun = this.editDesignationFun.bind(this);
-    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleDesignationPageChange = this.handleDesignationPageChange.bind(
+      this
+    );
   }
 
   async componentDidMount() {
@@ -840,9 +842,9 @@ export default class AdminPortal extends Component {
           // );
           // console.log("Filtered array", filtered, filteredTwo);
           let totalItemsCount = this.state.designationArr.length;
-          let currentRowData = this.state.designationArr.slice(0, 5);
+          let currentDesignationData = this.state.designationArr.slice(0, 5);
           this.setState({
-            currentRowData,
+            currentDesignationData,
             itemLength: totalItemsCount,
           });
           console.log("itemLength:" + this.state.itemLength);
@@ -1120,24 +1122,23 @@ export default class AdminPortal extends Component {
     };
     //console.log("tbl_designation_name:" + obj.tbl_designation_name);
     if (this.state.editDesignation == true) {
-      console.log("Edit id :" + this.state.editDesignationId);
       axios
         .put("http://localhost:4500/humbrat/edit_designation", obj)
         .then((res) => {
           console.log(res);
-          let newArray = [...this.state.currentRowData];
+          let newArray = [...this.state.currentDesignationData];
           newArray[this.state.designationIDX] = {
             ...newArray[this.state.designationIDX],
             tbl_designation_name: this.state.newDesignation,
           };
           let newArrayToMainArr = [...this.state.designationArr];
-          newArray[this.state.designationIDX] = {
-            ...newArray[this.state.designationIDX],
+          newArrayToMainArr[this.state.designationIDX] = {
+            ...newArrayToMainArr[this.state.designationIDX],
             tbl_designation_name: this.state.newDesignation,
           };
           this.setState({
             //designationArr: newArray,
-            currentRowData: newArray,
+            currentDesignationData: newArray,
             newDesignation: "",
             editDesignationId: 0,
             editDesignation: false,
@@ -1146,11 +1147,31 @@ export default class AdminPortal extends Component {
           });
         });
     } else {
+      const newId = this.state.designationArr[0].tbl_designation_id + 1;
       axios
         .post("http://localhost:4500/humbrat/new_designation", obj)
         .then((res) => {
           console.log(res);
+
+          const newItem = {
+            tbl_designation_id: newId,
+            tbl_designation_name: this.state.newDesignation,
+          };
+          // this.setState({
+          //   designationArr: [...this.state.designationArr, newItem],
+          //   currentDesignationData: [
+          //     ...this.state.currentDesignationData,
+          //     newItem,
+          //   ],
+          //   newDesignation: "",
+          // });
           this.setState({
+            designationArr: [0, ...this.state.designationArr, newItem],
+            currentDesignationData: [
+              0,
+              ...this.state.currentDesignationData,
+              newItem,
+            ],
             newDesignation: "",
           });
           //window.location.reload();
@@ -1169,19 +1190,27 @@ export default class AdminPortal extends Component {
       this.setState({ designationArr: rows });
     }
   }
-  async removeDesignation(idx, designationName, editID) {
+  async removeDesignation(idx, designationName, deleteID) {
     if (
       await confirm(
-        "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता? ?"
+        "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा",
+        "title here"
       )
     ) {
       axios
-        .delete("http://localhost:4500/humbrat/delete_designation", editID)
+        .delete("http://localhost:4500/humbrat/delete_designation/" + deleteID)
         .then((res) => {
           console.log(res);
-          const rows = [...this.state.designationArr];
-          rows.splice(idx, 1);
-          this.setState({ designationArr: rows });
+          const rowsOriginal = [...this.state.designationArr];
+          rowsOriginal.splice(idx, 1);
+          const rowsTemp = [...this.state.currentDesignationData];
+          rowsTemp.splice(idx, 1);
+          this.setState({
+            designationArr: rowsOriginal,
+            currentDesignationData: rowsTemp,
+          });
         });
     }
   }
@@ -1194,7 +1223,7 @@ export default class AdminPortal extends Component {
     });
   }
 
-  handlePageChange(pageNumber) {
+  handleDesignationPageChange(pageNumber) {
     let upperLimit = parseInt(pageNumber) * 5;
     let lowerLimit = upperLimit - 5;
     let data = [];
@@ -1205,7 +1234,7 @@ export default class AdminPortal extends Component {
       data = this.state.designationArr.slice(lowerLimit);
     }
     this.setState({
-      currentRowData: data,
+      currentDesignationData: data,
       activePage: pageNumber,
     });
   }
@@ -1642,6 +1671,8 @@ export default class AdminPortal extends Component {
                     onClick={(e) =>
                       this.setState((prevState) => ({
                         editDesignation: !prevState.editDesignation,
+                        editDesignationId: 0,
+                        newDesignation: "",
                       }))
                     }
                     type="button"
@@ -1660,10 +1691,13 @@ export default class AdminPortal extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.currentRowData.map((item, idx) => (
+                  {this.state.currentDesignationData.map((item, idx) => (
                     <tr key={idx}>
                       <td>
-                        {this.state.currentRowData[idx].tbl_designation_name}
+                        {
+                          this.state.currentDesignationData[idx]
+                            .tbl_designation_name
+                        }
                       </td>
                       {/* <td>
                         <EditDesignation
@@ -1678,9 +1712,10 @@ export default class AdminPortal extends Component {
                           onClick={() => {
                             this.fillEditDesignation(
                               idx,
-                              this.state.currentRowData[idx]
+                              this.state.currentDesignationData[idx]
                                 .tbl_designation_name,
-                              this.state.currentRowData[idx].tbl_designation_id
+                              this.state.currentDesignationData[idx]
+                                .tbl_designation_id
                             );
                           }}
                         >
@@ -1693,9 +1728,10 @@ export default class AdminPortal extends Component {
                           onClick={() => {
                             this.removeDesignation(
                               idx,
-                              this.state.currentRowData[idx]
+                              this.state.currentDesignationData[idx]
                                 .tbl_designation_name,
-                              this.state.currentRowData[idx].tbl_designation_id
+                              this.state.currentDesignationData[idx]
+                                .tbl_designation_id
                             );
                           }}
                         >
@@ -1713,7 +1749,7 @@ export default class AdminPortal extends Component {
                 itemsCountPerPage={5}
                 totalItemsCount={this.state.itemLength}
                 pageRangeDisplayed={5}
-                onChange={this.handlePageChange}
+                onChange={this.handleDesignationPageChange}
                 itemClass="page-item"
                 linkClass="page-link"
               />
