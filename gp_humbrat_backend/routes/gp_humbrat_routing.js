@@ -898,7 +898,7 @@ Router.put("/edit_designation", (req, res) => {
   );
 });
 //Edit designation end
-Router.delete("/delete_designation", (req, res) => {
+Router.delete("/delete_designation/:id", (req, res) => {
   var sqlQuery = "Delete from tbl_designation where tbl_designation_id=?";
   mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
     if (!err) {
