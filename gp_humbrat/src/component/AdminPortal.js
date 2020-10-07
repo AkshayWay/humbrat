@@ -1120,7 +1120,6 @@ export default class AdminPortal extends Component {
       tbl_designation_name: this.state.newDesignation,
       tbl_designation_id: this.state.editDesignationId,
     };
-    //console.log("tbl_designation_name:" + obj.tbl_designation_name);
     if (this.state.editDesignation == true) {
       axios
         .put("http://localhost:4500/humbrat/edit_designation", obj)
@@ -1131,13 +1130,18 @@ export default class AdminPortal extends Component {
             ...newArray[this.state.designationIDX],
             tbl_designation_name: this.state.newDesignation,
           };
+          let desID = this.state.currentDesignationData[
+            this.state.designationIDX
+          ].tbl_designation_id;
+          const elementsIndex = this.state.designationArr.findIndex(
+            (element) => element.tbl_designation_id == desID
+          );
           let newArrayToMainArr = [...this.state.designationArr];
-          newArrayToMainArr[this.state.designationIDX] = {
-            ...newArrayToMainArr[this.state.designationIDX],
+          newArrayToMainArr[elementsIndex] = {
+            ...newArrayToMainArr[elementsIndex],
             tbl_designation_name: this.state.newDesignation,
           };
           this.setState({
-            //designationArr: newArray,
             currentDesignationData: newArray,
             newDesignation: "",
             editDesignationId: 0,
@@ -1157,6 +1161,9 @@ export default class AdminPortal extends Component {
             tbl_designation_id: newId,
             tbl_designation_name: this.state.newDesignation,
           };
+
+          this.state.designationArr.splice(0, 0, newItem);
+          this.state.currentDesignationData.splice(0, 0, newItem);
           // this.setState({
           //   designationArr: [...this.state.designationArr, newItem],
           //   currentDesignationData: [
@@ -1165,13 +1172,15 @@ export default class AdminPortal extends Component {
           //   ],
           //   newDesignation: "",
           // });
+          console.log("Original Arr", this.state.designationArr);
+          console.log("Current Arr", this.state.currentDesignationData);
           this.setState({
-            designationArr: [0, ...this.state.designationArr, newItem],
-            currentDesignationData: [
-              0,
-              ...this.state.currentDesignationData,
-              newItem,
-            ],
+            // designationArr: [...this.state.designationArr, newItem],
+            //designationArr: [...this.state.designationArr, newItem],
+            // currentDesignationData: [
+            //   ...this.state.currentDesignationData,
+            //   newItem,
+            // ],
             newDesignation: "",
           });
           //window.location.reload();
@@ -1203,10 +1212,18 @@ export default class AdminPortal extends Component {
         .delete("http://localhost:4500/humbrat/delete_designation/" + deleteID)
         .then((res) => {
           console.log(res);
-          const rowsOriginal = [...this.state.designationArr];
-          rowsOriginal.splice(idx, 1);
+          // const rowsOriginal = [...this.state.designationArr];
+          // rowsOriginal.splice(idx, 1);
           const rowsTemp = [...this.state.currentDesignationData];
           rowsTemp.splice(idx, 1);
+
+          let desID = this.state.currentDesignationData[idx].tbl_designation_id;
+          const elementsIndex = this.state.designationArr.findIndex(
+            (element) => element.tbl_designation_id == desID
+          );
+
+          const rowsOriginal = [...this.state.designationArr];
+          rowsOriginal.splice(elementsIndex, 1);
           this.setState({
             designationArr: rowsOriginal,
             currentDesignationData: rowsTemp,
