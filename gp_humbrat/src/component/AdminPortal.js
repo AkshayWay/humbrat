@@ -13,6 +13,7 @@ import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 import { confirm } from "../common/Confirmation";
 import Pagination from "react-js-pagination";
+import { store } from 'react-notifications-component';
 
 const NewsList = (props) => (
   <tr
@@ -635,66 +636,6 @@ function DeleteInstructionInfo(props) {
     </>
   );
 }
-// function EditDesignation(props) {
-//   const [show, setShow] = React.useState(false);
-//   const handleClose = () => setShow(false);
-//   const handleShow = () => setShow(true);
-//   console.log("props 01", props.editValue[0]);
-//   console.log("props 02", props.editValue[1]);
-
-//   const [descriptionTxt, setDescriptionTxt] = useState(props.editValue[1]);
-//   const changeDesciption = (e) => {
-//     setDescriptionTxt(e.target.value);
-//   };
-//   // const editDesignation = () => {
-//   // const obj = {
-//   //   tbl_features_id: props.variant.tbl_features_id,
-//   //   tbl_features_title: imgTitleInput,
-//   //   tbl_features_description: imgDescInput,
-//   //   tbl_features_is_deleted: null,
-//   // };
-//   // axios
-//   //   .put(
-//   //     "http://localhost:4500/humbrat/village_features/" +
-//   //       props.variant.tbl_features_id,
-//   //     obj
-//   //   )
-//   //   .then((res) => console.log(res.data), window.location.reload(true));
-//   //  };
-//   return (
-//     <>
-//       <Button variant="primary" onClick={handleShow}>
-//         छायाचित्र माहिती व बदल
-//       </Button>
-
-//       <Modal show={show} onHide={handleClose} animation={false}>
-//         <Modal.Header closeButton>
-//           <Modal.Title>वैशिष्ठे माहिती व बदल</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <div className="form-group">
-//             <label>शीर्षक</label>
-//             <input
-//               type="text"
-//               className="form-control"
-//               value={descriptionTxt}
-//               required
-//               onChange={changeDesciption}
-//             ></input>
-//           </div>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="primary" onClick={}>
-//             माहिती बदल
-//           </Button>
-//           <Button variant="secondary" onClick={handleClose}>
-//             बंद करा
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-//     </>
-//   );
-// }
 export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
@@ -744,7 +685,7 @@ export default class AdminPortal extends Component {
     this.onWorkTitleChange = this.onWorkTitleChange.bind(this);
     this.onWorkDateChange = this.onWorkDateChange.bind(this);
     this.onWorkImageChange = this.onWorkImageChange.bind(this);
-    this.handleRemoveSpecificRow = this.handleRemoveSpecificRow.bind(this);
+    this.removeEmployee = this.removeEmployee.bind(this);
     this.removeDesignation = this.removeDesignation.bind(this);
     // this.editDesignationFun = this.editDesignationFun.bind(this);
     this.handleDesignationPageChange = this.handleDesignationPageChange.bind(
@@ -831,16 +772,6 @@ export default class AdminPortal extends Component {
           this.setState({
             designationArr: response.data,
           });
-
-          // console.log("Designatin array", this.state.designationArr);
-
-          // const filtered = this.state.designationArr.filter(
-          //   (month, idx) => idx < 5
-          // );
-          // const filteredTwo = this.state.designationArr.filter(
-          //   (month, idx) => idx >= 5 && idx < 10
-          // );
-          // console.log("Filtered array", filtered, filteredTwo);
           let totalItemsCount = this.state.designationArr.length;
           let currentDesignationData = this.state.designationArr.slice(0, 5);
           this.setState({
@@ -1188,15 +1119,42 @@ export default class AdminPortal extends Component {
     }
   };
 
-  async handleRemoveSpecificRow(idx, designationName) {
+  async removeEmployee(idx, employeeName, employeeImg, empId) {
     if (
       await confirm(
-        "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता? ?"
+        "तुम्ही नक्की '" + employeeName + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
       )
     ) {
-      const rows = [...this.state.designationArr];
-      rows.splice(idx, 1);
-      this.setState({ designationArr: rows });
+      const obj = {
+        tbl_designation_name: employeeName,
+        tbl_employee_id: empId,
+        tbl_employee_img: employeeImg,
+      };
+      axios
+        .put("http://localhost:4500/humbrat/delete_employee/", obj)
+        .then((res) => {
+          console.log(res);
+          const rows = [...this.state.employeesArr];
+          rows.splice(idx, 1);
+          this.setState({ employeesArr: rows });
+        });
+        store.addNotification({
+          title: "कर्मचारी माहिती",
+          message: "कर्मचारी माहिती काढून टाकण्यात आली आहे",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 4000,
+            //onScreen: true,
+            showIcon:true
+          },
+          width:600
+        });
     }
   }
   async removeDesignation(idx, designationName, deleteID) {
@@ -1204,16 +1162,13 @@ export default class AdminPortal extends Component {
       await confirm(
         "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता?",
         "काढून टाका",
-        "रद्द करा",
-        "title here"
+        "रद्द करा"
       )
     ) {
       axios
         .delete("http://localhost:4500/humbrat/delete_designation/" + deleteID)
         .then((res) => {
           console.log(res);
-          // const rowsOriginal = [...this.state.designationArr];
-          // rowsOriginal.splice(idx, 1);
           const rowsTemp = [...this.state.currentDesignationData];
           rowsTemp.splice(idx, 1);
 
@@ -1228,6 +1183,22 @@ export default class AdminPortal extends Component {
             designationArr: rowsOriginal,
             currentDesignationData: rowsTemp,
           });
+        });
+
+        store.addNotification({
+          title: "पद माहिती",
+          message: "पद काढून टाकण्यात आल आहे",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 4000,
+            onScreen: true,
+            showIcon:true
+          },
+          width:600
         });
     }
   }
@@ -1606,46 +1577,57 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {this.state.employeesArr.map((item, idx) => (
-                    <tr id="addr0" key={idx}>
-                      <td>
-                        {this.state.employeesArr[idx].tbl_employee_fullName}
-                      </td>
-                      <td>
-                        {this.state.employeesArr[idx].tbl_designation_name}
-                      </td>
-                      <td>
-                        {this.state.employeesArr[idx].tbl_employee_contact_no}
-                      </td>
-
-                      <td>
-                        <Link
-                          className="btn btn-primary"
-                          to={
-                            "/edit_employee/" +
-                            this.state.employeesArr[idx].tbl_employee_id
-                          }
-                        >
-                          माहिती बदल
-                        </Link>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-outline-danger btn-sm"
-                          onClick={() => {
-                            this.handleRemoveSpecificRow(
-                              idx,
-                              this.state.employeesArr[idx].tbl_employee_fullName
-                            );
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </td>
+                {this.state.employeesArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="4">माहिती उपलब्ध नाही</td>
                     </tr>
-                  ))}
-                </tbody>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.employeesArr.map((item, idx) => (
+                      <tr id="employee" key={idx}>
+                        <td>
+                          {this.state.employeesArr[idx].tbl_employee_fullName}
+                        </td>
+                        <td>
+                          {this.state.employeesArr[idx].tbl_designation_name}
+                        </td>
+                        <td>
+                          {this.state.employeesArr[idx].tbl_employee_contact_no}
+                        </td>
+
+                        <td>
+                          <Link
+                            className="btn btn-outline-info"
+                            to={
+                              "/edit_employee/" +
+                              this.state.employeesArr[idx].tbl_employee_id
+                            }
+                          >
+                            माहिती बदल
+                          </Link>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeEmployee(
+                                idx,
+                                this.state.employeesArr[idx]
+                                  .tbl_employee_fullName,
+                                this.state.employeesArr[idx].tbl_employee_img,
+                                this.state.employeesArr[idx].tbl_employee_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>
@@ -1692,6 +1674,7 @@ export default class AdminPortal extends Component {
                         newDesignation: "",
                       }))
                     }
+                    style={{marginLeft:"10px"}}
                     type="button"
                   >
                     रद्द करा
@@ -1716,16 +1699,9 @@ export default class AdminPortal extends Component {
                             .tbl_designation_name
                         }
                       </td>
-                      {/* <td>
-                        <EditDesignation
-                          editValue={[
-                            this.state.designationArr[idx].tbl_designation_id,
-                            this.state.designationArr[idx].tbl_designation_name,
-                          ]}
-                        />
-                      </td> */}
                       <td>
                         <button
+                          className="btn btn-outline-info"
                           onClick={() => {
                             this.fillEditDesignation(
                               idx,
@@ -1752,7 +1728,7 @@ export default class AdminPortal extends Component {
                             );
                           }}
                         >
-                          Delete
+                          काढून टाका
                         </button>
                       </td>
                     </tr>

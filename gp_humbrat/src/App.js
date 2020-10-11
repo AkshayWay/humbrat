@@ -19,6 +19,8 @@ import ReactBootstrap, {
   FormGroup,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-notifications-component/dist/theme.css'
+
 // import gp_banner from "./assets/images/gp_banner.jpg";
 // import gp_population from "./assets/images/gp_population.png";
 // import gp_connectivity from "./assets/images/gp_connectivity.png";
@@ -37,6 +39,8 @@ import WorkDetails from "./component/WorkDetails";
 import Features from "./component/Features";
 import AddEditOfficers from "./component/AddEditOfficers";
 import AddEditEmployees from "./component/AddEditEmployees";
+//notification component
+import ReactNotification from 'react-notifications-component'
 
 const Main = withRouter(({ location }) => {
   return (
@@ -77,6 +81,7 @@ function App() {
         </div>
         <Footer />
       </div> */}
+      <ReactNotification />
       <Main />
     </Router>
   );

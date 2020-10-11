@@ -1,5 +1,8 @@
 import React, { component, Component } from "react";
 import axios from "axios";
+//Notification component
+import { store } from 'react-notifications-component';
+
 
 const DesignationList = (props) => (
   <option value={props.DesignationList.tbl_designation_id}>
@@ -49,6 +52,8 @@ export default class AddEditEmployees extends Component {
             ElectedPersonImg: response.data[0].tbl_employee_img,
             imgDisplay: "inline",
           });
+
+          
         })
         .catch(function (error) {
           console.log(error);
@@ -90,14 +95,12 @@ export default class AddEditEmployees extends Component {
   onEmployeeUpload = (e) => {
     e.preventDefault();
     const employee = new FormData();
-    if (this.state.selectedFile == null) {
-      alert("selectedFile " + this.state.selectedFile);
-    }
     if (
       this.state.selectedFile == undefined ||
-      this.state.selectedFile == null
+      this.state.selectedFile == null ||  this.state.selectedFile ==""
     ) {
     } else {
+      console.log("File",this.state.selectedFile)
       employee.append(
         "employeeImg",
         this.state.selectedFile,
@@ -108,7 +111,7 @@ export default class AddEditEmployees extends Component {
     employee.append("tbl_employee_fullName", this.state.fullName);
     employee.append("tbl_employee_designation", this.state.designation);
     employee.append("tbl_employee_contact_no", this.state.phoneNumber);
-    alert(this.state.employeeId);
+    employee.append("tbl_employee_img", this.state.ElectedPersonImg);
     if (this.state.employeeId > 0) {
       axios
         .put("http://localhost:4500/humbrat/employee", employee)
@@ -119,8 +122,11 @@ export default class AddEditEmployees extends Component {
             fullName: this.state.fullName,
             phoneNumber: this.state.phoneNumber,
             designation: this.state.designation,
-            selectedFile: null,
+            selectedFile: "",
+            //   ElectedPersonImg: this.state.selectedFile.name,
           });
+           window.location.reload();
+         
         });
     } else {
       axios
@@ -134,7 +140,21 @@ export default class AddEditEmployees extends Component {
             designation: "",
             selectedFile: null,
           });
-          // window.location.reload();
+          store.addNotification({
+            title: "नवीन कर्मचारी",
+            message: "नवीन कर्मचार्याची माहिती यशस्वीपणे जतन झाली",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon:true
+            },
+            width:600
+          });
         });
     }
   };
@@ -148,9 +168,7 @@ export default class AddEditEmployees extends Component {
             display: this.state.imgDisplay,
           }}
         >
-          {this.state.ElectedPersonImg == "" ? (
-            <h1>No image found</h1>
-          ) : (
+          {this.state.ElectedPersonImg == "" ? null : (
             <img
               src={"/employees/" + this.state.ElectedPersonImg}
               className="rounded mx-auto d-block"

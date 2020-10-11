@@ -4,6 +4,7 @@ const mySqlConnection = require("../db_connection");
 //Multer for file upload
 const multer = require("multer");
 //const img=require("../uploads")
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -741,7 +742,7 @@ Router.put(
 //Designations for employee
 Router.get("/emp_designation", (req, res) => {
   mySqlConnection.query(
-    "select * from tbl_designation where tbl_designaton_type>3 order by tbl_designation_id desc",
+    "select * from tbl_designation where tbl_designation_id>3 order by tbl_designation_id desc",
     (err, rows) => {
       if (!err) {
         res.send(rows);
@@ -815,6 +816,15 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
     ],
     (err, rows) => {
       if (!err) {
+        console.log("req.body.tbl_employee_img+ " + req.body.tbl_employee_img);
+        if (req.body.tbl_employee_img != "" && EmployeeImg!="No image") {
+          const path = "./employees/" + req.body.tbl_employee_img;
+          try {
+            fs.unlinkSync(path);
+          } catch (err) {
+            console.error(err);
+          }
+        }
         // res.send(rows);
         res.status(201).json({
           message: "Employee info updated successfully",
@@ -833,6 +843,7 @@ Router.get("/employee_list", (req, res) => {
       " from tbl_employees as tbl1" +
       " Inner Join tbl_designation as tbl2 ON" +
       " tbl1.tbl_employee_designation=tbl2.tbl_designation_id" +
+      " where tbl1.tbl_employee_is_active<> 0" +
       " order by tbl2.tbl_designation_id ASC;",
     (err, rows) => {
       if (!err) {
@@ -859,6 +870,43 @@ Router.get("/employee_list/:id", (req, res) => {
   );
 });
 //Employee edit
+//Delete employee
+
+//Edit employee
+Router.put("/delete_employee", (req, res) => {
+  var sqlQuery =
+    "SET @tbl_employee_id=?;SET @tbl_employee_fullName=?; SET @tbl_employee_designation=?;" +
+    "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;CALL sp_employee" +
+    "(@tbl_employee_id,@tbl_employee_fullName,@tbl_employee_designation," +
+    "@tbl_employee_contact_no,@tbl_employee_img, @tbl_employee_is_active)";
+
+  mySqlConnection.query(
+    sqlQuery,
+    [req.body.tbl_employee_id, "", 0, "", req.body.tbl_employee_img, 0],
+    (err, rows) => {
+      if (!err) {
+        // res.send(rows);
+        if (req.body.tbl_employee_img != "") {
+          const path = "./employees/" + req.body.tbl_employee_img;
+          try {
+            fs.unlinkSync(path);
+            //file removed
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        res.status(201).json({
+          message: "Employee info deleted successfully",
+        });
+      } else {
+        console.log("Error :" + err);
+      }
+    }
+  );
+});
+//Edit employee end
+//Delete employee
 //Add designation
 Router.post("/new_designation", (req, res) => {
   var sqlQuery =
