@@ -1,6 +1,8 @@
 import React, { component, Component } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
+import { store } from 'react-notifications-component';
+
 
 const DesignationList = (props) => (
   <option value={props.DesignationList.tbl_designation_id}>
@@ -98,20 +100,12 @@ export default class AddEditOfficers extends Component {
   };
   onElectedPersonUpload = (e) => {
     e.preventDefault();
-    //  console.log("File not selected");
     const electedPerson = new FormData();
-    if (this.state.selectedFile == null) {
-      alert("selectedFile " + this.state.selectedFile);
-    }
+   
     if (
       this.state.selectedFile == undefined ||
-      this.state.selectedFile == null
+      this.state.selectedFile == null || this.state.selectedFile ==""
     ) {
-      // electedPerson.append(
-      //   "electedPersonImg",
-      //   this.state.selectedFile,
-      //   this.state.selectedFile.name
-      // );
     } else {
       electedPerson.append(
         "electedPersonImg",
@@ -143,6 +137,7 @@ export default class AddEditOfficers extends Component {
             designation: this.state.designation,
             selectedFile: null,
           });
+          window.location.reload();
         });
     } else {
       axios
@@ -157,7 +152,21 @@ export default class AddEditOfficers extends Component {
             designation: "",
             selectedFile: null,
           });
-          // window.location.reload();
+          store.addNotification({
+            title: "नवीन अधिकारी",
+            message: "नवीन अधिकाऱ्याची माहिती यशस्वीपणे जतन झाली",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon:true
+            },
+            width:600
+          });
         });
     }
   };

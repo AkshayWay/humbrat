@@ -650,6 +650,7 @@ Router.get("/elected_person_list", (req, res) => {
       " from tbl_elected_person as tbl1" +
       " Inner Join tbl_designation as tbl2 ON" +
       " tbl1.tbl_elected_person_designation=tbl2.tbl_designation_id" +
+      " where tbl1.tbl_elected_person_is_active <> 0"+
       " order by tbl2.tbl_designation_id ASC;",
     (err, rows) => {
       if (!err) {
@@ -717,27 +718,41 @@ Router.put(
   }
 );
 //Edit elected person end
-// //Add new designation
-// Router.post("/add_des", (req, res) => {
-//   var newDesg = req.body;
-//   console.log("req.body " + newDesg.tbl_designation_name);
-//   var sqlQuery =
-//     "SET @tbl_designation_name=?; CALL sp_designation(@tbl_designation_name);";
-//   mySqlConnection.query(
-//     sqlQuery,
-//     [newDesg.tbl_designation_name],
-//     (err, rows) => {
-//       if (!err) {
-//         res.status(201).json({
-//           message: "New designation added successfully",
-//         });
-//       } else {
-//         console.log("Error :" + err);
-//       }
-//     }
-//   );
-// });
-// //Add new designation end
+//Delete elected person
+Router.put(
+  "/elected_person",(req, res) => {
+    var ElectedPersonImg = "No image";
+    // var FileName="";
+    var sqlQuery =
+      "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
+
+    mySqlConnection.query(
+      sqlQuery,
+      [
+        req.body.tbl_elected_person_id,
+        "",
+        "",
+        "",
+        "",
+        "",
+        0,
+      ],
+      (err, rows) => {
+        if (!err) {
+          // res.send(rows);
+          res.status(201).json({
+            message: "Elected Person deleted successfully",
+          });
+        } else {
+          console.log("Error :" + err);
+        }
+      }
+    );
+  }
+);
+//Delete elected person end
 
 //Designations for employee
 Router.get("/emp_designation", (req, res) => {

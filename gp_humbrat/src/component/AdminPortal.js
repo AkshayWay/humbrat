@@ -756,6 +756,7 @@ export default class AdminPortal extends Component {
           this.setState({
             electedPersonArr: response.data,
           });
+          console.log("Elected person", this.state.electedPersonArr)
         });
 
       const employess = await axios
@@ -1539,7 +1540,25 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.electedPersonList()}</tbody>
+                {/* <tbody>{this.electedPersonList()}</tbody> */}
+                <tbody>
+                {this.state.electedPersonArr.map((item, idx) => (
+                      <tr id="electedPerson" key={idx}>
+
+                <td>{this.state.electedPersonArr[idx].tbl_elected_person_fullname}</td>
+                <td>{this.state.electedPersonArr[idx].tbl_designation_name}</td>
+                <td>{this.state.electedPersonArr[idx].tbl_elected_person_ward}</td>
+                <td>{this.state.electedPersonArr[idx].tbl_elected_person_contact_no}</td>
+                <td> <Link
+        className="btn btn-primary"
+        to={"/edit_officers/" +  this.state.electedPersonArr[idx].tbl_elected_person_id}
+      >
+        माहिती बदल
+      </Link></td>
+                <td>Delete</td>
+                      </tr>))}
+
+                </tbody>
               </table>
             </div>
           </div>
