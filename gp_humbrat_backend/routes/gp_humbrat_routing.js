@@ -683,7 +683,6 @@ Router.put(
   upload_elected_Person.single("electedPersonImg"),
   (req, res) => {
     var ElectedPersonImg = "No image";
-    // var FileName="";
     if (req.file !== undefined) {
       let newElectedPerson = req.file;
       ElectedPersonImg = newElectedPerson.filename;
@@ -706,9 +705,19 @@ Router.put(
       ],
       (err, rows) => {
         if (!err) {
-          // res.send(rows);
+          if (req.body.previousImg != "" && ElectedPersonImg!="No image") {
+            const path = "./elected_person/" + req.body.previousImg;
+            if(fs.existsSync(path)) {
+              console.log("File exist");
+              try {
+                fs.unlinkSync(path);
+              } catch (err) {
+                console.error(err);
+              }  
+            }
+          }
           res.status(201).json({
-            message: "Elected Person added successfully",
+            message: "Elected Person updated successfully",
           });
         } else {
           console.log("Error :" + err);
@@ -720,8 +729,12 @@ Router.put(
 //Edit elected person end
 //Delete elected person
 Router.put(
+<<<<<<< HEAD
   "/elected_person",(req, res) => {
     var ElectedPersonImg = "No image";
+=======
+  "/delete_elected_person",(req, res) => {
+>>>>>>> Elected_Person
     // var FileName="";
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
@@ -742,6 +755,17 @@ Router.put(
       (err, rows) => {
         if (!err) {
           // res.send(rows);
+<<<<<<< HEAD
+=======
+          if (req.body.tbl_elected_person_img != "") {
+            const path = "./elected_person/" + req.body.tbl_elected_person_img;
+            try {
+              fs.unlinkSync(path);
+            } catch (err) {
+              console.error(err);
+            }
+          }
+>>>>>>> Elected_Person
           res.status(201).json({
             message: "Elected Person deleted successfully",
           });
@@ -775,7 +799,7 @@ Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
     let newEmployee = req.file;
     EmployeeImg = newEmployee.filename;
   }
-
+console.log("req.body.tbl_employee_designation:"+req.body.tbl_employee_designation,)
   var sqlQuery =
     "SET @tbl_employee_id=?;SET @tbl_employee_fullName=?; SET @tbl_employee_designation=?;" +
     "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;CALL sp_employee" +
@@ -794,7 +818,6 @@ Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
     ],
     (err, rows) => {
       if (!err) {
-        // res.send(rows);
         res.status(201).json({
           message: "Employee added successfully",
         });
@@ -831,15 +854,16 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
     ],
     (err, rows) => {
       if (!err) {
-        console.log("req.body.tbl_employee_img+ " + req.body.tbl_employee_img);
         if (req.body.tbl_employee_img != "" && EmployeeImg!="No image") {
           const path = "./employees/" + req.body.tbl_employee_img;
+          if(fs.existsSync(path)) {
           try {
             fs.unlinkSync(path);
           } catch (err) {
             console.error(err);
           }
         }
+      }
         // res.send(rows);
         res.status(201).json({
           message: "Employee info updated successfully",
