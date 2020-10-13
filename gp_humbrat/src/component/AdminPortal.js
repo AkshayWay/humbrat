@@ -756,6 +756,7 @@ export default class AdminPortal extends Component {
           this.setState({
             electedPersonArr: response.data,
           });
+          console.log("electedPersonArr", this.state.electedPersonArr)
         });
 
       const employess = await axios
@@ -1539,7 +1540,48 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.electedPersonList()}</tbody>
+                {/* <tbody>{this.electedPersonList()}</tbody> */}
+                {this.state.electedPersonArr.map((item, idx) => (
+                      <tr id="electedPerson" key={idx}>
+                        <td>
+                          {this.state.electedPersonArr[idx].tbl_elected_person_fullname}
+                        </td>
+                        <td>
+                          {this.state.electedPersonArr[idx].tbl_designation_name}
+                        </td>
+                        <td>
+                          {this.state.electedPersonArr[idx].tbl_elected_person_ward}
+                        </td>
+
+                        <td>
+                          <Link
+                            className="btn btn-outline-info"
+                            to={
+                              "/edit_officers/" +
+                              this.state.electedPersonArr[idx].tbl_elected_person_id
+                            }
+                          >
+                            माहिती बदल
+                          </Link>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            // onClick={() => {
+                            //   this.removeEmployee(
+                            //     idx,
+                            //     this.state.employeesArr[idx]
+                            //       .tbl_employee_fullName,
+                            //     this.state.employeesArr[idx].tbl_employee_img,
+                            //     this.state.employeesArr[idx].tbl_employee_id
+                            //   );
+                            // }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
               </table>
             </div>
           </div>

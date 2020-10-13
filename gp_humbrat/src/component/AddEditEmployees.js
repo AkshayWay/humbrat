@@ -19,7 +19,6 @@ export default class AddEditEmployees extends Component {
       electedWord: "",
       phoneNumber: "",
       designation: 0,
-      designation: 0,
       selectedFile: null,
       ElectedPersonImg: "",
       imgDisplay: "none",
@@ -31,7 +30,7 @@ export default class AddEditEmployees extends Component {
       .then((response) => {
         this.setState({
           designationArr: response.data,
-          designation: response.data[0].tbl_designaton_type,
+          designation: response.data[0].tbl_designation_id,
         });
       })
       .catch(function (error) {
@@ -100,7 +99,6 @@ export default class AddEditEmployees extends Component {
       this.state.selectedFile == null ||  this.state.selectedFile ==""
     ) {
     } else {
-      console.log("File",this.state.selectedFile)
       employee.append(
         "employeeImg",
         this.state.selectedFile,
