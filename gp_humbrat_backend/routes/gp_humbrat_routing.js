@@ -708,7 +708,6 @@ Router.put(
           if (req.body.previousImg != "" && ElectedPersonImg!="No image") {
             const path = "./elected_person/" + req.body.previousImg;
             if(fs.existsSync(path)) {
-              console.log("File exist");
               try {
                 fs.unlinkSync(path);
               } catch (err) {
@@ -729,12 +728,7 @@ Router.put(
 //Edit elected person end
 //Delete elected person
 Router.put(
-<<<<<<< HEAD
   "/elected_person",(req, res) => {
-    var ElectedPersonImg = "No image";
-=======
-  "/delete_elected_person",(req, res) => {
->>>>>>> Elected_Person
     // var FileName="";
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
@@ -754,18 +748,16 @@ Router.put(
       ],
       (err, rows) => {
         if (!err) {
-          // res.send(rows);
-<<<<<<< HEAD
-=======
-          if (req.body.tbl_elected_person_img != "") {
-            const path = "./elected_person/" + req.body.tbl_elected_person_img;
-            try {
-              fs.unlinkSync(path);
-            } catch (err) {
-              console.error(err);
+          if (req.body.previousImg) {
+            const path = "./elected_person/" + req.body.previousImg;
+            if(fs.existsSync(path)) {
+              try {
+                fs.unlinkSync(path);
+              } catch (err) {
+                console.error(err);
+              }  
             }
           }
->>>>>>> Elected_Person
           res.status(201).json({
             message: "Elected Person deleted successfully",
           });
@@ -927,6 +919,7 @@ Router.put("/delete_employee", (req, res) => {
         // res.send(rows);
         if (req.body.tbl_employee_img != "") {
           const path = "./employees/" + req.body.tbl_employee_img;
+          if(fs.existsSync(path)) {
           try {
             fs.unlinkSync(path);
             //file removed
@@ -934,7 +927,7 @@ Router.put("/delete_employee", (req, res) => {
             console.error(err);
           }
         }
-
+      }
         res.status(201).json({
           message: "Employee info deleted successfully",
         });
