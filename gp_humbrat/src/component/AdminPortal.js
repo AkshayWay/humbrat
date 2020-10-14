@@ -13,7 +13,7 @@ import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 import { confirm } from "../common/Confirmation";
 import Pagination from "react-js-pagination";
-import { store } from 'react-notifications-component';
+import { store } from "react-notifications-component";
 
 const NewsList = (props) => (
   <tr
@@ -393,8 +393,8 @@ function ViewFeature(props) {
   };
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        छायाचित्र माहिती व बदल
+      <Button variant="btn btn-outline-info" onClick={handleShow}>
+        माहिती व बदल
       </Button>
 
       <Modal show={show} onHide={handleClose} animation={false}>
@@ -671,6 +671,7 @@ export default class AdminPortal extends Component {
     this.removeDesignation = this.removeDesignation.bind(this);
     // this.editDesignationFun = this.editDesignationFun.bind(this);
     this.removeOfficer = this.removeOfficer.bind(this);
+    this.removeVillageFeature = this.removeVillageFeature.bind(this);
     this.handleDesignationPageChange = this.handleDesignationPageChange.bind(
       this
     );
@@ -739,7 +740,10 @@ export default class AdminPortal extends Component {
           this.setState({
             electedPersonArr: response.data,
           });
-          console.log("electedPersonArr:",this.state.electedPersonArr[0].tbl_elected_person_img)
+          console.log(
+            "electedPersonArr:",
+            this.state.electedPersonArr[0].tbl_elected_person_img
+          );
         });
 
       const employess = await axios
@@ -1082,10 +1086,55 @@ export default class AdminPortal extends Component {
         });
     }
   };
+  //remove village feature
+  async removeVillageFeature(
+    idx,
+    villageFeatureName,
+    villageFeatureImg,
+    featureId
+  ) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + villageFeatureName + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      const obj = {
+        tbl_features_id: featureId,
+        tbl_features_is_deleted: 1,
+      };
+      axios
+        .put("http://localhost:4500/humbrat/village_features/" + featureId, obj)
+        .then((res) => {
+          console.log(res);
+          const rows = [...this.state.featureArr];
+          rows.splice(idx, 1);
+          this.setState({ featureArr: rows });
+
+          store.addNotification({
+            title: "गावाची वैशिष्ट्य माहिती",
+            message: "गावाची वैशिष्ट्य काढून टाकण्यात आली आहे",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon: true,
+            },
+            width: 600,
+          });
+        });
+    }
+  }
+  //remove village feature end
   async removeOfficer(idx, officerName, officerImg, officerId) {
     if (
       await confirm(
-        "तुम्ही नक्की '"+ officerName + "' काढून टाकू इच्चीता?",
+        "तुम्ही नक्की '" + officerName + "' काढून टाकू इच्चीता?",
         "काढून टाका",
         "रद्द करा"
       )
@@ -1113,12 +1162,11 @@ export default class AdminPortal extends Component {
             dismiss: {
               duration: 4000,
               onScreen: true,
-              showIcon:true
+              showIcon: true,
             },
-            width:600
+            width: 600,
           });
         });
-        
     }
   }
   async removeEmployee(idx, employeeName, employeeImg, empId) {
@@ -1142,27 +1190,26 @@ export default class AdminPortal extends Component {
           rows.splice(idx, 1);
           this.setState({ employeesArr: rows });
         });
-        store.addNotification({
-          title: "कर्मचारी माहिती",
-          message: "कर्मचारी माहिती काढून टाकण्यात आली आहे",
-          type: "success",
-          insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 4000,
-            //onScreen: true,
-            showIcon:true
-          },
-          width:600
-        });
+      store.addNotification({
+        title: "कर्मचारी माहिती",
+        message: "कर्मचारी माहिती काढून टाकण्यात आली आहे",
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 4000,
+          onScreen: true,
+          showIcon: true,
+        },
+        width: 600,
+      });
     }
   }
   async removeDesignation(idx, designationName, deleteID) {
     if (
       await confirm(
-        "afsd",
         "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता?",
         "काढून टाका",
         "रद्द करा"
@@ -1188,21 +1235,21 @@ export default class AdminPortal extends Component {
           });
         });
 
-        store.addNotification({
-          title: "पद माहिती",
-          message: "पद काढून टाकण्यात आल आहे",
-          type: "success",
-          insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 4000,
-            onScreen: true,
-            showIcon:true
-          },
-          width:600
-        });
+      store.addNotification({
+        title: "पद माहिती",
+        message: "पद काढून टाकण्यात आल आहे",
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 4000,
+          onScreen: true,
+          showIcon: true,
+        },
+        width: 600,
+      });
     }
   }
   fillEditDesignation(idx, designationName, ID) {
@@ -1442,7 +1489,7 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-    <tbody>{this.WorkPostList()}</tbody>
+                <tbody>{this.WorkPostList()}</tbody>
               </table>
             </div>
           </div>
@@ -1502,7 +1549,61 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.featureList()}</tbody>
+
+                {/* <tbody>{this.featureList()}</tbody> */}
+                {this.state.featureArr == "" ? (
+                  <tbody>
+                    <tr>
+                      {" "}
+                      <td colSpan="4">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.featureArr.map((item, idx) => (
+                      <tr id="villageFeatures" key={idx}>
+                        <td>{this.state.featureArr[idx].tbl_features_title}</td>
+                        <td>
+                          <img
+                            src={
+                              "feature/" +
+                              this.state.featureArr[idx].tbl_features_file_name
+                            }
+                            alt={this.state.featureArr[idx].tbl_features_title}
+                            style={{
+                              width: 80,
+                              height: 60,
+                              display: this.state.featureArr[idx]
+                                .tbl_features_file_name
+                                ? "inline"
+                                : "none",
+                            }}
+                          ></img>
+                        </td>
+                        <td>
+                          <ViewFeature variant={this.state.featureArr[idx]} />
+                        </td>
+                        <td>
+                          {" "}
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeVillageFeature(
+                                idx,
+                                this.state.featureArr[idx].tbl_features_title,
+                                this.state.featureArr[idx]
+                                  .tbl_features_file_name,
+                                this.state.featureArr[idx].tbl_features_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>
@@ -1541,37 +1642,74 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>
-                {this.state.electedPersonArr.map((item, idx) => (
+                {this.state.electedPersonArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="5">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.electedPersonArr.map((item, idx) => (
                       <tr id="electedPerson" key={idx}>
-
-                <td>{this.state.electedPersonArr[idx].tbl_elected_person_fullname}</td>
-                <td>{this.state.electedPersonArr[idx].tbl_designation_name}</td>
-                <td>{this.state.electedPersonArr[idx].tbl_elected_person_ward}</td>
-                <td>{this.state.electedPersonArr[idx].tbl_elected_person_contact_no}</td>
-                <td> <Link
-        className="btn btn-outline-info"
-        to={"/edit_officers/" +  this.state.electedPersonArr[idx].tbl_elected_person_id}
-      >
-        माहिती बदल
-      </Link></td>
-                <td><button
+                        <td>
+                          {
+                            this.state.electedPersonArr[idx]
+                              .tbl_elected_person_fullname
+                          }
+                        </td>
+                        <td>
+                          {
+                            this.state.electedPersonArr[idx]
+                              .tbl_designation_name
+                          }
+                        </td>
+                        <td>
+                          {
+                            this.state.electedPersonArr[idx]
+                              .tbl_elected_person_ward
+                          }
+                        </td>
+                        <td>
+                          {
+                            this.state.electedPersonArr[idx]
+                              .tbl_elected_person_contact_no
+                          }
+                        </td>
+                        <td>
+                          <Link
+                            className="btn btn-outline-info"
+                            to={
+                              "/edit_officers/" +
+                              this.state.electedPersonArr[idx]
+                                .tbl_elected_person_id
+                            }
+                          >
+                            माहिती बदल
+                          </Link>
+                        </td>
+                        <td>
+                          <button
                             className="btn btn-outline-danger btn-sm"
                             onClick={() => {
                               this.removeOfficer(
                                 idx,
                                 this.state.electedPersonArr[idx]
                                   .tbl_elected_person_fullname,
-                                this.state.electedPersonArr[idx].tbl_elected_person_img,
-                                this.state.electedPersonArr[idx].tbl_elected_person_id
+                                this.state.electedPersonArr[idx]
+                                  .tbl_elected_person_img,
+                                this.state.electedPersonArr[idx]
+                                  .tbl_elected_person_id
                               );
                             }}
                           >
                             काढून टाका
-                          </button></td>
-                      </tr>))}
-
-                </tbody>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>
@@ -1706,7 +1844,7 @@ export default class AdminPortal extends Component {
                         newDesignation: "",
                       }))
                     }
-                    style={{marginLeft:"10px"}}
+                    style={{ marginLeft: "10px" }}
                     type="button"
                   >
                     रद्द करा
