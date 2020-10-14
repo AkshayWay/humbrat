@@ -26,9 +26,9 @@ class Confirmation extends React.Component {
           backdrop={enableEscape ? true : "static"}
           keyboard={enableEscape}
         >
-          <Modal.Header>
+          {/* <Modal.Header>
             <Modal.Title>{title}</Modal.Title>
-          </Modal.Header>
+          </Modal.Header> */}
           <Modal.Body>{confirmation}</Modal.Body>
           <Modal.Footer>
             <Button onClick={() => proceed(false)}>{cancelLabel}</Button>

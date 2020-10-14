@@ -728,7 +728,7 @@ Router.put(
 //Edit elected person end
 //Delete elected person
 Router.put(
-  "/elected_person",(req, res) => {
+  "/delete_elected_person",(req, res) => {
     // var FileName="";
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
@@ -740,7 +740,7 @@ Router.put(
       [
         req.body.tbl_elected_person_id,
         "",
-        "",
+       0,
         "",
         "",
         "",

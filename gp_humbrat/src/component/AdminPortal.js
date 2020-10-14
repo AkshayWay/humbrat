@@ -71,7 +71,7 @@ const BannerInfo = (props) => (
     </td>
   </tr>
 );
-//List of all work post
+
 //List of features
 const FeatureInfo = (props) => (
   <tr>
@@ -97,25 +97,7 @@ const FeatureInfo = (props) => (
   </tr>
 );
 //List of features end
-//List of elected person
-const ElectedPersonInfo = (props) => (
-  <tr>
-    <td>{props.ElectedInfo.tbl_elected_person_fullname}</td>
-    <td>{props.ElectedInfo.tbl_designation_name}</td>
-    <td>{props.ElectedInfo.tbl_elected_person_ward}</td>
-    <td>{props.ElectedInfo.tbl_elected_person_contact_no}</td>
-    <td>
-      <Link
-        className="btn btn-primary"
-        to={"/edit_officers/" + props.ElectedInfo.tbl_elected_person_id}
-      >
-        माहिती बदल
-      </Link>
-    </td>
-    <td>{/* <DeleteFeature variant={props.FeatureInfo} /> */}</td>
-  </tr>
-);
-//List of elected person end
+//List of all work post
 const WorkPostInfo = (props) => (
   <tr>
     <td>{props.WorkPostInfo.tbl_work_title}</td>
@@ -688,6 +670,7 @@ export default class AdminPortal extends Component {
     this.removeEmployee = this.removeEmployee.bind(this);
     this.removeDesignation = this.removeDesignation.bind(this);
     // this.editDesignationFun = this.editDesignationFun.bind(this);
+    this.removeOfficer = this.removeOfficer.bind(this);
     this.handleDesignationPageChange = this.handleDesignationPageChange.bind(
       this
     );
@@ -756,7 +739,7 @@ export default class AdminPortal extends Component {
           this.setState({
             electedPersonArr: response.data,
           });
-          console.log("Elected person", this.state.electedPersonArr)
+          console.log("electedPersonArr:",this.state.electedPersonArr[0].tbl_elected_person_img)
         });
 
       const employess = await axios
@@ -843,24 +826,6 @@ export default class AdminPortal extends Component {
       return (
         <tr>
           <td colSpan="4">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
-  electedPersonList() {
-    if (this.state.electedPersonArr.length > 0) {
-      return this.state.electedPersonArr.map(function (electedInfo, i) {
-        return (
-          <ElectedPersonInfo
-            ElectedInfo={electedInfo}
-            key={i}
-          ></ElectedPersonInfo>
-        );
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="5">माहिती उपलब्ध नाही</td>
         </tr>
       );
     }
@@ -1104,8 +1069,6 @@ export default class AdminPortal extends Component {
           //   ],
           //   newDesignation: "",
           // });
-          console.log("Original Arr", this.state.designationArr);
-          console.log("Current Arr", this.state.currentDesignationData);
           this.setState({
             // designationArr: [...this.state.designationArr, newItem],
             //designationArr: [...this.state.designationArr, newItem],
@@ -1119,7 +1082,45 @@ export default class AdminPortal extends Component {
         });
     }
   };
+  async removeOfficer(idx, officerName, officerImg, officerId) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '"+ officerName + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      const obj = {
+        tbl_elected_person_id: officerId,
+        tbl_elected_person_img: officerImg,
+      };
+      axios
+        .put("http://localhost:4500/humbrat/delete_elected_person/", obj)
+        .then((res) => {
+          console.log(res);
+          const rows = [...this.state.electedPersonArr];
+          rows.splice(idx, 1);
+          this.setState({ electedPersonArr: rows });
 
+          store.addNotification({
+            title: "अधिकारी माहिती",
+            message: "अधिकारी माहिती काढून टाकण्यात आली आहे",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon:true
+            },
+            width:600
+          });
+        });
+        
+    }
+  }
   async removeEmployee(idx, employeeName, employeeImg, empId) {
     if (
       await confirm(
@@ -1161,6 +1162,7 @@ export default class AdminPortal extends Component {
   async removeDesignation(idx, designationName, deleteID) {
     if (
       await confirm(
+        "afsd",
         "तुम्ही नक्की '" + designationName + "' काढून टाकू इच्चीता?",
         "काढून टाका",
         "रद्द करा"
@@ -1216,7 +1218,6 @@ export default class AdminPortal extends Component {
     let upperLimit = parseInt(pageNumber) * 5;
     let lowerLimit = upperLimit - 5;
     let data = [];
-    console.log("On change page:" + this.state.itemLength);
     if (upperLimit <= this.state.itemLength) {
       data = this.state.designationArr.slice(lowerLimit, upperLimit);
     } else {
@@ -1441,7 +1442,7 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+    <tbody>{this.WorkPostList()}</tbody>
               </table>
             </div>
           </div>
@@ -1540,7 +1541,6 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                {/* <tbody>{this.electedPersonList()}</tbody> */}
                 <tbody>
                 {this.state.electedPersonArr.map((item, idx) => (
                       <tr id="electedPerson" key={idx}>
@@ -1550,12 +1550,25 @@ export default class AdminPortal extends Component {
                 <td>{this.state.electedPersonArr[idx].tbl_elected_person_ward}</td>
                 <td>{this.state.electedPersonArr[idx].tbl_elected_person_contact_no}</td>
                 <td> <Link
-        className="btn btn-primary"
+        className="btn btn-outline-info"
         to={"/edit_officers/" +  this.state.electedPersonArr[idx].tbl_elected_person_id}
       >
         माहिती बदल
       </Link></td>
-                <td>Delete</td>
+                <td><button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeOfficer(
+                                idx,
+                                this.state.electedPersonArr[idx]
+                                  .tbl_elected_person_fullname,
+                                this.state.electedPersonArr[idx].tbl_elected_person_img,
+                                this.state.electedPersonArr[idx].tbl_elected_person_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button></td>
                       </tr>))}
 
                 </tbody>

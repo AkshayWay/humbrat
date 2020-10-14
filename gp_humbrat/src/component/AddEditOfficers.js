@@ -18,7 +18,6 @@ export default class AddEditOfficers extends Component {
       electedWord: "",
       phoneNumber: "",
       designation: 0,
-      designation: 0,
       selectedFile: null,
       ElectedPersonImg: "",
       imgDisplay: "none",
@@ -26,14 +25,14 @@ export default class AddEditOfficers extends Component {
   }
 
   componentDidMount() {
-    debugger;
     axios
       .get("http://localhost:4500/humbrat/designation")
       .then((response) => {
         this.setState({
           designationArr: response.data,
-          designation: response.data[0].tbl_designaton_type,
+          designation: response.data[0].tbl_designation_id,
         });
+        console.log("Designation selected:"+this.state.designation)
       })
       .catch(function (error) {
         console.log(error);
