@@ -381,7 +381,8 @@ function ViewFeature(props) {
       tbl_features_id: props.variant.tbl_features_id,
       tbl_features_title: imgTitleInput,
       tbl_features_description: imgDescInput,
-      tbl_features_is_deleted: null,
+      tbl_features_is_deleted: 0,
+      tbl_features_file_name: "",
     };
     axios
       .put(
@@ -661,6 +662,11 @@ export default class AdminPortal extends Component {
       switchSort: false,
       activePage: 1,
       itemLength: 0,
+      //table pagination for village features
+      currentFeatureData: [],
+      switchSortFeature: false,
+      activePageFeature: 0,
+      itemFeatureLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -675,10 +681,9 @@ export default class AdminPortal extends Component {
     this.handleDesignationPageChange = this.handleDesignationPageChange.bind(
       this
     );
+    this.handleFeaturePageChange = this.handleFeaturePageChange.bind(this);
   }
-
   async componentDidMount() {
-    // alert("userEmail" + localStorage.getItem("userEmail"));
     if (
       localStorage.getItem("userEmail") != null &&
       localStorage.getItem("isLoggedIn") == 1
@@ -732,6 +737,12 @@ export default class AdminPortal extends Component {
           this.setState({
             featureArr: response.data,
           });
+          let totalItemsCount = this.state.featureArr.length;
+          let currentFeatureData = this.state.featureArr.slice(0, 5);
+          this.setState({
+            currentFeatureData,
+            itemFeatureLength: totalItemsCount,
+          });
         });
 
       const elected_person = await axios
@@ -740,10 +751,6 @@ export default class AdminPortal extends Component {
           this.setState({
             electedPersonArr: response.data,
           });
-          console.log(
-            "electedPersonArr:",
-            this.state.electedPersonArr[0].tbl_elected_person_img
-          );
         });
 
       const employess = await axios
@@ -766,7 +773,6 @@ export default class AdminPortal extends Component {
             currentDesignationData,
             itemLength: totalItemsCount,
           });
-          console.log("itemLength:" + this.state.itemLength);
         });
 
       return (
@@ -816,24 +822,24 @@ export default class AdminPortal extends Component {
       );
     }
   }
-  featureList() {
-    if (this.state.featureArr.length > 0) {
-      return this.state.featureArr.map(function (featureInfo, i) {
-        return (
-          <FeatureInfo
-            FeatureInfo={featureInfo}
-            key={featureInfo.tbl_features_id}
-          ></FeatureInfo>
-        );
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="4">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
+  // featureList() {
+  //   if (this.state.featureArr.length > 0) {
+  //     return this.state.featureArr.map(function (featureInfo, i) {
+  //       return (
+  //         <FeatureInfo
+  //           FeatureInfo={featureInfo}
+  //           key={featureInfo.tbl_features_id}
+  //         ></FeatureInfo>
+  //       );
+  //     });
+  //   } else {
+  //     return (
+  //       <tr>
+  //         <td colSpan="4">माहिती उपलब्ध नाही</td>
+  //       </tr>
+  //     );
+  //   }
+  // }
   WorkPostList() {
     //  console.log("Work before mapping", this.state.workPostArr[3].tbl_work_date);
     if (this.state.workPostArr.length > 0) {
@@ -925,7 +931,6 @@ export default class AdminPortal extends Component {
   onFeatureUpload = (e) => {
     e.preventDefault();
     if (this.state.selectedFeatureFile == undefined) {
-      //  console.log("File not selected");
       const featureImg = new FormData();
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
@@ -1103,14 +1108,30 @@ export default class AdminPortal extends Component {
       const obj = {
         tbl_features_id: featureId,
         tbl_features_is_deleted: 1,
+        tbl_features_file_name: villageFeatureImg,
       };
       axios
         .put("http://localhost:4500/humbrat/village_features/" + featureId, obj)
         .then((res) => {
           console.log(res);
-          const rows = [...this.state.featureArr];
-          rows.splice(idx, 1);
-          this.setState({ featureArr: rows });
+          // const rows = [...this.state.featureArr];
+          // rows.splice(idx, 1);
+          // this.setState({ featureArr: rows });
+
+          const rowsTemp = [...this.state.currentFeatureData];
+          rowsTemp.splice(idx, 1);
+
+          let featureID = this.state.currentFeatureData[idx].tbl_features_id;
+          const elementsIndex = this.state.featureArr.findIndex(
+            (element) => element.tbl_features_id == featureID
+          );
+
+          const rowsOriginal = [...this.state.featureArr];
+          rowsOriginal.splice(elementsIndex, 1);
+          this.setState({
+            featureArr: rowsOriginal,
+            currentFeatureData: rowsTemp,
+          });
 
           store.addNotification({
             title: "गावाची वैशिष्ट्य माहिती",
@@ -1273,6 +1294,21 @@ export default class AdminPortal extends Component {
     this.setState({
       currentDesignationData: data,
       activePage: pageNumber,
+    });
+  }
+  handleFeaturePageChange(pageNumber) {
+    debugger;
+    let upperLimit = parseInt(pageNumber) * 5;
+    let lowerLimit = upperLimit - 5;
+    let data = [];
+    if (upperLimit <= this.state.itemFeatureLength) {
+      data = this.state.featureArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.featureArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentFeatureData: data,
+      activePageFeature: pageNumber,
     });
   }
   render() {
@@ -1554,26 +1590,34 @@ export default class AdminPortal extends Component {
                 {this.state.featureArr == "" ? (
                   <tbody>
                     <tr>
-                      {" "}
                       <td colSpan="4">माहिती उपलब्ध नाही</td>
                     </tr>
                   </tbody>
                 ) : (
                   <tbody>
-                    {this.state.featureArr.map((item, idx) => (
+                    {this.state.currentFeatureData.map((item, idx) => (
                       <tr id="villageFeatures" key={idx}>
-                        <td>{this.state.featureArr[idx].tbl_features_title}</td>
+                        <td>
+                          {
+                            this.state.currentFeatureData[idx]
+                              .tbl_features_title
+                          }
+                        </td>
                         <td>
                           <img
                             src={
                               "feature/" +
-                              this.state.featureArr[idx].tbl_features_file_name
+                              this.state.currentFeatureData[idx]
+                                .tbl_features_file_name
                             }
-                            alt={this.state.featureArr[idx].tbl_features_title}
+                            alt={
+                              this.state.currentFeatureData[idx]
+                                .tbl_features_title
+                            }
                             style={{
                               width: 80,
                               height: 60,
-                              display: this.state.featureArr[idx]
+                              display: this.state.currentFeatureData[idx]
                                 .tbl_features_file_name
                                 ? "inline"
                                 : "none",
@@ -1581,19 +1625,22 @@ export default class AdminPortal extends Component {
                           ></img>
                         </td>
                         <td>
-                          <ViewFeature variant={this.state.featureArr[idx]} />
+                          <ViewFeature
+                            variant={this.state.currentFeatureData[idx]}
+                          />
                         </td>
                         <td>
-                          {" "}
                           <button
                             className="btn btn-outline-danger btn-sm"
                             onClick={() => {
                               this.removeVillageFeature(
                                 idx,
-                                this.state.featureArr[idx].tbl_features_title,
-                                this.state.featureArr[idx]
+                                this.state.currentFeatureData[idx]
+                                  .tbl_features_title,
+                                this.state.currentFeatureData[idx]
                                   .tbl_features_file_name,
-                                this.state.featureArr[idx].tbl_features_id
+                                this.state.currentFeatureData[idx]
+                                  .tbl_features_id
                               );
                             }}
                           >
@@ -1605,6 +1652,17 @@ export default class AdminPortal extends Component {
                   </tbody>
                 )}
               </table>
+              <div>
+                <Pagination
+                  activePageFeature={this.state.activePageFeature}
+                  itemsCountPerPage={5}
+                  totalItemsCount={this.state.itemFeatureLength}
+                  pageRangeDisplayed={5}
+                  onChange={this.handleFeaturePageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
+              </div>
             </div>
           </div>
         </div>

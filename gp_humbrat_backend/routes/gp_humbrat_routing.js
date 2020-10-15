@@ -619,6 +619,19 @@ Router.put("/village_features/:id", (req, res) => {
     ],
     (err, rows) => {
       if (!err) {
+        if (
+          req.body.tbl_features_file_name != "" &&
+          req.body.tbl_features_file_name != undefined
+        ) {
+          const path = "./feature/" + req.body.tbl_features_file_name;
+          if (fs.existsSync(path)) {
+            try {
+              fs.unlinkSync(path);
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
         res.status(201).json({
           message: "Feature edited/deleted successfully",
         });
@@ -650,7 +663,7 @@ Router.get("/elected_person_list", (req, res) => {
       " from tbl_elected_person as tbl1" +
       " Inner Join tbl_designation as tbl2 ON" +
       " tbl1.tbl_elected_person_designation=tbl2.tbl_designation_id" +
-      " where tbl1.tbl_elected_person_is_active <> 0"+
+      " where tbl1.tbl_elected_person_is_active <> 0" +
       " order by tbl2.tbl_designation_id ASC;",
     (err, rows) => {
       if (!err) {
@@ -705,14 +718,14 @@ Router.put(
       ],
       (err, rows) => {
         if (!err) {
-          if (req.body.previousImg != "" && ElectedPersonImg!="No image") {
+          if (req.body.previousImg != "" && ElectedPersonImg != "No image") {
             const path = "./elected_person/" + req.body.previousImg;
-            if(fs.existsSync(path)) {
+            if (fs.existsSync(path)) {
               try {
                 fs.unlinkSync(path);
               } catch (err) {
                 console.error(err);
-              }  
+              }
             }
           }
           res.status(201).json({
@@ -727,47 +740,37 @@ Router.put(
 );
 //Edit elected person end
 //Delete elected person
-Router.put(
-  "/delete_elected_person",(req, res) => {
-    // var FileName="";
-    var sqlQuery =
-      "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
-      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
-      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
+Router.put("/delete_elected_person", (req, res) => {
+  // var FileName="";
+  var sqlQuery =
+    "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
+    "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+    "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
 
-    mySqlConnection.query(
-      sqlQuery,
-      [
-        req.body.tbl_elected_person_id,
-        "",
-       0,
-        "",
-        "",
-        "",
-        0,
-      ],
-      (err, rows) => {
-        if (!err) {
-          if (req.body.previousImg) {
-            const path = "./elected_person/" + req.body.previousImg;
-            if(fs.existsSync(path)) {
-              try {
-                fs.unlinkSync(path);
-              } catch (err) {
-                console.error(err);
-              }  
+  mySqlConnection.query(
+    sqlQuery,
+    [req.body.tbl_elected_person_id, "", 0, "", "", "", 0],
+    (err, rows) => {
+      if (!err) {
+        if (req.body.previousImg) {
+          const path = "./elected_person/" + req.body.previousImg;
+          if (fs.existsSync(path)) {
+            try {
+              fs.unlinkSync(path);
+            } catch (err) {
+              console.error(err);
             }
           }
-          res.status(201).json({
-            message: "Elected Person deleted successfully",
-          });
-        } else {
-          console.log("Error :" + err);
         }
+        res.status(201).json({
+          message: "Elected Person deleted successfully",
+        });
+      } else {
+        console.log("Error :" + err);
       }
-    );
-  }
-);
+    }
+  );
+});
 //Delete elected person end
 
 //Designations for employee
@@ -791,7 +794,9 @@ Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
     let newEmployee = req.file;
     EmployeeImg = newEmployee.filename;
   }
-console.log("req.body.tbl_employee_designation:"+req.body.tbl_employee_designation,)
+  console.log(
+    "req.body.tbl_employee_designation:" + req.body.tbl_employee_designation
+  );
   var sqlQuery =
     "SET @tbl_employee_id=?;SET @tbl_employee_fullName=?; SET @tbl_employee_designation=?;" +
     "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;CALL sp_employee" +
@@ -846,16 +851,16 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
     ],
     (err, rows) => {
       if (!err) {
-        if (req.body.tbl_employee_img != "" && EmployeeImg!="No image") {
+        if (req.body.tbl_employee_img != "" && EmployeeImg != "No image") {
           const path = "./employees/" + req.body.tbl_employee_img;
-          if(fs.existsSync(path)) {
-          try {
-            fs.unlinkSync(path);
-          } catch (err) {
-            console.error(err);
+          if (fs.existsSync(path)) {
+            try {
+              fs.unlinkSync(path);
+            } catch (err) {
+              console.error(err);
+            }
           }
         }
-      }
         // res.send(rows);
         res.status(201).json({
           message: "Employee info updated successfully",
@@ -919,15 +924,15 @@ Router.put("/delete_employee", (req, res) => {
         // res.send(rows);
         if (req.body.tbl_employee_img != "") {
           const path = "./employees/" + req.body.tbl_employee_img;
-          if(fs.existsSync(path)) {
-          try {
-            fs.unlinkSync(path);
-            //file removed
-          } catch (err) {
-            console.error(err);
+          if (fs.existsSync(path)) {
+            try {
+              fs.unlinkSync(path);
+              //file removed
+            } catch (err) {
+              console.error(err);
+            }
           }
         }
-      }
         res.status(201).json({
           message: "Employee info deleted successfully",
         });
