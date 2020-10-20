@@ -250,7 +250,7 @@ Router.post(
         if (!err) {
           // res.send(rows);
           res.status(201).json({
-            message: "Feature created successfully",
+            message: "Image:" + FileName,
           });
         } else {
           console.log("Error :" + err);

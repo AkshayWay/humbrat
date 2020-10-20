@@ -13,6 +13,7 @@ import { Modal, Button, Form, Col, Alert } from "react-bootstrap";
 import * as $ from "jquery";
 import { confirm } from "../common/Confirmation";
 import Pagination from "react-js-pagination";
+
 import { store } from "react-notifications-component";
 
 const NewsList = (props) => (
@@ -73,29 +74,29 @@ const BannerInfo = (props) => (
 );
 
 //List of features
-const FeatureInfo = (props) => (
-  <tr>
-    <td>{props.FeatureInfo.tbl_features_title}</td>
-    <td>
-      <img
-        src={"feature/" + props.FeatureInfo.tbl_features_file_name}
-        alt={props.FeatureInfo.tbl_features_title}
-        style={{
-          width: 80,
-          height: 60,
-          display: props.FeatureInfo.tbl_features_file_name ? "inline" : "none",
-        }}
-      ></img>
-    </td>
+// const FeatureInfo = (props) => (
+//   <tr>
+//     <td>{props.FeatureInfo.tbl_features_title}</td>
+//     <td>
+//       <img
+//         src={"feature/" + props.FeatureInfo.tbl_features_file_name}
+//         alt={props.FeatureInfo.tbl_features_title}
+//         style={{
+//           width: 80,
+//           height: 60,
+//           display: props.FeatureInfo.tbl_features_file_name ? "inline" : "none",
+//         }}
+//       ></img>
+//     </td>
 
-    <td>
-      <ViewFeature variant={props.FeatureInfo} />
-    </td>
-    <td>
-      <DeleteFeature variant={props.FeatureInfo} />
-    </td>
-  </tr>
-);
+//     <td>
+//       <ViewFeature variant={props.FeatureInfo} />
+//     </td>
+//     <td>
+//       <DeleteFeature variant={props.FeatureInfo} />
+//     </td>
+//   </tr>
+// );
 //List of features end
 //List of all work post
 const WorkPostInfo = (props) => (
@@ -228,52 +229,52 @@ function DeleteWork(props) {
 }
 //Delete work post end
 //Delete village feature start
-function DeleteFeature(props) {
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const deleteAndClose = () => {
-    const obj = {
-      tbl_features_id: props.variant.tbl_features_id,
-      tbl_features_title: null,
-      tbl_features_description: null,
-      tbl_features_is_deleted: 1,
-    };
-    axios
-      .put(
-        "http://localhost:4500/humbrat/village_features/" +
-          props.variant.tbl_features_id,
-        obj
-      )
-      .then((res) => console.log(res.data), window.location.reload(true));
-    setShow(false);
-  };
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        काढून टाका
-      </Button>
+// function DeleteFeature(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   const deleteAndClose = () => {
+//     const obj = {
+//       tbl_features_id: props.variant.tbl_features_id,
+//       tbl_features_title: null,
+//       tbl_features_description: null,
+//       tbl_features_is_deleted: 1,
+//     };
+//     axios
+//       .put(
+//         "http://localhost:4500/humbrat/village_features/" +
+//           props.variant.tbl_features_id,
+//         obj
+//       )
+//       .then((res) => console.log(res.data), window.location.reload(true));
+//     setShow(false);
+//   };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         काढून टाका
+//       </Button>
 
-      <Modal show={show} onHide={handleClose} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>वैशिष्ठ काढून टाका</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_features_title}</b>' हे वैशिष्ठ
-          काढून टाकू इच्चीता?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>वैशिष्ठ काढून टाका</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           तुम्ही नक्की '<b>{props.variant.tbl_features_title}</b>' हे वैशिष्ठ
+//           काढून टाकू इच्चीता?
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={deleteAndClose}>
+//             काढून टाका
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 //Delete village feature end
 //View Banner Image and make changes
 function ViewBanner(props) {
@@ -362,12 +363,20 @@ function ViewFeature(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [imgDescInput, setimgDescInput] = useState(
-    props.variant.tbl_features_description
+  var [imgDescFeatureInput, setimgDescInput] = useState(
+    ...props.variant.tbl_features_description
   );
+  React.useEffect(() => {
+    setimgDescInput(props.variant.tbl_features_description);
+  }, [props.variant.tbl_features_description]);
+
   const [imgTitleInput, setImgTitleInput] = useState(
-    props.variant.tbl_features_title
+    ...props.variant.tbl_features_title
   );
+  React.useEffect(() => {
+    setImgTitleInput(props.variant.tbl_features_title);
+  }, [props.variant.tbl_features_title]);
+
   const changeDescHandler = (e) => {
     setimgDescInput(e.target.value);
   };
@@ -380,7 +389,7 @@ function ViewFeature(props) {
     const obj = {
       tbl_features_id: props.variant.tbl_features_id,
       tbl_features_title: imgTitleInput,
-      tbl_features_description: imgDescInput,
+      tbl_features_description: imgDescFeatureInput,
       tbl_features_is_deleted: 0,
       tbl_features_file_name: "",
     };
@@ -390,7 +399,7 @@ function ViewFeature(props) {
           props.variant.tbl_features_id,
         obj
       )
-      .then((res) => console.log(res.data), window.location.reload(true));
+      .then((res) => console.log(res.data));
   };
   return (
     <>
@@ -424,7 +433,7 @@ function ViewFeature(props) {
             <label>छायाचित्र माहिती</label>
             <textarea
               className="form-control"
-              value={imgDescInput}
+              value={imgDescFeatureInput}
               onChange={changeDescHandler}
               rows="3"
             ></textarea>
@@ -665,7 +674,7 @@ export default class AdminPortal extends Component {
       //table pagination for village features
       currentFeatureData: [],
       switchSortFeature: false,
-      activePageFeature: 0,
+      activePageFeature: 1,
       itemFeatureLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
@@ -929,21 +938,38 @@ export default class AdminPortal extends Component {
     }
   };
   onFeatureUpload = (e) => {
+    debugger;
     e.preventDefault();
     if (this.state.selectedFeatureFile == undefined) {
       const featureImg = new FormData();
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
+      let lengthArr = this.state.featureArr.length - 1;
+      console.log("lengthArr:" + lengthArr);
+      const newId = this.state.featureArr[lengthArr].tbl_features_id + 1;
+      console.log("newId:" + newId);
       axios
         .post("http://localhost:4500/humbrat/village_features", featureImg)
         .then((res) => {
           console.log(res);
+          const newItem = {
+            tbl_features_id: newId,
+            tbl_features_file_name: "",
+            tbl_features_title: this.state.featureTitle,
+            tbl_features_description: this.state.featureDesc,
+            tbl_features_is_deleted: 0,
+          };
+
+          this.state.featureArr.splice(0, 0, newItem);
+          if (this.state.activePage == 1) {
+            this.state.currentFeatureData.splice(0, 0, newItem);
+          }
+
           this.setState({
             featureTitle: "",
             featureDesc: "",
             selectedFeatureFile: "",
           });
-          window.location.reload();
         });
     } else {
       const featureImg = new FormData();
@@ -965,8 +991,17 @@ export default class AdminPortal extends Component {
             featureDesc: "",
             selectedFeatureFile: "",
           });
+
+          // const newItem = {
+          //   tbl_designation_id: newId,
+          //   tbl_designation_name: this.state.newDesignation,
+          // };
+          //  this.state.featureArr.splice(0, 0, newItem);
+          // if(this.state.activePageFeature==1){
+          // this.state.currentDesignationData.splice(0, 0, newItem);
+          // }
         });
-      window.location.reload(true);
+      //window.location.reload(true);
     }
   };
   onBannerChange = (event) => {
@@ -1069,7 +1104,9 @@ export default class AdminPortal extends Component {
           };
 
           this.state.designationArr.splice(0, 0, newItem);
-          this.state.currentDesignationData.splice(0, 0, newItem);
+          if (this.state.activePage == 1) {
+            this.state.currentDesignationData.splice(0, 0, newItem);
+          }
           // this.setState({
           //   designationArr: [...this.state.designationArr, newItem],
           //   currentDesignationData: [
@@ -1297,7 +1334,6 @@ export default class AdminPortal extends Component {
     });
   }
   handleFeaturePageChange(pageNumber) {
-    debugger;
     let upperLimit = parseInt(pageNumber) * 5;
     let lowerLimit = upperLimit - 5;
     let data = [];
@@ -1654,7 +1690,7 @@ export default class AdminPortal extends Component {
               </table>
               <div>
                 <Pagination
-                  activePageFeature={this.state.activePageFeature}
+                  activePage={this.state.activePageFeature}
                   itemsCountPerPage={5}
                   totalItemsCount={this.state.itemFeatureLength}
                   pageRangeDisplayed={5}
