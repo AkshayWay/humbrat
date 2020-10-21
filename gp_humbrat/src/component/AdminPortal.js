@@ -386,6 +386,7 @@ function ViewFeature(props) {
   };
 
   const editFeature = () => {
+    debugger;
     const obj = {
       tbl_features_id: props.variant.tbl_features_id,
       tbl_features_title: imgTitleInput,
@@ -400,6 +401,33 @@ function ViewFeature(props) {
         obj
       )
       .then((res) => console.log(res.data));
+
+    const elementCurrentIndex = this.state.currentFeatureData.findIndex(
+      (element) => element.tbl_features_id == props.variant.tbl_features_id
+    );
+
+    const elementOriginalIndex = this.state.featureArr.findIndex(
+      (element) => element.tbl_features_id == props.variant.tbl_features_id
+    );
+
+    console.log("elementCurrentIndex:" + elementCurrentIndex);
+    console.log("elementOriginalIndex:" + elementOriginalIndex);
+    // let newArray = [...this.state.currentFeatureData];
+    //     newArray[this.state.designationIDX] = {
+    //       ...newArray[this.state.designationIDX],
+    //       tbl_designation_name: this.state.newDesignation,
+    //     };
+    //     let desID = this.state.currentDesignationData[
+    //       this.state.designationIDX
+    //     ].tbl_designation_id;
+    //     const elementsIndex = this.state.designationArr.findIndex(
+    //       (element) => element.tbl_designation_id == desID
+    //     );
+    //     let newArrayToMainArr = [...this.state.designationArr];
+    //     newArrayToMainArr[elementsIndex] = {
+    //       ...newArrayToMainArr[elementsIndex],
+    //       tbl_designation_name: this.state.newDesignation,
+    //     };
   };
   return (
     <>
@@ -940,18 +968,20 @@ export default class AdminPortal extends Component {
   onFeatureUpload = (e) => {
     debugger;
     e.preventDefault();
-    if (this.state.selectedFeatureFile == undefined) {
+    if (
+      this.state.selectedFeatureFile == undefined ||
+      this.state.selectedFeatureFile == "" ||
+      this.state.selectedFeatureFile == null
+    ) {
       const featureImg = new FormData();
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
       let lengthArr = this.state.featureArr.length - 1;
-      console.log("lengthArr:" + lengthArr);
-      const newId = this.state.featureArr[lengthArr].tbl_features_id + 1;
-      console.log("newId:" + newId);
       axios
         .post("http://localhost:4500/humbrat/village_features", featureImg)
         .then((res) => {
-          console.log(res);
+          console.log(res.data[0].tbl_features_id);
+          let newId = res.data[0].tbl_features_id;
           const newItem = {
             tbl_features_id: newId,
             tbl_features_file_name: "",
@@ -960,10 +990,14 @@ export default class AdminPortal extends Component {
             tbl_features_is_deleted: 0,
           };
 
-          this.state.featureArr.splice(0, 0, newItem);
-          if (this.state.activePage == 1) {
-            this.state.currentFeatureData.splice(0, 0, newItem);
-          }
+          this.state.featureArr.splice(
+            this.state.itemFeatureLength,
+            0,
+            newItem
+          );
+          // if (this.state.activePage == 1) {
+          //   this.state.currentFeatureData.splice(0, 0, newItem);
+          // }
 
           this.setState({
             featureTitle: "",
@@ -1147,6 +1181,7 @@ export default class AdminPortal extends Component {
         tbl_features_is_deleted: 1,
         tbl_features_file_name: villageFeatureImg,
       };
+      debugger;
       axios
         .put("http://localhost:4500/humbrat/village_features/" + featureId, obj)
         .then((res) => {
@@ -1154,7 +1189,6 @@ export default class AdminPortal extends Component {
           // const rows = [...this.state.featureArr];
           // rows.splice(idx, 1);
           // this.setState({ featureArr: rows });
-
           const rowsTemp = [...this.state.currentFeatureData];
           rowsTemp.splice(idx, 1);
 

@@ -207,7 +207,7 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
       if (!err) {
         // res.send(rows);
         res.status(201).json({
-          message: "Created product successfully",
+          message: "Created dashboard successfully",
           createdImage: {
             id: rows.tbl_banner_id,
             name: rows.tbl_banner_title,
@@ -248,10 +248,21 @@ Router.post(
       [0, FileName, req.body.feature_title, req.body.feature_desc, null],
       (err, rows) => {
         if (!err) {
-          // res.send(rows);
-          res.status(201).json({
-            message: "Image:" + FileName,
-          });
+          mySqlConnection.query(
+            "select tbl_features_id,tbl_features_file_name from tbl_features order by tbl_features_id desc limit 1;",
+            (err, rows) => {
+              if (!err) {
+                console.log("Id and image:" + rows);
+                res.send(rows);
+              } else {
+                console.log("Error :" + err);
+              }
+            }
+          );
+          // var featureID=
+          // res.status(201).json({
+          //   message: "Image:" + FileName,
+          // });
         } else {
           console.log("Error :" + err);
         }
@@ -603,6 +614,7 @@ Router.get("/village_features", (req, res) => {
 //Features of the village end
 //Feature of the village edit
 Router.put("/village_features/:id", (req, res) => {
+  console.log("Feature id:" + req.body.tbl_features_id);
   var sqlQuery =
     "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
     "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
