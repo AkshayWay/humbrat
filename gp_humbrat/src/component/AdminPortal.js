@@ -400,34 +400,7 @@ function ViewFeature(props) {
           props.variant.tbl_features_id,
         obj
       )
-      .then((res) => console.log(res.data));
-
-    const elementCurrentIndex = this.state.currentFeatureData.findIndex(
-      (element) => element.tbl_features_id == props.variant.tbl_features_id
-    );
-
-    const elementOriginalIndex = this.state.featureArr.findIndex(
-      (element) => element.tbl_features_id == props.variant.tbl_features_id
-    );
-
-    console.log("elementCurrentIndex:" + elementCurrentIndex);
-    console.log("elementOriginalIndex:" + elementOriginalIndex);
-    // let newArray = [...this.state.currentFeatureData];
-    //     newArray[this.state.designationIDX] = {
-    //       ...newArray[this.state.designationIDX],
-    //       tbl_designation_name: this.state.newDesignation,
-    //     };
-    //     let desID = this.state.currentDesignationData[
-    //       this.state.designationIDX
-    //     ].tbl_designation_id;
-    //     const elementsIndex = this.state.designationArr.findIndex(
-    //       (element) => element.tbl_designation_id == desID
-    //     );
-    //     let newArrayToMainArr = [...this.state.designationArr];
-    //     newArrayToMainArr[elementsIndex] = {
-    //       ...newArrayToMainArr[elementsIndex],
-    //       tbl_designation_name: this.state.newDesignation,
-    //     };
+      .then((res) => window.location.reload());
   };
   return (
     <>
@@ -775,7 +748,7 @@ export default class AdminPortal extends Component {
             featureArr: response.data,
           });
           let totalItemsCount = this.state.featureArr.length;
-          let currentFeatureData = this.state.featureArr.slice(0, 5);
+          let currentFeatureData = this.state.featureArr.slice(0, 10);
           this.setState({
             currentFeatureData,
             itemFeatureLength: totalItemsCount,
@@ -976,11 +949,9 @@ export default class AdminPortal extends Component {
       const featureImg = new FormData();
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
-      let lengthArr = this.state.featureArr.length - 1;
       axios
         .post("http://localhost:4500/humbrat/village_features", featureImg)
         .then((res) => {
-          console.log(res.data[0].tbl_features_id);
           let newId = res.data[0].tbl_features_id;
           const newItem = {
             tbl_features_id: newId,
@@ -995,14 +966,33 @@ export default class AdminPortal extends Component {
             0,
             newItem
           );
-          // if (this.state.activePage == 1) {
-          //   this.state.currentFeatureData.splice(0, 0, newItem);
-          // }
-
+          if (
+            this.state.activePageFeature * 10 >=
+            this.state.itemFeatureLength
+          ) {
+            let currentDataLength = this.state.currentFeatureData.length;
+            this.state.currentFeatureData.splice(currentDataLength, 0, newItem);
+          }
           this.setState({
             featureTitle: "",
             featureDesc: "",
             selectedFeatureFile: "",
+          });
+
+          store.addNotification({
+            title: "गावाची वैशिष्ट्य माहिती",
+            message: "गावाचे नवीन वैशिष्ठ जातं करण्यात आले आहे",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon: true,
+            },
+            width: 600,
           });
         });
     } else {
@@ -1020,22 +1010,29 @@ export default class AdminPortal extends Component {
         .then((res) => {
           console.log(res);
           //window.location.reload(true);
+          console.log(res.data[0].tbl_features_id);
+          console.log(res.data[1].tbl_features_file_name);
+          let newId = res.data[0].tbl_features_id;
+          let newImage = res.data[1].tbl_features_file_name;
+          const newItem = {
+            tbl_features_id: newId,
+            tbl_features_file_name: newImage,
+            tbl_features_title: this.state.featureTitle,
+            tbl_features_description: this.state.featureDesc,
+            tbl_features_is_deleted: 0,
+          };
+
+          this.state.featureArr.splice(
+            this.state.itemFeatureLength,
+            0,
+            newItem
+          );
           this.setState({
             featureTitle: "",
             featureDesc: "",
             selectedFeatureFile: "",
           });
-
-          // const newItem = {
-          //   tbl_designation_id: newId,
-          //   tbl_designation_name: this.state.newDesignation,
-          // };
-          //  this.state.featureArr.splice(0, 0, newItem);
-          // if(this.state.activePageFeature==1){
-          // this.state.currentDesignationData.splice(0, 0, newItem);
-          // }
         });
-      //window.location.reload(true);
     }
   };
   onBannerChange = (event) => {
@@ -1368,8 +1365,8 @@ export default class AdminPortal extends Component {
     });
   }
   handleFeaturePageChange(pageNumber) {
-    let upperLimit = parseInt(pageNumber) * 5;
-    let lowerLimit = upperLimit - 5;
+    let upperLimit = parseInt(pageNumber) * 10;
+    let lowerLimit = upperLimit - 10;
     let data = [];
     if (upperLimit <= this.state.itemFeatureLength) {
       data = this.state.featureArr.slice(lowerLimit, upperLimit);
@@ -1725,7 +1722,7 @@ export default class AdminPortal extends Component {
               <div>
                 <Pagination
                   activePage={this.state.activePageFeature}
-                  itemsCountPerPage={5}
+                  itemsCountPerPage={10}
                   totalItemsCount={this.state.itemFeatureLength}
                   pageRangeDisplayed={5}
                   onChange={this.handleFeaturePageChange}
