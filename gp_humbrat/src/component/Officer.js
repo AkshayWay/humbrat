@@ -1,25 +1,5 @@
 import React, { Component } from "react";
-
 import axios from "axios";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  hashHistory,
-} from "react-router-dom";
-import ReactBootstrap, {
-  Navbar,
-  Button,
-  Nav,
-  Col,
-  Form,
-  FormControl,
-  Grid,
-  Panel,
-  FormGroup,
-} from "react-bootstrap";
-import gp_literacy from "../assets/images/archana.jpeg";
 
 class Office extends Component {
   constructor() {
@@ -39,7 +19,6 @@ class Office extends Component {
         this.setState({
           electedPersonArr: response.data,
         });
-        console.log("List", this.state.electedPersonArr);
       });
 
     axios
@@ -48,7 +27,6 @@ class Office extends Component {
         this.setState({
           employeeArr: response.data,
         });
-        console.log("employeeArr", this.state.employeeArr);
       });
   }
 
