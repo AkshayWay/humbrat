@@ -28,6 +28,7 @@ class Office extends Component {
       memberShow: true,
       officersShow: true,
       electedPersonArr: [],
+      employeeArr: [],
     };
   }
 
@@ -38,8 +39,17 @@ class Office extends Component {
         this.setState({
           electedPersonArr: response.data,
         });
+        console.log("List", this.state.electedPersonArr);
       });
-    console.log("List", this.state.electedPersonArr);
+
+    axios
+      .get("http://localhost:4500/humbrat/employee_list")
+      .then((response) => {
+        this.setState({
+          employeeArr: response.data,
+        });
+        console.log("employeeArr", this.state.employeeArr);
+      });
   }
 
   collapseMemberIcon(e) {
@@ -57,14 +67,86 @@ class Office extends Component {
     var memberIcon;
     var officerIcon;
     if (this.state.memberShow) {
-      memberIcon = "fa fa-angle-double-up";
+      memberIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
     } else {
-      memberIcon = "fa fa-angle-double-down";
+      memberIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
     }
     if (this.state.officersShow) {
-      officerIcon = "fa fa-angle-double-up";
+      officerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
     } else {
-      officerIcon = "fa fa-angle-double-down";
+      officerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
     }
 
     return (
@@ -73,20 +155,8 @@ class Office extends Component {
           <div style={{ textAlign: "center" }}>
             <h4>सदस्य</h4>
           </div>
-          {/* <a
-            className="btn btn-primary"
-            data-toggle="collapse"
-            href="#collapseMember"
-            role="button"
-            aria-expanded="false"
-            aria-controls="collapseMember"
-            id="MemberId"
-            onClick={() => this.collapseMemberIcon}
-          >
-            <i className={memberIcon}></i>
-          </a> */}
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-primary"
             type="button"
             data-toggle="collapse"
             data-target="#collapseMember"
@@ -94,55 +164,76 @@ class Office extends Component {
             aria-controls="collapseMember"
             onClick={() => this.collapseMemberIcon(1)}
           >
-            <i className={memberIcon}></i>
+            {memberIcon}
           </button>
           <div className="collapse show" id="collapseMember">
-            <div
-              className="card mb-3 shadow p-3 mb-5 bg-white rounded"
-              style={{
-                maxWidth: 740 + "px",
-                margin: "auto",
-                textAlign: "center",
-              }}
-            >
-              <div className="row no-gutters">
-                <div className="col-md-4">
-                  <img src={gp_literacy} className="card-img" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h4 className="card-title">
-                      <b>सौ. अर्चना अरविंद वायंगणकर </b>
-                    </h4>
-                    <h5>सरपंच </h5>
-                    <p className="card-text">संपर्क : ९६०४४९०९३९ .</p>
-                  </div>
-                </div>
+            {this.state.electedPersonArr == "" ? (
+              <div>
+                <h2>No data found</h2>
               </div>
-            </div>
-            <div
-              className="card mb-3 shadow p-3 mb-5 bg-white rounded"
-              style={{
-                maxWidth: 740 + "px",
-                margin: "auto",
-                textAlign: "center",
-              }}
-            >
-              <div className="row no-gutters">
-                <div className="col-md-4">
-                  <img src={gp_literacy} className="card-img" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h4 className="card-title">
-                      <b>सौ. अर्चना अरविंद वायंगणकर </b>
-                    </h4>
-                    <h5>सरपंच </h5>
-                    <p className="card-text">संपर्क : ९६०४४९०९३९ .</p>
+            ) : (
+              <div>
+                {this.state.electedPersonArr.map((item, idx) => (
+                  <div
+                    className="card mb-3 shadow p-3 mb-5 bg-white rounded"
+                    style={{
+                      maxWidth: 740 + "px",
+                      margin: "auto",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div className="row no-gutters">
+                      <div className="col-md-4">
+                        <img
+                          src={
+                            "./elected_person/" +
+                            this.state.electedPersonArr[idx]
+                              .tbl_elected_person_img
+                          }
+                          className="card-img"
+                          alt={
+                            this.state.electedPersonArr[idx]
+                              .tbl_elected_person_img
+                          }
+                        />
+                      </div>
+                      <div className="col-md-8">
+                        <div className="card-body">
+                          <h4 className="card-title">
+                            <b>
+                              {
+                                this.state.electedPersonArr[idx]
+                                  .tbl_elected_person_fullname
+                              }{" "}
+                            </b>
+                          </h4>
+                          <h5>
+                            {
+                              this.state.electedPersonArr[idx]
+                                .tbl_designation_name
+                            }
+                          </h5>
+                          <h5>
+                            {
+                              this.state.electedPersonArr[idx]
+                                .tbl_elected_person_ward
+                            }
+                          </h5>
+                          <p className="card-text">
+                            संपर्क :{" "}
+                            {
+                              this.state.electedPersonArr[idx]
+                                .tbl_elected_person_contact_no
+                            }
+                            .
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div id="Officers">
@@ -150,7 +241,7 @@ class Office extends Component {
             <h4>कर्मचारी </h4>
           </div>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-primary"
             type="button"
             data-toggle="collapse"
             data-target="#collapseOfficers"
@@ -158,55 +249,63 @@ class Office extends Component {
             aria-controls="collapseOfficers"
             onClick={() => this.collapseMemberIcon(2)}
           >
-            <i className={officerIcon}></i>
+            {officerIcon}
           </button>
           <div className="collapse show" id="collapseOfficers">
-            <div
-              className="card mb-3 shadow p-3 mb-5 bg-white rounded"
-              style={{
-                maxWidth: 740 + "px",
-                margin: "auto",
-                textAlign: "center",
-              }}
-            >
-              <div className="row no-gutters">
-                <div className="col-md-4">
-                  <img src={gp_literacy} className="card-img" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h4 className="card-title">
-                      <b>सौ. अर्चना अरविंद वायंगणकर </b>
-                    </h4>
-                    <h5>सरपंच </h5>
-                    <p className="card-text">संपर्क : ९६०४४९०९३९ .</p>
-                  </div>
-                </div>
+            {this.state.employeeArr == "" ? (
+              <div>
+                <h2>No data found</h2>
               </div>
-            </div>
-            <div
-              className="card mb-3 shadow p-3 mb-5 bg-white rounded"
-              style={{
-                maxWidth: 740 + "px",
-                margin: "auto",
-                textAlign: "center",
-              }}
-            >
-              <div className="row no-gutters">
-                <div className="col-md-4">
-                  <img src={gp_literacy} className="card-img" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h4 className="card-title">
-                      <b>सौ. अर्चना अरविंद वायंगणकर </b>
-                    </h4>
-                    <h5>सरपंच </h5>
-                    <p className="card-text">संपर्क : ९६०४४९०९३९ .</p>
+            ) : (
+              <div>
+                {this.state.employeeArr.map((item, idx) => (
+                  <div
+                    className="card mb-3 shadow p-3 mb-5 bg-white rounded"
+                    style={{
+                      maxWidth: 740 + "px",
+                      margin: "auto",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div className="row no-gutters">
+                      <div className="col-md-4">
+                        <img
+                          src={
+                            "./employees/" +
+                            this.state.employeeArr[idx].tbl_employee_img
+                          }
+                          className="card-img"
+                          alt={this.state.employeeArr[idx].tbl_employee_img}
+                        />
+                      </div>
+                      <div className="col-md-8">
+                        <div className="card-body">
+                          <h4 className="card-title">
+                            <b>
+                              {
+                                this.state.employeeArr[idx]
+                                  .tbl_employee_fullName
+                              }
+                            </b>
+                          </h4>
+                          <h5>
+                            {this.state.employeeArr[idx].tbl_designation_name}
+                          </h5>
+                          <p className="card-text">
+                            संपर्क :
+                            {
+                              this.state.employeeArr[idx]
+                                .tbl_employee_contact_no
+                            }
+                            .
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
