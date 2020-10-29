@@ -99,25 +99,25 @@ const BannerInfo = (props) => (
 // );
 //List of features end
 //List of all work post
-const WorkPostInfo = (props) => (
-  <tr>
-    <td>{props.WorkPostInfo.tbl_work_title}</td>
-    <td>
-      <img
-        src={"work/" + props.WorkPostInfo.tbl_work_images_title}
-        alt={props.WorkPostInfo.tbl_work_images_title}
-        style={{ width: 80, height: 60 }}
-      ></img>
-    </td>
+// const WorkPostInfo = (props) => (
+//   <tr>
+//     <td>{props.WorkPostInfo.tbl_work_title}</td>
+//     <td>
+//       <img
+//         src={"work/" + props.WorkPostInfo.tbl_work_images_title}
+//         alt={props.WorkPostInfo.tbl_work_images_title}
+//         style={{ width: 80, height: 60 }}
+//       ></img>
+//     </td>
 
-    <td>
-      <ViewWork variant={props.WorkPostInfo} changeDesc={props.handleChange} />
-    </td>
-    <td>
-      <DeleteWork variant={props.WorkPostInfo} />
-    </td>
-  </tr>
-);
+//     <td>
+//       <ViewWork variant={props.WorkPostInfo} changeDesc={props.handleChange} />
+//     </td>
+//     <td>
+//       <DeleteWork variant={props.WorkPostInfo} />
+//     </td>
+//   </tr>
+// );
 
 //List of all instructions
 const Instruction = (props) => (
@@ -187,46 +187,46 @@ function DeleteBanner(props) {
 }
 //Delete banner info end
 //Delete work post
-function DeleteWork(props) {
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const deleteAndClose = () => {
-    axios
-      .put(
-        "http://localhost:4500/humbrat/WorkDetails/delete/" +
-          props.variant.tbl_work_id
-      )
-      .then((res) => console.log(res.data), window.location.reload(true));
-    //.then((res) => console.log(res.data));
-    setShow(false);
-  };
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        काढून टाका
-      </Button>
+// function DeleteWork(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   const deleteAndClose = () => {
+//     axios
+//       .put(
+//         "http://localhost:4500/humbrat/WorkDetails/delete/" +
+//           props.variant.tbl_work_id
+//       )
+//       .then((res) => console.log(res.data), window.location.reload(true));
+//     //.then((res) => console.log(res.data));
+//     setShow(false);
+//   };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         काढून टाका
+//       </Button>
 
-      <Modal show={show} onHide={handleClose} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_work_title}</b>' हे छायाचित्र
-          काढून टाकू इच्चीता?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           तुम्ही नक्की '<b>{props.variant.tbl_work_title}</b>' हे छायाचित्र
+//           काढून टाकू इच्चीता?
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={deleteAndClose}>
+//             काढून टाका
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 //Delete work post end
 //Delete village feature start
 // function DeleteFeature(props) {
@@ -465,8 +465,21 @@ function ViewWork(props) {
     props.variant.tbl_work_title
   );
 
-  const dateFormat = props.variant.tbl_work_date.split("T");
-  const [imgDateInput, setimgDateInput] = useState(dateFormat[0]);
+  const dateFormatOriginal = props.variant.tbl_work_date.split("T");
+  var formatCreatedDate = new Date(props.variant.tbl_work_date);
+  var isoDate = new Date(formatCreatedDate.toUTCString().slice(0, -4));
+  isoDate.setDate(isoDate.getDate() + parseInt(1));
+  var dd = isoDate.getDate();
+  var mm = isoDate.getMonth() + 1;
+  var yyyy = isoDate.getFullYear();
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+  var dateFormat = yyyy + "-" + mm + "-" + dd;
+  const [imgDateInput, setimgDateInput] = useState(dateFormat);
   const changeImageDate = (e) => {
     setimgDateInput(e.target.value);
   };
@@ -493,7 +506,7 @@ function ViewWork(props) {
   };
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="btn btn-outline-info" onClick={handleShow}>
         कामाची माहिती व बदल
       </Button>
 
@@ -863,26 +876,26 @@ export default class AdminPortal extends Component {
   //     );
   //   }
   // }
-  WorkPostList() {
-    //  console.log("Work before mapping", this.state.workPostArr[3].tbl_work_date);
-    if (this.state.workPostArr.length > 0) {
-      return this.state.workPostArr.map(function (workPostInfo, i) {
-        return (
-          <WorkPostInfo
-            WorkPostInfo={workPostInfo}
-            key={i}
-            //handleChange={e}
-          ></WorkPostInfo>
-        );
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="5">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
+  // WorkPostList() {
+  //   //  console.log("Work before mapping", this.state.workPostArr[3].tbl_work_date);
+  //   if (this.state.workPostArr.length > 0) {
+  //     return this.state.workPostArr.map(function (workPostInfo, i) {
+  //       return (
+  //         <WorkPostInfo
+  //           WorkPostInfo={workPostInfo}
+  //           key={i}
+  //           //handleChange={e}
+  //         ></WorkPostInfo>
+  //       );
+  //     });
+  //   } else {
+  //     return (
+  //       <tr>
+  //         <td colSpan="5">माहिती उपलब्ध नाही</td>
+  //       </tr>
+  //     );
+  //   }
+  // }
   instructionList() {
     if (this.state.instructionArr.length > 0) {
       return this.state.instructionArr.map(function (instructionInfo, i) {
@@ -1023,8 +1036,6 @@ export default class AdminPortal extends Component {
         .then((res) => {
           console.log(res);
           //window.location.reload(true);
-          console.log(res.data[0].tbl_features_id);
-          console.log(res.data[1].tbl_features_file_name);
           let newId = res.data[0].tbl_features_id;
           let newImage = res.data[1].tbl_features_file_name;
           const newItem = {
@@ -1712,10 +1723,7 @@ export default class AdminPortal extends Component {
                           ></img>
                         </td>
                         <td>
-                          {/* <ViewFeature
-                            variant={this.state.currentFeatureData[idx]}
-                          /> */}
-                          VIEW
+                          <ViewWork variant={this.state.currentWorkData[idx]} />
                         </td>
                         <td>
                           <button

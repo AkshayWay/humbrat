@@ -32,8 +32,8 @@ export default class WorkDetails extends Component {
             workDate: response.data[0].tbl_work_date,
             workDetails: response.data[0].tbl_work_details,
           });
-          var formatCreatedDate = this.state.workDate.split("T");
-          formatCreatedDate = new Date(this.state.workDate);
+          //  var formatCreatedDate = this.state.workDate.split("T");
+          var formatCreatedDate = new Date(this.state.workDate);
           var isoDate = new Date(formatCreatedDate.toUTCString().slice(0, -4));
           isoDate.setDate(isoDate.getDate() + parseInt(1));
           var dd = isoDate.getDate();
@@ -46,7 +46,6 @@ export default class WorkDetails extends Component {
             mm = "0" + mm;
           }
           var d = dd + "/" + mm + "/" + yyyy;
-          console.log("ddmmyyyy:" + d);
           var imageArray = this.state.workImageStrng.split(",");
           this.setState({
             workDate: d,

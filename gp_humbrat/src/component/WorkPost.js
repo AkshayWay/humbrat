@@ -1,13 +1,12 @@
 import React, { component, Component } from "react";
 import axios from "axios";
-import { Card, CardDeck, Col } from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  hashHistory,
-} from "react-router-dom";
-//import { Container, Row } from "reactstrap";
+// import { Card, CardDeck, Col } from "react-bootstrap";
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Link,
+//   hashHistory,
+// } from "react-router-dom";
 import WorkCard from "./WorkCard";
 
 export default class WorkPost extends Component {
