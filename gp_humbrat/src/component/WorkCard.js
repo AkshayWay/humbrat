@@ -7,11 +7,11 @@ export default class WorkCard extends Component {
   }
   render() {
     let today = new Date(this.props.workPost.tbl_work_date);
-    let day = ("0" + parseInt(today.getDate() + 1)).slice(-2);
+    let day = ("0" + parseInt(today.getDate())).slice(-2);
     let month = ("0" + parseInt(today.getMonth() + 1)).slice(-2);
     let date = day + "-" + month + "-" + today.getFullYear();
     return (
-      <div className="card">
+      <div className="card" style={{ border: "solid #34ebe8" }}>
         <img
           className="card-img-top"
           src={"work/" + this.props.workPost.tbl_work_images_title}

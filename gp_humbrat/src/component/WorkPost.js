@@ -33,14 +33,16 @@ export default class WorkPost extends Component {
   render() {
     let workPostList = this.state.workPostArray.map(function (workPost, i) {
       return (
-        <div className="col-6 col-md-4">
+        <div
+          className="col-6 col-md-4 shadow-sm bg-light rounded"
+          style={{ paddingTop: "20px" }}
+        >
           <WorkCard workPost={workPost} key={i} />
         </div>
       );
     });
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h2>Work post here</h2>
         <div className="container">
           <div className="row">{workPostList}</div>
         </div>

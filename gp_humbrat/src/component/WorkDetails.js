@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import WorkSlider from "./WorkSlider";
 import { Carousel } from "react-bootstrap";
+import "../App.css";
 
 export default class WorkDetails extends Component {
   constructor(props) {
@@ -32,12 +33,25 @@ export default class WorkDetails extends Component {
             workDetails: response.data[0].tbl_work_details,
           });
           var formatCreatedDate = this.state.workDate.split("T");
+          formatCreatedDate = new Date(this.state.workDate);
+          var isoDate = new Date(formatCreatedDate.toUTCString().slice(0, -4));
+          isoDate.setDate(isoDate.getDate() + parseInt(1));
+          var dd = isoDate.getDate();
+          var mm = isoDate.getMonth() + 1;
+          var yyyy = isoDate.getFullYear();
+          if (dd < 10) {
+            dd = "0" + dd;
+          }
+          if (mm < 10) {
+            mm = "0" + mm;
+          }
+          var d = dd + "/" + mm + "/" + yyyy;
+          console.log("ddmmyyyy:" + d);
           var imageArray = this.state.workImageStrng.split(",");
           this.setState({
-            workDate: formatCreatedDate[0],
+            workDate: d,
             workImageArr: imageArray,
           });
-          //   console.log("Iamge array", this.state.workImageArr);
         })
         .catch(function (error) {
           console.log(error);
@@ -55,9 +69,16 @@ export default class WorkDetails extends Component {
     });
     return (
       <div>
-        <h2>Work Details</h2>
         <div id="work_div">
-          <div id="ImageSlider">
+          <div
+            id="ImageSlider"
+            className="rounded mx-auto d-block card mb-3 shadow-sm p-3 mb-5 bg-light rounded"
+            style={{
+              width: "80%",
+              paddingTop: "20px",
+              margin: "20px",
+            }}
+          >
             <Carousel>
               {this.state.workImageArr.map((images) => (
                 <Carousel.Item>
@@ -65,74 +86,15 @@ export default class WorkDetails extends Component {
                     className="d-block w-100"
                     src={"/work/" + images}
                     alt={images}
+                    style={{ maxHeight: "550px" }}
                   />
                 </Carousel.Item>
               ))}
             </Carousel>
           </div>
-          {/* <div
-            id="carouselExampleInterval"
-            className="carousel slide"
-            data-ride="carousel"
-          >
-          <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img
-                  src="/work/2020-08-12T18-21-20.858Z-Bandhara_Bandhani_1.jpeg"
-                  className="d-block w-100"
-                  alt="..."
-                />
-              </div>
-              <div className="carousel-item ">
-                <img
-                  src="/work/2020-08-12T18-40-29.133Z-road_inauguration.jpeg"
-                  className="d-block w-100"
-                  alt="..."
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="/work/2020-08-12T18-40-29.133Z-road_inauguration.jpeg"
-                  className="d-block w-100"
-                  alt="..."
-                />
-              </div>
-            </div>
-          <a
-              className="carousel-control-prev"
-              href="#carouselExampleInterval"
-              role="button"
-              data-slide="prev"
-            >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="sr-only">Previous</span>
-            </a>
-            <a
-              className="carousel-control-next"
-              href="#carouselExampleInterval"
-              role="button"
-              data-slide="next"
-            >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="sr-only">Next</span>
-            </a>
-          </div> */}
-          <form>
+          <form style={{ margin: "20px" }}>
             <div className="form-row">
               <div className="form-group col-md-6">
-                {/* <label>शीर्षक</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  readOnly
-                  value={this.state.workTitle}
-                /> */}
                 <p>
                   <label>
                     <b>शीर्षक</b>
@@ -142,13 +104,6 @@ export default class WorkDetails extends Component {
                 </p>
               </div>
               <div className="form-group col-md-6">
-                {/* <label>दिनांक</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  readOnly
-                  value={this.state.workDate}
-                /> */}
                 <label>
                   <b>दिनांक</b>
                 </label>
@@ -156,16 +111,6 @@ export default class WorkDetails extends Component {
                 {this.state.workDate}
               </div>
             </div>
-            {/* <div className="form-group">
-              <label>सविस्तर माहिती</label>
-              <textarea
-                type="text"
-                row="4"
-                className="form-control"
-                readOnly
-                value={this.state.workTitle}
-              />
-            </div> */}
             <p>
               <label>
                 <b>सविस्तर माहिती</b>

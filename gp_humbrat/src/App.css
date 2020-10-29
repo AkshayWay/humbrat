@@ -59,6 +59,12 @@ footer {
 .hscroll {
   overflow-x: auto; /* Horizontal */
 }
+.carousel-inner {
+  width: 80%;
+  max-height: 550px !important;
+  vertical-align: middle;
+}
+
 .table-responsive {
   /* max-height:300px; */
 }

@@ -677,6 +677,11 @@ export default class AdminPortal extends Component {
       switchSortFeature: false,
       activePageFeature: 1,
       itemFeatureLength: 0,
+      //table pagination for Work
+      currentWorkData: [],
+      switchSortWork: false,
+      activePageWork: 1,
+      itemWorkLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -692,6 +697,8 @@ export default class AdminPortal extends Component {
       this
     );
     this.handleFeaturePageChange = this.handleFeaturePageChange.bind(this);
+    this.handleWorkPageChange = this.handleWorkPageChange.bind(this);
+    this.removeWorkPost = this.removeWorkPost.bind(this);
   }
   async componentDidMount() {
     if (
@@ -738,6 +745,12 @@ export default class AdminPortal extends Component {
         .then((response) => {
           this.setState({
             workPostArr: response.data,
+          });
+          let totalItemsCount = this.state.workPostArr.length;
+          let currentWorkData = this.state.workPostArr.slice(0, 10);
+          this.setState({
+            currentWorkData,
+            itemWorkLength: totalItemsCount,
           });
         });
 
@@ -1219,6 +1232,64 @@ export default class AdminPortal extends Component {
         });
     }
   }
+  //remove work post
+  async removeWorkPost(idx, workPostName, workPostImg, workId) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + workPostName + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      const obj = {
+        tbl_work_id: workId,
+        tbl_work_is_deleted: 1,
+        tbl_work_images_title: workPostImg,
+      };
+      debugger;
+      axios
+        .put("http://localhost:4500/humbrat/WorkDetails/delete", obj)
+        .then((res) => {
+          console.log(res);
+
+          const rows = [...this.state.workPostArr];
+          rows.splice(idx, 1);
+          this.setState({ workPostArr: rows });
+
+          const rowsTemp = [...this.state.currentWorkData];
+          rowsTemp.splice(idx, 1);
+
+          let workID = this.state.currentWorkData[idx].tbl_work_id;
+          const elementsIndex = this.state.workPostArr.findIndex(
+            (element) => element.tbl_work_id == workID
+          );
+
+          const rowsOriginal = [...this.state.workPostArr];
+          rowsOriginal.splice(elementsIndex, 1);
+          this.setState({
+            workPostArr: rowsOriginal,
+            currentWorkData: rowsTemp,
+          });
+
+          store.addNotification({
+            title: "गावाची काम माहिती",
+            message: "गावाचं काम काढून टाकण्यात आल आहे",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon: true,
+            },
+            width: 600,
+          });
+        });
+    }
+  }
+
   //remove village feature end
   async removeOfficer(idx, officerName, officerImg, officerId) {
     if (
@@ -1364,6 +1435,7 @@ export default class AdminPortal extends Component {
       activePage: pageNumber,
     });
   }
+
   handleFeaturePageChange(pageNumber) {
     let upperLimit = parseInt(pageNumber) * 10;
     let lowerLimit = upperLimit - 10;
@@ -1376,6 +1448,21 @@ export default class AdminPortal extends Component {
     this.setState({
       currentFeatureData: data,
       activePageFeature: pageNumber,
+    });
+  }
+  //handleWorkPageChange
+  handleWorkPageChange(pageNumber) {
+    let upperLimit = parseInt(pageNumber) * 10;
+    let lowerLimit = upperLimit - 10;
+    let data = [];
+    if (upperLimit <= this.state.itemWorkLength) {
+      data = this.state.workPostArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.workPostArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentWorkData: data,
+      activePageWork: pageNumber,
     });
   }
   render() {
@@ -1592,8 +1679,76 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.WorkPostList()}</tbody>
+                {/* <tbody>{this.WorkPostList()}</tbody> */}
+                {this.state.workPostArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="4">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.currentWorkData.map((item, idx) => (
+                      <tr id="workPost" key={idx}>
+                        <td>
+                          {this.state.currentWorkData[idx].tbl_work_title}
+                        </td>
+                        <td>
+                          <img
+                            src={
+                              "work/" +
+                              this.state.currentWorkData[idx]
+                                .tbl_work_images_title
+                            }
+                            alt={this.state.currentWorkData[idx].tbl_work_title}
+                            style={{
+                              width: 80,
+                              height: 60,
+                              display: this.state.currentWorkData[idx]
+                                .tbl_work_images_title
+                                ? "inline"
+                                : "none",
+                            }}
+                          ></img>
+                        </td>
+                        <td>
+                          {/* <ViewFeature
+                            variant={this.state.currentFeatureData[idx]}
+                          /> */}
+                          VIEW
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeWorkPost(
+                                idx,
+                                this.state.currentWorkData[idx].tbl_work_title,
+                                this.state.currentWorkData[idx]
+                                  .tbl_work_images_title,
+                                this.state.currentWorkData[idx].tbl_work_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
+              <div>
+                <Pagination
+                  activePage={this.state.activePageWork}
+                  itemsCountPerPage={10}
+                  totalItemsCount={this.state.itemWorkLength}
+                  pageRangeDisplayed={10}
+                  onChange={this.handleWorkPageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
+              </div>
             </div>
           </div>
         </div>

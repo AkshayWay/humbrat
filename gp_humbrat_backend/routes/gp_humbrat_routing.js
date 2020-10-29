@@ -5,6 +5,7 @@ const mySqlConnection = require("../db_connection");
 const multer = require("multer");
 //const img=require("../uploads")
 const fs = require("fs");
+const mysqlConnection = require("../db_connection");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -568,15 +569,86 @@ Router.put("/WorkDetails/add_edit/:id", (req, res) => {
 });
 //Update work post end
 //Delete work post
-Router.put("/WorkDetails/delete/:id", (req, res) => {
+Router.put("/WorkDetails/delete", (req, res) => {
+  console.log("Body:", req.body);
   var sqlQuery =
     "Update tbl_work set tbl_work_is_deleted=1 where tbl_work_id=?";
-  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
+  mySqlConnection.query(sqlQuery, [req.body.tbl_work_id], (err, rows) => {
     if (!err) {
-      res.status(201).json({
-        message: "Work post deleted successfully",
-      });
-    } else {
+      mysqlConnection.query(
+        "Select tbl_work_images_title from tbl_work where tbl_work_id=?",
+        [req.body.tbl_work_id],
+        (err, rows) => {
+          if (!err) {
+            console.log("rows", rows);
+            const workImageData = rows[0];
+            console.log("workImageData", workImageData);
+
+            var imageString = workImageData.tbl_work_images_title.toString();
+            var mutipleImage = imageString.includes("world");
+            if (mutipleImage == true) {
+              const workArr = imageString.toString().split(",");
+              console.log("Work array:", workArr);
+              console.log("Work array 0:", workArr[0]);
+              console.log("Work array 1:", workArr[1]);
+              console.log("Work array length:" + workArr.length);
+              for (var i = 0; i < workArr.length; i++) {
+                const path = "./work/" + workArr[i];
+                if (fs.existsSync(path)) {
+                  try {
+                    fs.unlinkSync(path);
+                    res.status(201).json({
+                      message: "Work post info Updated/Deleted successfully",
+                    });
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }
+              }
+            } else {
+              const path = "./work/" + imageString;
+              if (fs.existsSync(path)) {
+                try {
+                  fs.unlinkSync(path);
+                  res.status(201).json({
+                    message: "Work post info Updated/Deleted successfully",
+                  });
+                } catch (err) {
+                  console.error(err);
+                }
+              }
+            }
+            // if (req.body.tbl_employee_img != "") {
+          } else {
+            console.log("Error :" + err);
+          }
+        }
+      );
+    }
+    //   const workImageData = req.body.tbl_work_images_title;
+
+    //   console.log("workImageData:" + workImageData);
+    //   const workArr = workImageData.split(",");
+    //   console.log("Work array length:" + workArr.length);
+    //   // if (req.body.tbl_employee_img != "") {
+    //   for (var i = 0; i < workArr.length; i++) {
+    //     const path = "./employees/" + req.body.tbl_work_images_title;
+    //     if (fs.existsSync(path)) {
+    //       try {
+    //         fs.unlinkSync(path);
+    //         //file removed
+    //       } catch (err) {
+    //         console.error(err);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // res.status(201).json({
+    //   message: "Work post deleted successfully",
+    // });
+    //  }
+    else {
       console.log("Error :" + err);
     }
   });
