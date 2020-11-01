@@ -206,21 +206,35 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
     [newBanner.filename, newBanner.path, 1, 0, req.body.imageDesciption],
     (err, rows) => {
       if (!err) {
-        // res.send(rows);
-        res.status(201).json({
-          message: "Created dashboard successfully",
-          createdImage: {
-            id: rows.tbl_banner_id,
-            name: rows.tbl_banner_title,
-            src: rows.tbl_banner_src,
-            isActive: rows.tbl_banner_is_active,
-            isDeleted: rows.tbl_banner_is_deleted,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/products/" + rows._id,
-            },
-          },
-        });
+        // res.status(201).json({
+        //   message: "Created dashboard successfully",
+        //   createdImage: {
+        //     id: rows.tbl_banner_id,
+        //     name: rows.tbl_banner_title,
+        //     src: rows.tbl_banner_src,
+        //     isActive: rows.tbl_banner_is_active,
+        //     isDeleted: rows.tbl_banner_is_deleted,
+        //     request: {
+        //       type: "GET",
+        //       url: "http://localhost:3000/products/" + rows._id,
+        //     },
+        //   },
+        // });
+        if (!err) {
+          mySqlConnection.query(
+            "select tbl_banner_id,tbl_banner_title from tbl_dashboard_banner order by tbl_banner_id desc limit 1;",
+            (err, rows) => {
+              if (!err) {
+                console.log("Id and image:" + rows);
+                res.send(rows);
+              } else {
+                console.log("Error :" + err);
+              }
+            }
+          );
+        } else {
+          console.log("Error :" + err);
+        }
       } else {
         console.log("Error :" + err);
       }
@@ -409,15 +423,24 @@ Router.put("/dashboard_banner/edit/:id", (req, res) => {
 });
 //End displaying banner image
 // Delete banner image
-Router.put("/dashboard_banner/delete/:id", (req, res) => {
+Router.put("/dashboard_banner/delete", (req, res) => {
+  console.log("Id:" + req.body.tbl_banner_id);
+  console.log("Image:" + req.body.tbl_banner_title);
   var sqlQuery =
     "SET @tbl_banner_id=?;CALL sp_dashboard_banner_delete(@tbl_banner_id)";
-  mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
+  mySqlConnection.query(sqlQuery, [req.body.tbl_banner_id], (err, rows) => {
     if (!err) {
-      //  console.log(rows);
-      res.status(201).json({
-        message: "Banner info deleted successfully",
-      });
+      const path = "./uploads/" + req.body.tbl_banner_title;
+      if (fs.existsSync(path)) {
+        try {
+          fs.unlinkSync(path);
+          res.status(201).json({
+            message: "Banner info deleted successfully",
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
     } else {
       console.log("Error :" + err);
     }
@@ -580,18 +603,11 @@ Router.put("/WorkDetails/delete", (req, res) => {
         [req.body.tbl_work_id],
         (err, rows) => {
           if (!err) {
-            console.log("rows", rows);
             const workImageData = rows[0];
-            console.log("workImageData", workImageData);
-
             var imageString = workImageData.tbl_work_images_title.toString();
             var mutipleImage = imageString.includes("world");
             if (mutipleImage == true) {
               const workArr = imageString.toString().split(",");
-              console.log("Work array:", workArr);
-              console.log("Work array 0:", workArr[0]);
-              console.log("Work array 1:", workArr[1]);
-              console.log("Work array length:" + workArr.length);
               for (var i = 0; i < workArr.length; i++) {
                 const path = "./work/" + workArr[i];
                 if (fs.existsSync(path)) {

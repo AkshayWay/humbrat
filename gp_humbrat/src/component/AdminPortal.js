@@ -49,29 +49,29 @@ const NewsList = (props) => (
   </tr>
 );
 
-const BannerInfo = (props) => (
-  <tr
-    className={
-      props.BannerInfo.tbl_banner_is_active == 1 ? "table-success" : "null"
-    }
-  >
-    <td>{props.BannerInfo.tbl_banner_img_desc}</td>
-    <td>
-      <img
-        src={"uploads/" + props.BannerInfo.tbl_banner_title}
-        alt={props.BannerInfo.tbl_banner_title}
-        style={{ width: 80, height: 60 }}
-      ></img>
-    </td>
+// const BannerInfo = (props) => (
+//   <tr
+//     className={
+//       props.BannerInfo.tbl_banner_is_active == 1 ? "table-success" : "null"
+//     }
+//   >
+//     <td>{props.BannerInfo.tbl_banner_img_desc}</td>
+//     <td>
+//       <img
+//         src={"uploads/" + props.BannerInfo.tbl_banner_title}
+//         alt={props.BannerInfo.tbl_banner_title}
+//         style={{ width: 80, height: 60 }}
+//       ></img>
+//     </td>
 
-    <td>
-      <ViewBanner variant={props.BannerInfo} changeDesc={props.handleChange} />
-    </td>
-    <td>
-      <DeleteBanner variant={props.BannerInfo} />
-    </td>
-  </tr>
-);
+//     <td>
+//       <ViewBanner variant={props.BannerInfo} changeDesc={props.handleChange} />
+//     </td>
+//     <td>
+//       <DeleteBanner variant={props.BannerInfo} />
+//     </td>
+//   </tr>
+// );
 
 //List of features
 // const FeatureInfo = (props) => (
@@ -145,46 +145,46 @@ const BannerInfo = (props) => (
 
 //List of all instructions end
 //Delete banner info
-function DeleteBanner(props) {
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const deleteAndClose = () => {
-    axios
-      .put(
-        "http://localhost:4500/humbrat/dashboard_banner/delete/" +
-          props.variant.tbl_banner_id
-      )
-      .then((res) => console.log(res.data), window.location.reload(true));
-    //.then((res) => console.log(res.data));
-    setShow(false);
-  };
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        काढून टाका
-      </Button>
+// function DeleteBanner(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   const deleteAndClose = () => {
+//     axios
+//       .put(
+//         "http://localhost:4500/humbrat/dashboard_banner/delete/" +
+//           props.variant.tbl_banner_id
+//       )
+//       .then((res) => console.log(res.data), window.location.reload(true));
+//     //.then((res) => console.log(res.data));
+//     setShow(false);
+//   };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         काढून टाका
+//       </Button>
 
-      <Modal show={show} onHide={handleClose} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_banner_img_desc}</b>' हे छायाचित्र
-          काढून टाकू इच्चीता?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>छायाचित्र काढून टाका</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           तुम्ही नक्की '<b>{props.variant.tbl_banner_img_desc}</b>' हे छायाचित्र
+//           काढून टाकू इच्चीता?
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={deleteAndClose}>
+//             काढून टाका
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 //Delete banner info end
 //Delete work post
 // function DeleteWork(props) {
@@ -278,6 +278,7 @@ function DeleteBanner(props) {
 //Delete village feature end
 //View Banner Image and make changes
 function ViewBanner(props) {
+  debugger;
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -285,9 +286,16 @@ function ViewBanner(props) {
   const [imgDescInput, setimgDescInput] = useState(
     props.variant.tbl_banner_img_desc
   );
+  React.useEffect(() => {
+    setimgDescInput(props.variant.tbl_banner_img_desc);
+  }, [props.variant.tbl_banner_img_desc]);
+
   var isActiveChecked = props.variant.tbl_banner_is_active == 1 ? true : false;
   const [imgIsActiveInput, setimgIsActiveInput] = useState(isActiveChecked);
-  //props.variant.bannerImgDesc = props.variant.tbl_banner_img_desc;
+
+  React.useEffect(() => {
+    setimgIsActiveInput(isActiveChecked);
+  }, [isActiveChecked]);
 
   const changeDescHandler = (e) => {
     setimgDescInput(e.target.value);
@@ -311,7 +319,7 @@ function ViewBanner(props) {
   };
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="btn btn-btn btn-outline-info" onClick={handleShow}>
         छायाचित्र माहिती व बदल
       </Button>
 
@@ -328,12 +336,13 @@ function ViewBanner(props) {
             ></img>
           </div>
           <div className="form-group">
+            <label>सक्रिय आहे </label>
+            <br></br>
             <input
               type="checkbox"
               checked={imgIsActiveInput}
               onChange={changeIsActiveHandler}
             ></input>
-            <label> : सक्रिय आहे </label>
           </div>
           <div className="form-group">
             <label>छायाचित्र माहिती</label>
@@ -404,7 +413,7 @@ function ViewFeature(props) {
   };
   return (
     <>
-      <Button variant="btn btn-outline-info" onClick={handleShow}>
+      <Button variant="btn btn-btn btn-outline-info" onClick={handleShow}>
         माहिती व बदल
       </Button>
 
@@ -659,6 +668,7 @@ export default class AdminPortal extends Component {
       selectedFiles: "",
       bannerImgDesc: "",
       bannerImages: [],
+      newBannerImg: "",
       //  bannerIsActive: "",
       selectedBanner: "",
       instructionArr: [],
@@ -700,6 +710,11 @@ export default class AdminPortal extends Component {
       switchSortInstruction: false,
       activePageInstruction: 1,
       itemInstructionLength: 0,
+      //table pagination for Banner
+      currentBannerData: [],
+      switchSortBanner: false,
+      activePageBanner: 1,
+      itemBannerLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -719,8 +734,10 @@ export default class AdminPortal extends Component {
     this.handleInstructionPageChange = this.handleInstructionPageChange.bind(
       this
     );
+    this.handleBannerPageChange = this.handleBannerPageChange.bind(this);
     this.removeWorkPost = this.removeWorkPost.bind(this);
     this.removeInstruction = this.removeInstruction.bind(this);
+    this.removeBanner = this.removeBanner.bind(this);
   }
   async componentDidMount() {
     if (
@@ -750,7 +767,13 @@ export default class AdminPortal extends Component {
         .get("http://localhost:4500/humbrat/dashboard_banner/all_img")
         .then((response) => {
           this.setState({
-            bannerImages: response.data,
+            bannerImagesArr: response.data,
+          });
+          let totalItemsCount = this.state.bannerImagesArr.length;
+          let currentBannerData = this.state.bannerImagesArr.slice(0, 5);
+          this.setState({
+            currentBannerData,
+            itemBannerLength: totalItemsCount,
           });
         });
 
@@ -854,25 +877,25 @@ export default class AdminPortal extends Component {
     }
   }
 
-  bannerList(e) {
-    if (this.state.bannerImages.length > 0) {
-      return this.state.bannerImages.map(function (bannerInfo, i) {
-        return (
-          <BannerInfo
-            BannerInfo={bannerInfo}
-            key={i}
-            handleChange={e}
-          ></BannerInfo>
-        );
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="5">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
+  // bannerList(e) {
+  //   if (this.state.bannerImages.length > 0) {
+  //     return this.state.bannerImages.map(function (bannerInfo, i) {
+  //       return (
+  //         <BannerInfo
+  //           BannerInfo={bannerInfo}
+  //           key={i}
+  //           handleChange={e}
+  //         ></BannerInfo>
+  //       );
+  //     });
+  //   } else {
+  //     return (
+  //       <tr>
+  //         <td colSpan="5">माहिती उपलब्ध नाही</td>
+  //       </tr>
+  //     );
+  //   }
+  // }
   // featureList() {
   //   if (this.state.featureArr.length > 0) {
   //     return this.state.featureArr.map(function (featureInfo, i) {
@@ -934,14 +957,77 @@ export default class AdminPortal extends Component {
       this.state.selectedFile,
       this.state.selectedFile.name
     );
-
+    debugger;
     bannerImg.append("imageDesciption", this.state.bannerImgDesc);
 
     axios
       .post("http://localhost:4500/humbrat/dashboard_banner", bannerImg)
       .then((res) => {
-        console.log(res);
-        window.location.reload(true);
+        console.log(res.data);
+        const elementsIndex = this.state.bannerImagesArr.findIndex(
+          (element) => element.tbl_banner_is_active == 1
+        );
+        if (elementsIndex >= 0) {
+          var newArrayToMainArr = [...this.state.bannerImagesArr];
+          newArrayToMainArr[elementsIndex] = {
+            ...newArrayToMainArr[elementsIndex],
+            tbl_banner_is_active: 0,
+          };
+          this.setState({
+            bannerImagesArr: newArrayToMainArr,
+          });
+        }
+        const elementsIndexCurrent = this.state.currentBannerData.findIndex(
+          (element) => element.tbl_banner_is_active == 1
+        );
+        if (elementsIndexCurrent >= 0) {
+          var newArrayToCurrentArr = [...this.state.currentBannerData];
+          newArrayToCurrentArr[elementsIndexCurrent] = {
+            ...newArrayToCurrentArr[elementsIndexCurrent],
+            tbl_banner_is_active: 0,
+          };
+          this.setState({
+            currentBannerData: newArrayToCurrentArr,
+          });
+        }
+        let newId = res.data[0].tbl_banner_id;
+        const newItem = {
+          tbl_banner_id: newId,
+          tbl_banner_title: res.data[0].tbl_banner_title,
+          tbl_banner_img_desc: this.state.bannerImgDesc,
+          tbl_banner_is_active: 1,
+        };
+
+        this.state.bannerImagesArr.splice(
+          this.state.itemBannerLength,
+          0,
+          newItem
+        );
+        if (this.state.activePageBanner * 5 >= this.state.itemBannerLength) {
+          let currentDataLength = this.state.currentBannerData.length;
+          this.state.currentBannerData.splice(currentDataLength, 0, newItem);
+        }
+        this.setState({
+          bannerImgDesc: "",
+          selectedFile: "",
+        });
+
+        store.addNotification({
+          title: "मुखपृष्ठ माहिती",
+          message: "नवीन मुखपृष्ठ जतन करण्यात आले आहे",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 4000,
+            onScreen: true,
+            showIcon: true,
+          },
+          width: 600,
+        });
+        // window.location.reload(true);
       });
   };
   onWorkImageUpload = (e) => {
@@ -1257,6 +1343,80 @@ export default class AdminPortal extends Component {
         });
     }
   }
+  // remove banner
+  async removeBanner(idx, bannerImg, bannerId) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + bannerImg + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      debugger;
+      const obj = {
+        tbl_banner_id: bannerId,
+        tbl_banner_title: bannerImg,
+        // tbl_work_images_title: workPostImg,
+      };
+      axios
+        .put("http://localhost:4500/humbrat/dashboard_banner/delete", obj)
+        .then((res) => {
+          console.log(res.data.message);
+          if (res.data.message == "Banner info deleted successfully") {
+            const rows = [...this.state.bannerImagesArr];
+            rows.splice(idx, 1);
+            this.setState({ bannerImagesArr: rows });
+
+            const rowsTemp = [...this.state.currentBannerData];
+            rowsTemp.splice(idx, 1);
+
+            let InstructionID = this.state.currentBannerData[idx].tbl_banner_id;
+            const elementsIndex = this.state.bannerImagesArr.findIndex(
+              (element) => element.tbl_banner_id == InstructionID
+            );
+
+            const rowsOriginal = [...this.state.bannerImagesArr];
+            rowsOriginal.splice(elementsIndex, 1);
+            this.setState({
+              bannerImagesArr: rowsOriginal,
+              currentBannerData: rowsTemp,
+            });
+
+            store.addNotification({
+              title: "सूचना",
+              message: "सूचना काढून टाकण्यात आली आहे.",
+              type: "success",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 4000,
+                onScreen: true,
+                showIcon: true,
+              },
+              width: 600,
+            });
+          } else {
+            store.addNotification({
+              title: "काहीतरी चुकत आहे",
+              message: "पेज रिफ्रेश करून कृपया पुन्हा प्रयत्न करा. ",
+              type: "danger",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 4000,
+                onScreen: true,
+                showIcon: true,
+              },
+              width: 600,
+            });
+          }
+        });
+    }
+  }
   //remove instruction
   async removeInstruction(idx, instuction_msg, instructionId) {
     if (
@@ -1266,7 +1426,6 @@ export default class AdminPortal extends Component {
         "रद्द करा"
       )
     ) {
-      debugger;
       axios.put(
         "http://localhost:4500/humbrat/instructions/delete/" + instructionId
       );
@@ -1322,7 +1481,6 @@ export default class AdminPortal extends Component {
         tbl_work_is_deleted: 1,
         tbl_work_images_title: workPostImg,
       };
-      debugger;
       axios
         .put("http://localhost:4500/humbrat/WorkDetails/delete", obj)
         .then((res) => {
@@ -1556,6 +1714,22 @@ export default class AdminPortal extends Component {
       activePageInstruction: pageNumber,
     });
   }
+  //handleBannerPageChange
+  handleBannerPageChange(pageNumber) {
+    debugger;
+    let upperLimit = parseInt(pageNumber) * 5;
+    let lowerLimit = upperLimit - 5;
+    let data = [];
+    if (upperLimit <= this.state.itemBannerLength) {
+      data = this.state.bannerImagesArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.bannerImagesArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentBannerData: data,
+      activePageBanner: pageNumber,
+    });
+  }
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
@@ -1658,9 +1832,80 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                {/* <tbody>{this.bannerList()}</tbody> */}
-                <tbody>{this.bannerList(this.onBannerDescChange)}</tbody>
+                {/* <tbody>{this.bannerList(this.onBannerDescChange)}</tbody> */}
+                {this.state.bannerImagesArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="4">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.currentBannerData.map((item, idx) => (
+                      <tr
+                        id="BannerInfo"
+                        key={idx}
+                        className={
+                          this.state.currentBannerData[idx]
+                            .tbl_banner_is_active == 1
+                            ? "table-success"
+                            : "null"
+                        }
+                      >
+                        <td>
+                          <img
+                            src={
+                              "uploads/" +
+                              this.state.currentBannerData[idx].tbl_banner_title
+                            }
+                            alt={
+                              this.state.currentBannerData[idx].tbl_banner_title
+                            }
+                            style={{ width: 80, height: 60 }}
+                          ></img>
+                        </td>
+                        <td>
+                          {
+                            this.state.currentBannerData[idx]
+                              .tbl_banner_img_desc
+                          }
+                        </td>
+                        <td>
+                          <ViewBanner
+                            variant={this.state.currentBannerData[idx]}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeBanner(
+                                idx,
+                                this.state.currentBannerData[idx]
+                                  .tbl_banner_title,
+                                this.state.currentBannerData[idx].tbl_banner_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
+              <div>
+                <Pagination
+                  activePage={this.state.activePageBanner}
+                  itemsCountPerPage={5}
+                  totalItemsCount={this.state.itemBannerLength}
+                  pageRangeDisplayed={5}
+                  onChange={this.handleBannerPageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1724,7 +1969,6 @@ export default class AdminPortal extends Component {
                           }
                         </td>
                         <td>
-                          {" "}
                           <Link
                             className="btn btn-btn btn-outline-info"
                             to={
