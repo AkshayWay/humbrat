@@ -1,7 +1,6 @@
 import React, { component, Component } from "react";
 import axios from "axios";
-import { store } from 'react-notifications-component';
-
+import { store } from "react-notifications-component";
 
 const DesignationList = (props) => (
   <option value={props.DesignationList.tbl_designation_id}>
@@ -32,7 +31,7 @@ export default class AddEditOfficers extends Component {
           designationArr: response.data,
           designation: response.data[0].tbl_designation_id,
         });
-        console.log("Designation selected:"+this.state.designation)
+        console.log("Designation selected:" + this.state.designation);
       })
       .catch(function (error) {
         console.log(error);
@@ -101,10 +100,11 @@ export default class AddEditOfficers extends Component {
     debugger;
     e.preventDefault();
     const electedPerson = new FormData();
-   
+
     if (
       this.state.selectedFile == undefined ||
-      this.state.selectedFile == null || this.state.selectedFile ==""
+      this.state.selectedFile == null ||
+      this.state.selectedFile == ""
     ) {
     } else {
       electedPerson.append(
@@ -124,12 +124,8 @@ export default class AddEditOfficers extends Component {
       "tbl_elected_person_contact_no",
       this.state.phoneNumber
     );
-    electedPerson.append(
-      "previousImg",
-      this.state.ElectedPersonImg
-    );
+    electedPerson.append("previousImg", this.state.ElectedPersonImg);
     if (this.state.electedPersonId > 0) {
-    
       axios
         .put("http://localhost:4500/humbrat/elected_person", electedPerson)
         .then((res) => {
@@ -144,7 +140,7 @@ export default class AddEditOfficers extends Component {
           });
           window.location.reload();
         });
-        window.location.reload();
+      window.location.reload();
     } else {
       axios
         .post("http://localhost:4500/humbrat/elected_person", electedPerson)
@@ -169,9 +165,9 @@ export default class AddEditOfficers extends Component {
             dismiss: {
               duration: 4000,
               onScreen: true,
-              showIcon:true
+              showIcon: true,
             },
-            width:600
+            width: 600,
           });
         });
     }
@@ -180,7 +176,16 @@ export default class AddEditOfficers extends Component {
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h1>अधिकारी</h1>
+        <h1 style={{ margin: "20px" }}>अधिकारी</h1>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
         <div
           style={{
             display: this.state.imgDisplay,
@@ -256,28 +261,12 @@ export default class AddEditOfficers extends Component {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary">
-            संक्रमित करा
-          </button>
-        </form>
-
-        {/* <form>
-          <div className="form-row">
-            <div className="form-group col-md-6">
-              <input
-                type="text"
-                className="form-control"
-                required
-                //onChange={this.onElectedPersonImageChange}
-              />
-            </div>
-            <div className="form-group col-md-6">
-              <button type="submit" className="btn btn-primary">
-                संक्रमित करा
-              </button>
-            </div>
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary">
+              संक्रमित करा
+            </button>
           </div>
-        </form> */}
+        </form>
       </div>
     );
   }
