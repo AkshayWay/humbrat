@@ -120,28 +120,28 @@ const BannerInfo = (props) => (
 // );
 
 //List of all instructions
-const Instruction = (props) => (
-  <tr
-    className={
-      props.instructionInfo.tbl_instructions_is_active == 1
-        ? "table-success"
-        : "null"
-    }
-  >
-    <td>{props.instructionInfo.tbl_instructions_msg}</td>
-    <td>
-      <Link
-        className="btn btn-primary"
-        to={"/instruction/" + props.instructionInfo.tbl_instructions_id}
-      >
-        माहिती बदल
-      </Link>
-    </td>
-    <td>
-      <DeleteInstructionInfo variant={props.instructionInfo} />
-    </td>
-  </tr>
-);
+// const Instruction = (props) => (
+//   <tr
+//     className={
+//       props.instructionInfo.tbl_instructions_is_active == 1
+//         ? "table-success"
+//         : "null"
+//     }
+//   >
+//     <td>{props.instructionInfo.tbl_instructions_msg}</td>
+//     <td>
+//       <Link
+//         className="btn btn-primary"
+//         to={"/instruction/" + props.instructionInfo.tbl_instructions_id}
+//       >
+//         माहिती बदल
+//       </Link>
+//     </td>
+//     <td>
+//       <DeleteInstructionInfo variant={props.instructionInfo} />
+//     </td>
+//   </tr>
+// );
 
 //List of all instructions end
 //Delete banner info
@@ -603,45 +603,45 @@ function DeleteNewsInfo(props) {
   );
 }
 
-function DeleteInstructionInfo(props) {
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const deleteAndClose = () => {
-    axios
-      .put(
-        "http://localhost:4500/humbrat/instructions/delete/" +
-          props.variant.tbl_instructions_id
-      )
-      .then((res) => console.log(res.data), window.location.reload(true));
-    setShow(false);
-  };
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        काढून टाका
-      </Button>
+// function DeleteInstructionInfo(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   const deleteAndClose = () => {
+//     axios
+//       .put(
+//         "http://localhost:4500/humbrat/instructions/delete/" +
+//           props.variant.tbl_instructions_id
+//       )
+//       .then((res) => console.log(res.data), window.location.reload(true));
+//     setShow(false);
+//   };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         काढून टाका
+//       </Button>
 
-      <Modal show={show} onHide={handleClose} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>सूचना काढून टाका</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_instructions_msg}</b>' हि सूचना
-          काढून टाकू इच्चीता?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>सूचना काढून टाका</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           तुम्ही नक्की '<b>{props.variant.tbl_instructions_msg}</b>' हि सूचना
+//           काढून टाकू इच्चीता?
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={deleteAndClose}>
+//             काढून टाका
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 export default class AdminPortal extends Component {
   constructor(props) {
     super(props);
@@ -695,6 +695,11 @@ export default class AdminPortal extends Component {
       switchSortWork: false,
       activePageWork: 1,
       itemWorkLength: 0,
+      //table pagination for Instruction
+      currentInstructionData: [],
+      switchSortInstruction: false,
+      activePageInstruction: 1,
+      itemInstructionLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -711,7 +716,11 @@ export default class AdminPortal extends Component {
     );
     this.handleFeaturePageChange = this.handleFeaturePageChange.bind(this);
     this.handleWorkPageChange = this.handleWorkPageChange.bind(this);
+    this.handleInstructionPageChange = this.handleInstructionPageChange.bind(
+      this
+    );
     this.removeWorkPost = this.removeWorkPost.bind(this);
+    this.removeInstruction = this.removeInstruction.bind(this);
   }
   async componentDidMount() {
     if (
@@ -750,6 +759,12 @@ export default class AdminPortal extends Component {
         .then((response) => {
           this.setState({
             instructionArr: response.data,
+          });
+          let totalItemsCount = this.state.instructionArr.length;
+          let currentInstructionData = this.state.instructionArr.slice(0, 5);
+          this.setState({
+            currentInstructionData,
+            itemInstructionLength: totalItemsCount,
           });
         });
 
@@ -896,21 +911,21 @@ export default class AdminPortal extends Component {
   //     );
   //   }
   // }
-  instructionList() {
-    if (this.state.instructionArr.length > 0) {
-      return this.state.instructionArr.map(function (instructionInfo, i) {
-        return (
-          <Instruction instructionInfo={instructionInfo} key={i}></Instruction>
-        );
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="5">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
+  // instructionList() {
+  //   if (this.state.instructionArr.length > 0) {
+  //     return this.state.instructionArr.map(function (instructionInfo, i) {
+  //       return (
+  //         <Instruction instructionInfo={instructionInfo} key={i}></Instruction>
+  //       );
+  //     });
+  //   } else {
+  //     return (
+  //       <tr>
+  //         <td colSpan="5">माहिती उपलब्ध नाही</td>
+  //       </tr>
+  //     );
+  //   }
+  // }
   onBannerUpload = (e) => {
     e.preventDefault();
     const bannerImg = new FormData();
@@ -1007,7 +1022,7 @@ export default class AdminPortal extends Component {
 
           store.addNotification({
             title: "गावाची वैशिष्ट्य माहिती",
-            message: "गावाचे नवीन वैशिष्ठ जातं करण्यात आले आहे",
+            message: "गावाचे नवीन वैशिष्ठ जतन करण्यात आले आहे",
             type: "success",
             insert: "top",
             container: "top-right",
@@ -1179,7 +1194,6 @@ export default class AdminPortal extends Component {
             // ],
             newDesignation: "",
           });
-          //window.location.reload();
         });
     }
   };
@@ -1241,6 +1255,57 @@ export default class AdminPortal extends Component {
             width: 600,
           });
         });
+    }
+  }
+  //remove instruction
+  async removeInstruction(idx, instuction_msg, instructionId) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + instuction_msg + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      debugger;
+      axios.put(
+        "http://localhost:4500/humbrat/instructions/delete/" + instructionId
+      );
+      const rows = [...this.state.instructionArr];
+      rows.splice(idx, 1);
+      this.setState({ instructionArr: rows });
+
+      const rowsTemp = [...this.state.currentInstructionData];
+      rowsTemp.splice(idx, 1);
+
+      let InstructionID = this.state.currentInstructionData[idx]
+        .tbl_instructions_id;
+      const elementsIndex = this.state.instructionArr.findIndex(
+        (element) => element.tbl_instructions_id == InstructionID
+      );
+
+      const rowsOriginal = [...this.state.instructionArr];
+      rowsOriginal.splice(elementsIndex, 1);
+      this.setState({
+        instructionArr: rowsOriginal,
+        currentInstructionData: rowsTemp,
+      });
+
+      store.addNotification({
+        title: "सूचना",
+        message: "सूचना काढून टाकण्यात आली आहे.",
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 4000,
+          onScreen: true,
+          showIcon: true,
+        },
+        width: 600,
+      });
+      //});
     }
   }
   //remove work post
@@ -1476,6 +1541,21 @@ export default class AdminPortal extends Component {
       activePageWork: pageNumber,
     });
   }
+  // handleInstructionPageChange
+  handleInstructionPageChange(pageNumber) {
+    let upperLimit = parseInt(pageNumber) * 5;
+    let lowerLimit = upperLimit - 5;
+    let data = [];
+    if (upperLimit <= this.state.itemInstructionLength) {
+      data = this.state.instructionArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.instructionArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentInstructionData: data,
+      activePageInstruction: pageNumber,
+    });
+  }
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
@@ -1617,8 +1697,77 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.instructionList()}</tbody>
+                {/* <tbody>{this.instructionList()}</tbody> */}
+                {this.state.instructionArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="3">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.currentInstructionData.map((item, idx) => (
+                      <tr
+                        id="Instruction"
+                        key={idx}
+                        className={
+                          this.state.currentInstructionData[idx]
+                            .tbl_instructions_is_active == 1
+                            ? "table-success"
+                            : "null"
+                        }
+                      >
+                        <td>
+                          {
+                            this.state.currentInstructionData[idx]
+                              .tbl_instructions_msg
+                          }
+                        </td>
+                        <td>
+                          {" "}
+                          <Link
+                            className="btn btn-btn btn-outline-info"
+                            to={
+                              "/instruction/" +
+                              this.state.currentInstructionData[idx]
+                                .tbl_instructions_id
+                            }
+                          >
+                            माहिती बदल
+                          </Link>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeInstruction(
+                                idx,
+                                this.state.currentInstructionData[idx]
+                                  .tbl_instructions_msg,
+                                this.state.currentInstructionData[idx]
+                                  .tbl_instructions_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
+              <div>
+                <Pagination
+                  activePage={this.state.activePageInstruction}
+                  itemsCountPerPage={5}
+                  totalItemsCount={this.state.itemInstructionLength}
+                  pageRangeDisplayed={5}
+                  onChange={this.handleInstructionPageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
+              </div>
             </div>
           </div>
         </div>
