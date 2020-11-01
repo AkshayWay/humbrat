@@ -1,10 +1,11 @@
 import React, { component, Component } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Col } from "react-bootstrap";
+import { store } from "react-notifications-component";
 
 export default class Instructions extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.onInstructionActiveChange = this.onInstructionActiveChange.bind(this);
     this.onInstructionChange = this.onInstructionChange.bind(this);
     this.state = {
@@ -59,7 +60,26 @@ export default class Instructions extends Component {
       .post("http://localhost:4500/humbrat/instructions", obj)
       .then((res) => {
         console.log("Successfully Inserted/Updated");
-        this.props.history.push("/adminPortal");
+        store.addNotification({
+          title: "सूचना",
+          message: "सूचना जतन करण्यात आले आहे",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 4000,
+            onScreen: true,
+            showIcon: true,
+          },
+          width: 600,
+        });
+        setTimeout(function () {
+          window.location.reload();
+        }, 5000);
+
+        //this.props.history.push("/adminPortal");
       })
       .catch(function (error) {
         console.log("Error : " + error);
@@ -68,13 +88,26 @@ export default class Instructions extends Component {
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h2>सूचना</h2>
-        <Form onSubmit={this.onSubmit}>
+        <h2 style={{ margin: "20px" }}>सूचना</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
+        <Form
+          onSubmit={this.onSubmit}
+          style={{ width: "60%", margin: "0 auto" }}
+        >
           <Form.Row>
             <Form.Group as={Col} controlId="formInstructionIsActive">
+              <Form.Label>सक्रिय आहे</Form.Label>
               <Form.Check
                 type="checkbox"
-                label="सक्रिय आहे"
+                //label="सक्रिय आहे"
                 checked={this.state.instructionIsActive}
                 onChange={this.onInstructionActiveChange}
               />
@@ -91,9 +124,11 @@ export default class Instructions extends Component {
               />
             </Form.Group>
           </Form.Row>
-          <Button variant="primary" value="Edit news" type="submit">
-            जतन करा
-          </Button>
+          <div className="text-center">
+            <Button variant="primary" value="Edit news" type="submit">
+              जतन करा
+            </Button>
+          </div>
         </Form>
       </div>
     );
