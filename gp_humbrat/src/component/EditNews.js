@@ -8,6 +8,7 @@ import {
 import Moment from "react-moment";
 import axios from "axios";
 import { Modal, Button, Form, Col } from "react-bootstrap";
+import { store } from "react-notifications-component";
 
 export default class EditNews extends Component {
   constructor(props) {
@@ -95,6 +96,21 @@ export default class EditNews extends Component {
       )
       .then((res) => {
         console.log("Successfully Inserted/Updated");
+        store.addNotification({
+          title: "बातमी",
+          message: "बातमी जतन करण्यात आले आहे",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 4000,
+            onScreen: true,
+            showIcon: true,
+          },
+          width: 600,
+        });
         this.props.history.push("/adminPortal");
       })
       .catch(function (error) {
@@ -104,13 +120,26 @@ export default class EditNews extends Component {
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h1>बातमी बदल</h1>
-        <Form onSubmit={this.onSubmit}>
+        <h2 style={{ margin: "20px" }}>बातमी</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
+        <Form
+          onSubmit={this.onSubmit}
+          style={{ width: "60%", margin: "0 auto" }}
+        >
           <Form.Row>
             <Form.Group as={Col} controlId="formNewsIsActive">
+              <Form.Label>सक्रिय आहे</Form.Label>
               <Form.Check
                 type="checkbox"
-                label="सक्रिय आहे"
+                //  label="सक्रिय आहे"
                 checked={this.state.newsIsActive}
                 onChange={this.onNewsActiveChange}
               />
@@ -160,10 +189,11 @@ export default class EditNews extends Component {
               />
             </Form.Group>
           </Form.Row>
-
-          <Button variant="primary" value="Edit news" type="submit">
-            जतन करा
-          </Button>
+          <div className="text-center">
+            <Button variant="primary" value="Edit news" type="submit">
+              जतन करा
+            </Button>
+          </div>
         </Form>
       </div>
     );

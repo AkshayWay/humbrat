@@ -656,7 +656,7 @@ export default class AdminPortal extends Component {
     super(props);
 
     this.state = {
-      newsInformation: [],
+      newsInformationArr: [],
       newsId: 0,
       newsTitle: "",
       newsDesp: "",
@@ -715,6 +715,11 @@ export default class AdminPortal extends Component {
       switchSortBanner: false,
       activePageBanner: 1,
       itemBannerLength: 0,
+      //table pagination for news
+      currentNewsData: [],
+      switchSortNews: false,
+      activePageNews: 1,
+      itemNewsLength: 0,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -734,10 +739,13 @@ export default class AdminPortal extends Component {
     this.handleInstructionPageChange = this.handleInstructionPageChange.bind(
       this
     );
+    this.handleNewsPageChange = this.handleNewsPageChange.bind(this);
     this.handleBannerPageChange = this.handleBannerPageChange.bind(this);
+    this.handleNewsPageChange = this.handleNewsPageChange.bind(this);
     this.removeWorkPost = this.removeWorkPost.bind(this);
     this.removeInstruction = this.removeInstruction.bind(this);
     this.removeBanner = this.removeBanner.bind(this);
+    this.removeNews = this.removeNews.bind(this);
   }
   async componentDidMount() {
     if (
@@ -759,7 +767,13 @@ export default class AdminPortal extends Component {
         .get("http://localhost:4500/humbrat/news_panel")
         .then((response) => {
           this.setState({
-            newsInformation: response.data,
+            newsInformationArr: response.data,
+          });
+          let totalItemsCount = this.state.newsInformationArr.length;
+          let currentNewsData = this.state.newsInformationArr.slice(0, 5);
+          this.setState({
+            currentNewsData,
+            itemNewsLength: totalItemsCount,
           });
         });
 
@@ -864,8 +878,8 @@ export default class AdminPortal extends Component {
     }
   }
   NewsAlertList() {
-    if (this.state.newsInformation.length > 0) {
-      return this.state.newsInformation.map(function (currentNewsInfo, i) {
+    if (this.state.newsInformationArr.length > 0) {
+      return this.state.newsInformationArr.map(function (currentNewsInfo, i) {
         return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
       });
     } else {
@@ -1302,7 +1316,6 @@ export default class AdminPortal extends Component {
         tbl_features_is_deleted: 1,
         tbl_features_file_name: villageFeatureImg,
       };
-      debugger;
       axios
         .put("http://localhost:4500/humbrat/village_features/" + featureId, obj)
         .then((res) => {
@@ -1343,6 +1356,71 @@ export default class AdminPortal extends Component {
         });
     }
   }
+  // remove news
+  async removeNews(idx, newsTitle, newsId) {
+    if (
+      await confirm(
+        "तुम्ही नक्की '" + newsTitle + "' काढून टाकू इच्चीता?",
+        "काढून टाका",
+        "रद्द करा"
+      )
+    ) {
+      debugger;
+      axios
+        .put("http://localhost:4500/humbrat/news_panel/delete/" + newsId)
+        .then((res) => {
+          console.log(res.data.message);
+          if (res.data.message == "News deleted successfully") {
+            const rowsTemp = [...this.state.currentNewsData];
+            rowsTemp.splice(idx, 1);
+
+            let NewsID = this.state.currentNewsData[idx].tbl_news_id;
+            const elementsIndex = this.state.newsInformationArr.findIndex(
+              (element) => element.tbl_news_id == NewsID
+            );
+
+            const rowsOriginal = [...this.state.newsInformationArr];
+            rowsOriginal.splice(elementsIndex, 1);
+            this.setState({
+              newsInformationArr: rowsOriginal,
+              currentNewsData: rowsTemp,
+            });
+
+            store.addNotification({
+              title: "बातमी",
+              message: "बातमी काढून टाकण्यात आली आहे.",
+              type: "success",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 4000,
+                onScreen: true,
+                showIcon: true,
+              },
+              width: 600,
+            });
+          } else {
+            store.addNotification({
+              title: "काहीतरी चुकत आहे",
+              message: "पेज रिफ्रेश करून कृपया पुन्हा प्रयत्न करा. ",
+              type: "danger",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 4000,
+                onScreen: true,
+                showIcon: true,
+              },
+              width: 600,
+            });
+          }
+        });
+    }
+  }
   // remove banner
   async removeBanner(idx, bannerImg, bannerId) {
     if (
@@ -1352,7 +1430,6 @@ export default class AdminPortal extends Component {
         "रद्द करा"
       )
     ) {
-      debugger;
       const obj = {
         tbl_banner_id: bannerId,
         tbl_banner_title: bannerImg,
@@ -1699,6 +1776,7 @@ export default class AdminPortal extends Component {
       activePageWork: pageNumber,
     });
   }
+
   // handleInstructionPageChange
   handleInstructionPageChange(pageNumber) {
     let upperLimit = parseInt(pageNumber) * 5;
@@ -1730,11 +1808,35 @@ export default class AdminPortal extends Component {
       activePageBanner: pageNumber,
     });
   }
+  //handleNewsPageChange
+  handleNewsPageChange(pageNumber) {
+    let upperLimit = parseInt(pageNumber) * 5;
+    let lowerLimit = upperLimit - 5;
+    let data = [];
+    if (upperLimit <= this.state.itemNewsLength) {
+      data = this.state.newsInformationArr.slice(lowerLimit, upperLimit);
+    } else {
+      data = this.state.newsInformationArr.slice(lowerLimit);
+    }
+    this.setState({
+      currentNewsData: data,
+      activePageNews: pageNumber,
+    });
+  }
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
         {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
-        <h1>प्रशासक</h1>
+        <h2 style={{ margin: "20px" }}>प्रशासक</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
         <h5>
           कोणतीही माहिती पुरवताना किंवा काढताना त्याची शहानिशा करून मगच कृती
           करावी. पुरवलेली सर्व माहिती आपल्या संकेतस्थळावर दिसणार आहे याची नोंद
@@ -1777,8 +1879,86 @@ export default class AdminPortal extends Component {
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
-                <tbody>{this.NewsAlertList()}</tbody>
+                {/* <tbody>{this.NewsAlertList()}</tbody> */}
+                {this.state.newsInformationArr == "" ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan="5">माहिती उपलब्ध नाही</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {this.state.currentNewsData.map((item, idx) => (
+                      <tr
+                        id="Instruction"
+                        key={idx}
+                        className={
+                          this.state.currentNewsData[idx].tbl_news_is_active ==
+                          1
+                            ? "table-success"
+                            : "null"
+                        }
+                      >
+                        <td>
+                          {this.state.currentNewsData[idx].tbl_news_title}
+                        </td>
+                        <td>
+                          <Moment format="DD/MM/YYYY">
+                            {
+                              this.state.currentNewsData[idx]
+                                .tbl_news_created_date
+                            }
+                          </Moment>
+                        </td>
+                        <td>
+                          <Moment format="DD/MM/YYYY">
+                            {
+                              this.state.currentNewsData[idx]
+                                .tbl_news_updated_date
+                            }
+                          </Moment>
+                        </td>
+                        <td>
+                          <Link
+                            className="btn btn-btn btn-btn btn-outline-info"
+                            to={
+                              "/editNews/" +
+                              this.state.currentNewsData[idx].tbl_news_id
+                            }
+                          >
+                            बातमी बदल
+                          </Link>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => {
+                              this.removeNews(
+                                idx,
+                                this.state.currentNewsData[idx].tbl_news_title,
+                                this.state.currentNewsData[idx].tbl_news_id
+                              );
+                            }}
+                          >
+                            काढून टाका
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
+              <div>
+                <Pagination
+                  activePage={this.state.activePageNews}
+                  itemsCountPerPage={5}
+                  totalItemsCount={this.state.itemNewsLength}
+                  pageRangeDisplayed={5}
+                  onChange={this.handleNewsPageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
+              </div>
             </div>
           </div>
         </div>

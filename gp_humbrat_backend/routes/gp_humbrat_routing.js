@@ -162,14 +162,14 @@ Router.post("/news_panel/addEdit/:id", (req, res) => {
     }
   );
 });
-Router.post("/news_panel/delete/:id", (req, res) => {
+Router.put("/news_panel/delete/:id", (req, res) => {
   let deleteId = req.body;
-  //console.log(req.params.id);
   var sqlQuery = "SET @tbl_news_id=?; CALL sp_deleteNewsInfo(@tbl_news_id)";
   mySqlConnection.query(sqlQuery, [req.params.id], (err, rows) => {
     if (!err) {
-      // console.log("Deleted successfully");
-      res.send(rows);
+      res.status(201).json({
+        message: "News deleted successfully",
+      });
     } else {
       console.log("Error :" + err);
     }
@@ -225,7 +225,6 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
             "select tbl_banner_id,tbl_banner_title from tbl_dashboard_banner order by tbl_banner_id desc limit 1;",
             (err, rows) => {
               if (!err) {
-                console.log("Id and image:" + rows);
                 res.send(rows);
               } else {
                 console.log("Error :" + err);
@@ -267,7 +266,6 @@ Router.post(
             "select tbl_features_id,tbl_features_file_name from tbl_features order by tbl_features_id desc limit 1;",
             (err, rows) => {
               if (!err) {
-                console.log("Id and image:" + rows);
                 res.send(rows);
               } else {
                 console.log("Error :" + err);
