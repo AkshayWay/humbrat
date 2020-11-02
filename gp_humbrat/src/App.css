@@ -68,3 +68,29 @@ footer {
 .table-responsive {
   /* max-height:300px; */
 }
+.bg-primary_change {
+  background-color: #563d7c !important;
+}
+
+.navbar {
+  min-height: 4rem;
+}
+
+.navbar-nav > li > a {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 80px;
+}
+
+@media (max-width: 767px) {
+  .navbar-nav > li > a {
+    line-height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+.navbar-brand:hover {
+  -ms-transform: scale(1.5); /* IE 9 */
+  -webkit-transform: scale(1.5); /* Safari 3-8 */
+  transform: scale(1.5);
+}

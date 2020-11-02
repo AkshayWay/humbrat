@@ -76,11 +76,6 @@ export default class HomePage extends Component {
               bannerImgScr: response.data[0].tbl_banner_title,
               bannerImgAlt: response.data[0].tbl_banner_img_desc,
             });
-          } else {
-            this.setState({
-              bannerImgScr: "none",
-              bannerImgAlt: "Network issue",
-            });
           }
         });
 
@@ -135,14 +130,17 @@ export default class HomePage extends Component {
 
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={"uploads/" + this.state.bannerImgScr}
-            alt={this.state.bannerImgAlt}
-            className="img-fluid rounded rounded shadow p-3 mb-5 bg-white rounded"
-          />
-        </div>
-
+        {this.state.bannerImgScr == "" ? (
+          <div></div>
+        ) : (
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={"uploads/" + this.state.bannerImgScr}
+              alt={this.state.bannerImgAlt}
+              className="img-fluid rounded rounded shadow p-3 mb-5 bg-white rounded"
+            />
+          </div>
+        )}
         <marquee scrollamount="7">{this.state.instructionMsg}</marquee>
         <div
           className="card mb-3 shadow-sm p-3 mb-5 bg-white rounded"

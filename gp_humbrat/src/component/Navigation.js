@@ -5,17 +5,14 @@ import {
   Link,
   hashHistory,
 } from "react-router-dom";
-import ReactBootstrap, {
-  Navbar,
-  Button,
-  Nav,
-  Col,
-  Form,
-  FormControl,
-  Grid,
-  Panel,
-  FormGroup,
-} from "react-bootstrap";
+import AppCSS from "../App.css";
+import Logo from "../assets/images/Logo_humbrat.png";
+import $ from "jquery";
+
+$(document).on("click", ".nav-item", function (e) {
+  $(this).addClass("active").siblings().removeClass("active");
+});
+
 class Navigation extends Component {
   constructor(props) {
     super(props);
@@ -45,9 +42,22 @@ class Navigation extends Component {
   render() {
     const UserLoggedIn = this.state.LoggedIn ? "inherit" : "none";
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a className="navbar-brand" href="#">
-          ग्रामपंचायत हुंबरट
+      <nav
+        className="navbar navbar-expand-lg navbar-dark bg-primary_change"
+        style={{
+          marginBottom: "10px",
+          backgroundColor: "#563d7c!important",
+          borderRadius: "0px 0px 10px 10px",
+        }}
+      >
+        <a className="navbar-brand" href="/">
+          <img
+            src={Logo}
+            width="50"
+            height="50"
+            alt="ग्रामपंचायत हुंबरट"
+            style={{ borderRadius: "50%" }}
+          />
         </a>
         <button
           className="navbar-toggler"
@@ -63,7 +73,7 @@ class Navigation extends Component {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
+            <li className="nav-item active">
               <Link to="/" className="nav-link">
                 मुख्य पृष्ठ
               </Link>
@@ -101,6 +111,18 @@ class Navigation extends Component {
           </form>
         </div>
       </nav>
+      // <Navbar bg="primary" variant="dark">
+      //   <Navbar.Brand href="#home">ग्रामपंचायत हुंबरट</Navbar.Brand>
+      //   <Nav className="mr-auto">
+      //     <Nav.Link href="#home">Home</Nav.Link>
+      //     <Nav.Link href="#features">Features</Nav.Link>
+      //     <Nav.Link href="#pricing">Pricing</Nav.Link>
+      //   </Nav>
+      //   <Form inline>
+      //     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+      //     <Button variant="outline-light">Search</Button>
+      //   </Form>
+      // </Navbar>
     );
   }
 }

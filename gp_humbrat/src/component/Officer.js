@@ -130,17 +130,28 @@ class Office extends Component {
     return (
       <div style={{ marginTop: 20 + "px", minHeight: "calc(100vh - 70px)" }}>
         <div id="Members">
+          <h2 style={{ margin: "20px" }}>अधिकारी</h2>
+          <hr
+            style={{
+              height: "10px",
+              borderWidth: "0",
+              boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+              backgroundImage:
+                "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+            }}
+          ></hr>
           <div style={{ textAlign: "center" }}>
             <h4>सदस्य</h4>
           </div>
           <button
-            className="btn btn-outline-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseMember"
             aria-expanded="false"
             aria-controls="collapseMember"
             onClick={() => this.collapseMemberIcon(1)}
+            style={{ margin: "5px" }}
           >
             {memberIcon}
           </button>
@@ -219,13 +230,14 @@ class Office extends Component {
             <h4>कर्मचारी </h4>
           </div>
           <button
-            className="btn btn-outline-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseOfficers"
             aria-expanded="false"
             aria-controls="collapseOfficers"
             onClick={() => this.collapseMemberIcon(2)}
+            style={{ margin: "5px" }}
           >
             {officerIcon}
           </button>

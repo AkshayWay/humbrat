@@ -2,11 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Carousel } from "react-bootstrap";
 
-//const [index, setIndex] = React.useState(0);
-
-// const handleSelect = (selectedIndex, e) => {
-//   setIndex(selectedIndex);
-// };
 export default class WorkSlider extends Component {
   constructor(props) {
     super(props);

@@ -1460,10 +1460,10 @@ export default class AdminPortal extends Component {
     }
   }
   // remove banner
-  async removeBanner(idx, bannerImg, bannerId) {
+  async removeBanner(idx, bannerImg, bannerId, bannerDesc) {
     if (
       await confirm(
-        "तुम्ही नक्की '" + bannerImg + "' काढून टाकू इच्चीता?",
+        "तुम्ही नक्की '" + bannerDesc + "' काढून टाकू इच्चीता?",
         "काढून टाका",
         "रद्द करा"
       )
@@ -1473,6 +1473,7 @@ export default class AdminPortal extends Component {
         tbl_banner_title: bannerImg,
         // tbl_work_images_title: workPostImg,
       };
+      debugger;
       axios
         .put("http://localhost:4500/humbrat/dashboard_banner/delete", obj)
         .then((res) => {
@@ -2101,7 +2102,9 @@ export default class AdminPortal extends Component {
                                 idx,
                                 this.state.currentBannerData[idx]
                                   .tbl_banner_title,
-                                this.state.currentBannerData[idx].tbl_banner_id
+                                this.state.currentBannerData[idx].tbl_banner_id,
+                                this.state.currentBannerData[idx]
+                                  .tbl_banner_img_desc
                               );
                             }}
                           >

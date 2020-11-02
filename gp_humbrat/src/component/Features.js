@@ -63,7 +63,16 @@ export default class Features extends Component {
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h1>Features here</h1>
+        <h2 style={{ margin: "20px" }}>वैशिष्ठे</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
         {this.FeatureList()}
       </div>
     );

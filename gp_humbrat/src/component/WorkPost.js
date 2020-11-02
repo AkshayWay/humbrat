@@ -1,12 +1,5 @@
 import React, { component, Component } from "react";
 import axios from "axios";
-// import { Card, CardDeck, Col } from "react-bootstrap";
-// import {
-//   BrowserRouter as Router,
-//   Route,
-//   Link,
-//   hashHistory,
-// } from "react-router-dom";
 import WorkCard from "./WorkCard";
 
 export default class WorkPost extends Component {
@@ -42,6 +35,16 @@ export default class WorkPost extends Component {
     });
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
+        <h2 style={{ margin: "20px" }}>ग्रामपंचायत कार्य</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
         <div className="container">
           <div className="row">{workPostList}</div>
         </div>
