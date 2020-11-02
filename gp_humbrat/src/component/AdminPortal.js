@@ -466,13 +466,22 @@ function ViewWork(props) {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  // const [imgDescInput, setimgDescInput] = useState(
+  //   ...props.variant.tbl_work_details
+  // );
   const [imgDescInput, setimgDescInput] = useState(
-    props.variant.tbl_work_details
+    ...props.variant.tbl_work_details
   );
+  React.useEffect(() => {
+    setimgDescInput(props.variant.tbl_work_details);
+  }, [props.variant.tbl_work_details]);
 
   const [imgTitleInput, setimgTitleInput] = useState(
-    props.variant.tbl_work_title
+    ...props.variant.tbl_work_title
   );
+  React.useEffect(() => {
+    setimgTitleInput(props.variant.tbl_work_title);
+  }, [props.variant.tbl_work_title]);
 
   const dateFormatOriginal = props.variant.tbl_work_date.split("T");
   var formatCreatedDate = new Date(props.variant.tbl_work_date);
@@ -489,6 +498,11 @@ function ViewWork(props) {
   }
   var dateFormat = yyyy + "-" + mm + "-" + dd;
   const [imgDateInput, setimgDateInput] = useState(dateFormat);
+
+  React.useEffect(() => {
+    setimgDateInput(dateFormat);
+  }, [dateFormat]);
+
   const changeImageDate = (e) => {
     setimgDateInput(e.target.value);
   };
@@ -1152,7 +1166,7 @@ export default class AdminPortal extends Component {
           console.log(res);
           //window.location.reload(true);
           let newId = res.data[0].tbl_features_id;
-          let newImage = res.data[1].tbl_features_file_name;
+          let newImage = res.data[0].tbl_features_file_name;
           const newItem = {
             tbl_features_id: newId,
             tbl_features_file_name: newImage,
@@ -1166,10 +1180,34 @@ export default class AdminPortal extends Component {
             0,
             newItem
           );
+
+          if (
+            this.state.activePageFeature * 10 >=
+            this.state.itemFeatureLength
+          ) {
+            let currentDataLength = this.state.currentFeatureData.length;
+            this.state.currentFeatureData.splice(currentDataLength, 0, newItem);
+          }
           this.setState({
             featureTitle: "",
             featureDesc: "",
             selectedFeatureFile: "",
+          });
+
+          store.addNotification({
+            title: "गावाची वैशिष्ट्य माहिती",
+            message: "गावाचे नवीन वैशिष्ठ जतन करण्यात आले आहे",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 4000,
+              onScreen: true,
+              showIcon: true,
+            },
+            width: 600,
           });
         });
     }
