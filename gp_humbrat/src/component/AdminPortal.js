@@ -734,6 +734,15 @@ export default class AdminPortal extends Component {
       switchSortNews: false,
       activePageNews: 1,
       itemNewsLength: 0,
+      //toggle button icons
+      newsToggleArrow: true,
+      bannerToggleArrow: false,
+      instructionToggleArrow: true,
+      workToggleArrow: false,
+      featureToggleArrow: true,
+      officerToggleArrow: false,
+      employeeToggleArrow: true,
+      designationToggleArrow: false,
     };
     this.onBannerChange = this.onBannerChange.bind(this);
     this.onWorkDescChange = this.onWorkDescChange.bind(this);
@@ -1473,7 +1482,6 @@ export default class AdminPortal extends Component {
         tbl_banner_title: bannerImg,
         // tbl_work_images_title: workPostImg,
       };
-      debugger;
       axios
         .put("http://localhost:4500/humbrat/dashboard_banner/delete", obj)
         .then((res) => {
@@ -1862,7 +1870,379 @@ export default class AdminPortal extends Component {
       activePageNews: pageNumber,
     });
   }
+  collapseDiv(e) {
+    switch (e) {
+      case 1:
+        this.setState({
+          newsToggleArrow: !this.state.newsToggleArrow,
+        });
+      case 2:
+        this.setState({
+          bannerToggleArrow: !this.state.bannerToggleArrow,
+        });
+      case 3:
+        this.setState({
+          instructionToggleArrow: !this.state.instructionToggleArrow,
+        });
+      case 4:
+        this.setState({
+          workToggleArrow: !this.state.workToggleArrow,
+        });
+      case 5:
+        this.setState({
+          featureToggleArrow: !this.state.featureToggleArrow,
+        });
+      case 6:
+        this.setState({
+          officerToggleArrow: !this.state.officerToggleArrow,
+        });
+      case 7:
+        this.setState({
+          employeeToggleArrow: !this.state.employeeToggleArrow,
+        });
+      case 8:
+        this.setState({
+          designationToggleArrow: !this.state.designationToggleArrow,
+        });
+    }
+  }
   render() {
+    var newsIcon;
+    var bannerIcon;
+    var instructionIcon;
+    var workIcon;
+    var featureIcon;
+    var officerIcon;
+    var employeeIcon;
+    var designationIcon;
+    if (this.state.newsToggleArrow) {
+      newsIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      newsIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.bannerToggleArrow) {
+      bannerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      bannerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.instructionToggleArrow) {
+      instructionIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      instructionIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.workToggleArrow) {
+      workIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      workIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.featureToggleArrow) {
+      featureIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      featureIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.officerToggleArrow) {
+      officerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      officerIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.employeeToggleArrow) {
+      employeeIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      employeeIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
+    if (this.state.designationToggleArrow) {
+      designationIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-up"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+          />
+        </svg>
+      );
+    } else {
+      designationIcon = (
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-chevron-double-down"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      );
+    }
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
         {this.state.redirect ? <Redirect push to="/sign_in" /> : null}
@@ -1883,14 +2263,17 @@ export default class AdminPortal extends Component {
         </h5>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseNewsDiv"
             aria-expanded="false"
             aria-controls="collapseNewsDiv"
+            onClick={() => this.collapseDiv(1)}
+            style={{ margin: "10px" }}
           >
             बातम्या
+            {newsIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseNewsDiv">
@@ -2006,14 +2389,17 @@ export default class AdminPortal extends Component {
 
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseBannerDiv"
             aria-expanded="false"
             aria-controls="collapseBannerDiv"
+            onClick={() => this.collapseDiv(2)}
+            style={{ margin: "10px" }}
           >
             मुख्य पृष्ठ छायाचित्र
+            {bannerIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseBannerDiv">
@@ -2133,14 +2519,17 @@ export default class AdminPortal extends Component {
 
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseInstructionDiv"
             aria-expanded="false"
             aria-controls="collapseInstructionDiv"
+            onClick={() => this.collapseDiv(3)}
+            style={{ margin: "10px" }}
           >
             सूचना
+            {instructionIcon}
           </button>
         </p>
 
@@ -2238,14 +2627,17 @@ export default class AdminPortal extends Component {
         </div>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseWorkPostDiv"
             aria-expanded="false"
             aria-controls="collapseWorkPostDiv"
+            onClick={() => this.collapseDiv(4)}
+            style={{ margin: "10px" }}
           >
             ग्रामपंचायत कार्य
+            {workIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseWorkPostDiv">
@@ -2376,14 +2768,17 @@ export default class AdminPortal extends Component {
         </div>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseFeatureDiv"
             aria-expanded="false"
             aria-controls="collapseFeatureDiv"
+            onClick={() => this.collapseDiv(5)}
+            style={{ margin: "10px" }}
           >
             वैशिष्ठे
+            {featureIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseFeatureDiv">
@@ -2512,14 +2907,17 @@ export default class AdminPortal extends Component {
         </div>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseAddOfficersDiv"
             aria-expanded="false"
             aria-controls="collapseAddOfficersDiv"
+            onClick={() => this.collapseDiv(6)}
+            style={{ margin: "10px" }}
           >
             अधिकारी
+            {officerIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseAddOfficersDiv">
@@ -2618,17 +3016,20 @@ export default class AdminPortal extends Component {
         </div>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
-            data-target="#collapseAddOfficersDiv"
+            data-target="#collapseEmployeeDiv"
             aria-expanded="false"
-            aria-controls="collapseAddOfficersDiv"
+            aria-controls="collapseEmployeeDiv"
+            onClick={() => this.collapseDiv(7)}
+            style={{ margin: "10px" }}
           >
             कर्मचारी
+            {employeeIcon}
           </button>
         </p>
-        <div className="collapse show" id="collapseAddOfficersDiv">
+        <div className="collapse show" id="collapseEmployeeDiv">
           <div className="card card-body">
             <p>
               <Link
@@ -2706,14 +3107,17 @@ export default class AdminPortal extends Component {
         </div>
         <p>
           <button
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
             type="button"
             data-toggle="collapse"
             data-target="#collapseDesignationDiv"
             aria-expanded="false"
             aria-controls="collapseDesignationDiv"
+            onClick={() => this.collapseDiv(8)}
+            style={{ margin: "10px" }}
           >
             पद
+            {designationIcon}
           </button>
         </p>
         <div className="collapse show" id="collapseDesignationDiv">
