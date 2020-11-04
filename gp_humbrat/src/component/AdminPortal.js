@@ -2281,10 +2281,10 @@ export default class AdminPortal extends Component {
             <p>
               <Link
                 type="button"
-                className="btn btn-outline-primary"
+                className="text-decoration-none"
                 to={"/editNews/0"}
               >
-                नवीन बातमी
+                नवीन बातमी <b>&#43;</b>
               </Link>
             </p>
             <div className="table-responsive">
@@ -2384,9 +2384,6 @@ export default class AdminPortal extends Component {
             </div>
           </div>
         </div>
-
-        {/* Dashboard banner*/}
-
         <p>
           <button
             className="btn btn-outline-warning"
@@ -2538,10 +2535,10 @@ export default class AdminPortal extends Component {
             <p>
               <Link
                 type="button"
-                className="btn btn-outline-primary"
+                className="text-decoration-none"
                 to={"/instruction/0"}
               >
-                नवीन सूचना
+                नवीन सूचना +
               </Link>
             </p>
             <div className="table-responsive">
@@ -2925,10 +2922,10 @@ export default class AdminPortal extends Component {
             <p>
               <Link
                 type="button"
-                className="btn btn-outline-primary"
+                className="text-decoration-none"
                 to={"/add_officers/0"}
               >
-                नवीन अधिकारी
+                नवीन अधिकारी +
               </Link>
             </p>
             <div className="table-responsive">
@@ -3034,10 +3031,10 @@ export default class AdminPortal extends Component {
             <p>
               <Link
                 type="button"
-                className="btn btn-outline-primary"
+                className="text-decoration-none"
                 to={"/add_employee/0"}
               >
-                नवीन कर्मचारी
+                नवीन कर्मचारी +
               </Link>
             </p>
             <div className="table-responsive">

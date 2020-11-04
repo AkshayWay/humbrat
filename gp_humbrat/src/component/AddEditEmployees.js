@@ -1,8 +1,7 @@
 import React, { component, Component } from "react";
 import axios from "axios";
 //Notification component
-import { store } from 'react-notifications-component';
-
+import { store } from "react-notifications-component";
 
 const DesignationList = (props) => (
   <option value={props.DesignationList.tbl_designation_id}>
@@ -51,8 +50,6 @@ export default class AddEditEmployees extends Component {
             ElectedPersonImg: response.data[0].tbl_employee_img,
             imgDisplay: "inline",
           });
-
-          
         })
         .catch(function (error) {
           console.log(error);
@@ -96,7 +93,8 @@ export default class AddEditEmployees extends Component {
     const employee = new FormData();
     if (
       this.state.selectedFile == undefined ||
-      this.state.selectedFile == null ||  this.state.selectedFile ==""
+      this.state.selectedFile == null ||
+      this.state.selectedFile == ""
     ) {
     } else {
       employee.append(
@@ -123,8 +121,7 @@ export default class AddEditEmployees extends Component {
             selectedFile: "",
             //   ElectedPersonImg: this.state.selectedFile.name,
           });
-           window.location.reload();
-         
+          window.location.reload();
         });
     } else {
       axios
@@ -149,9 +146,9 @@ export default class AddEditEmployees extends Component {
             dismiss: {
               duration: 4000,
               onScreen: true,
-              showIcon:true
+              showIcon: true,
             },
-            width:600
+            width: 600,
           });
         });
     }
@@ -160,7 +157,16 @@ export default class AddEditEmployees extends Component {
   render() {
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
-        <h1>कर्मचारी</h1>
+        <h2 style={{ margin: "20px" }}>कर्मचारी</h2>
+        <hr
+          style={{
+            height: "10px",
+            borderWidth: "0",
+            boxShadow: " 0 10px 10px -10px #8c8c8c inset",
+            backgroundImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 179, 113), rgba(0, 0, 0, 0))",
+          }}
+        ></hr>
         <div
           style={{
             display: this.state.imgDisplay,
@@ -171,11 +177,14 @@ export default class AddEditEmployees extends Component {
               src={"/employees/" + this.state.ElectedPersonImg}
               className="rounded mx-auto d-block"
               alt="Employees image"
-              style={{ width: "300px", height: "300px" }}
+              // style={{ width: "300px", height: "300px" }}
             />
           )}
         </div>
-        <form onSubmit={this.onEmployeeUpload} style={{ padding: "20px" }}>
+        <form
+          onSubmit={this.onEmployeeUpload}
+          style={{ width: "60%", margin: "0 auto" }}
+        >
           <div className="form-group">
             <label>संपूर्ण नाव</label>
             <input
@@ -218,9 +227,11 @@ export default class AddEditEmployees extends Component {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary">
-            संक्रमित करा
-          </button>
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary">
+              संक्रमित करा
+            </button>
+          </div>
         </form>
       </div>
     );

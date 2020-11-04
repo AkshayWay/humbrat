@@ -158,7 +158,7 @@ class Office extends Component {
           <div className="collapse show" id="collapseMember">
             {this.state.electedPersonArr == "" ? (
               <div>
-                <h2>No data found</h2>
+                <h2>माहिती उपलब्ध नाही</h2>
               </div>
             ) : (
               <div>
@@ -209,7 +209,7 @@ class Office extends Component {
                             }
                           </h5>
                           <p className="card-text">
-                            संपर्क :{" "}
+                            संपर्क :
                             {
                               this.state.electedPersonArr[idx]
                                 .tbl_elected_person_contact_no
@@ -244,7 +244,7 @@ class Office extends Component {
           <div className="collapse show" id="collapseOfficers">
             {this.state.employeeArr == "" ? (
               <div>
-                <h2>No data found</h2>
+                <h2>माहिती उपलब्ध नाही</h2>
               </div>
             ) : (
               <div>
