@@ -183,7 +183,7 @@ export default class AddEditEmployees extends Component {
         </div>
         <form
           onSubmit={this.onEmployeeUpload}
-          style={{ width: "60%", margin: "0 auto" }}
+          style={{ width: "70%", margin: "0 auto" }}
         >
           <div className="form-group">
             <label>संपूर्ण नाव</label>

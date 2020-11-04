@@ -132,7 +132,7 @@ export default class EditNews extends Component {
         ></hr>
         <Form
           onSubmit={this.onSubmit}
-          style={{ width: "60%", margin: "0 auto" }}
+          style={{ width: "70%", margin: "0 auto" }}
         >
           <Form.Row>
             <Form.Group as={Col} controlId="formNewsIsActive">

@@ -204,7 +204,7 @@ export default class AddEditOfficers extends Component {
         </div>
         <form
           onSubmit={this.onElectedPersonUpload}
-          style={{ width: "60%", margin: "0 auto" }}
+          style={{ width: "70%", margin: "0 auto" }}
         >
           <div className="form-group">
             <label>संपूर्ण नाव</label>
