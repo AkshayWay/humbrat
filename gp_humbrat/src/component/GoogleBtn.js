@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { Route } from "react-router";
 import { browserHistory } from "react-router";
 //import { hashHistory } from "react-router";
-import { HashRouter } from "react-router-dom";
+import { store } from "react-notifications-component";
 import axios from "axios";
 
 import App from "../App.css";
@@ -49,6 +49,23 @@ class GoogleBtn extends Component {
             localStorage.setItem("userEmail", null);
             localStorage.setItem("isLoggedIn", 0);
             alert("Check your email id or password");
+
+            store.addNotification({
+              title: "लॉग इन माहिती तपासून पहा",
+              message:
+                "तुमचा ई-मेल किंवा पासवर्ड तपासून बघा.अथवा तुम्ही वैध व्यक्ती नाही आहात.",
+              type: "danger",
+              insert: "top",
+              container: "top-center",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 4000,
+                onScreen: true,
+                showIcon: true,
+              },
+              width: 600,
+            });
           }
         });
       // if (response.profileObj.email == "waingankar.akshay95@gmail.com") {
