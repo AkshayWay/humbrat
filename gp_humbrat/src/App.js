@@ -19,7 +19,7 @@ import ReactBootstrap, {
   FormGroup,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'react-notifications-component/dist/theme.css'
+import "react-notifications-component/dist/theme.css";
 
 // import gp_banner from "./assets/images/gp_banner.jpg";
 // import gp_population from "./assets/images/gp_population.png";
@@ -40,7 +40,9 @@ import Features from "./component/Features";
 import AddEditOfficers from "./component/AddEditOfficers";
 import AddEditEmployees from "./component/AddEditEmployees";
 //notification component
-import ReactNotification from 'react-notifications-component'
+import ReactNotification from "react-notifications-component";
+//React idle timeout
+import IdleTimeout from "./common/IdleTimeContainer";
 
 const Main = withRouter(({ location }) => {
   return (
@@ -49,18 +51,23 @@ const Main = withRouter(({ location }) => {
       <Route path="/" exact component={HomePage}></Route>
       <Route path="/officer" component={Officers}></Route>
       {localStorage.getItem("userEmail") != null ? (
-        <Route path="/adminPortal" component={AdminPortal}></Route>
+        <div>
+          <Route path="/adminPortal" component={AdminPortal}></Route>
+          <Route path="/editNews/:id" component={EditNews}></Route>
+          <Route path="/add_officers/:id" component={AddEditOfficers}></Route>
+          <Route path="/edit_officers/:id" component={AddEditOfficers}></Route>
+          <Route path="/add_employee/:id" component={AddEditEmployees}></Route>
+          <Route path="/edit_employee/:id" component={AddEditEmployees}></Route>
+          <Route path="/instruction/:id" component={Instruction}></Route>
+          <IdleTimeout></IdleTimeout>
+        </div>
       ) : null}
-      <Route path="/editNews/:id" component={EditNews}></Route>
-      <Route path="/instruction/:id" component={Instruction}></Route>
+
       <Route path="/WorkPost" component={WorkPost}></Route>
       <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
       <Route path="/sign_in" component={Login}></Route>
       <Route path="/features" component={Features}></Route>
-      <Route path="/add_officers/:id" component={AddEditOfficers}></Route>
-      <Route path="/edit_officers/:id" component={AddEditOfficers}></Route>
-      <Route path="/add_employee/:id" component={AddEditEmployees}></Route>
-      <Route path="/edit_employee/:id" component={AddEditEmployees}></Route>
+
       {location.pathname == "/sign_in" ? null : <Footer />}
     </div>
   );
