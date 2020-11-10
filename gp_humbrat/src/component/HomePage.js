@@ -166,13 +166,12 @@ export default class HomePage extends Component {
             <div className="card-body">
               <h5 className="card-title">लोकसंख्या</h5>
               <p className="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
+                २०११ साली झालल्या जनगणनेनुसार हुंबरट गावची लोकसंख्या १६६९ इतकी
+                होती. त्यापैकी ८६३ पुरुष व ८०६ महिला होत्या.
               </p>
-              <p className="card-text">
+              {/* <p className="card-text">
                 <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="card" style={marginBottom}>
@@ -191,14 +190,12 @@ export default class HomePage extends Component {
           <div className="card" style={marginBottom}>
             <img src={gp_connectivity} className="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">भौगोलिक स्थान</h5>
+              <h5 className="card-title">स्वच्छता</h5>
               <p className="card-text">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This card has even longer content
-                than the first to show that equal height action.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
+                गावपातळीवर आरोग्य आणि स्वच्छतेसाठी बरेच कार्यक्रम आणि जनजागृती
+                केली जाते. त्याचाच एक भाग म्हणून गाव मध्ये प्लास्टिक बंदीचे पालन
+                केले जाते आणि त्यास गावातील व्यक्ती तसेच दुकानदार उत्तम प्रतिसाद
+                देताना दिसत आहेत.
               </p>
             </div>
           </div>
@@ -209,12 +206,10 @@ export default class HomePage extends Component {
             <div className="card-body">
               <h5 className="card-title">बचतगट</h5>
               <p className="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
+                बचत गट हे महिलांना आर्थिकदृष्टया सबल बनवण्यासाठी उत्तम संधी
+                असते. रोजगार आणि आत्मसन्मान या गोष्टी साध्या होतात त्याच बरोबर
+                संघभावनाही यातून जोपासली जाते. एकूण २७ सक्रिय बचतगट गावात
+                कार्यरत आहेत
               </p>
             </div>
           </div>
@@ -223,25 +218,22 @@ export default class HomePage extends Component {
             <div className="card-body">
               <h5 className="card-title">शाळा</h5>
               <p className="card-text">
-                This card has supporting text below as a natural lead-in to
-                additional content.
+                गावामध्ये एकूण ४ शाळा आहेत (जि. प. पूर्ण प्रा. १, जि. प. शाळा २,
+                जि. प. प्रा. शाळा १) तसेच ५ अंगणवाड्या आहेत
               </p>
-              <p className="card-text">
+              {/* <p className="card-text">
                 <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="card" style={marginBottom}>
             <img src={gp_connectivity} className="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">भौगोलिक स्थान</h5>
+              <h5 className="card-title">सामाजिक कार्यक्रम</h5>
               <p className="card-text">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This card has even longer content
-                than the first to show that equal height action.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
+                ग्रामदैवत श्री पावणादेवी ची वार्षिक जत्रा,दसरा, हनुमान जयंती,
+                हळदी-कुंकू, महिला दिन त्याच बरोबर थोर पुरुषांचे जयंती/ पुण्यतिथी
+                यांसारखे कार्यक्रम मोठ्या उत्साहात साजरे केले जातात.
               </p>
             </div>
           </div>

@@ -34,8 +34,6 @@ class GoogleBtn extends Component {
     //const history = useHistory();
 
     if (response.accessToken) {
-      console.log("Response:", response.profileObj);
-      console.log("Email:", response.profileObj.email);
       var obj = { tbl_user_email: response.profileObj.email };
       axios
         .post("http://localhost:4500/humbrat/check_user", obj)
@@ -48,7 +46,6 @@ class GoogleBtn extends Component {
           } else {
             localStorage.setItem("userEmail", null);
             localStorage.setItem("isLoggedIn", 0);
-            alert("Check your email id or password");
 
             store.addNotification({
               title: "लॉग इन माहिती तपासून पहा",
@@ -68,26 +65,8 @@ class GoogleBtn extends Component {
             });
           }
         });
-      // if (response.profileObj.email == "waingankar.akshay95@gmail.com") {
-      //   {
-      //     localStorage.setItem("userEmail", response.profileObj.email);
-      //     //this.setState({ redirect: true });
-      //   }
-
-      //   //  history.push("/adminPortal");
-      //   // this.props.router.push("/adminPortal");
-      // } else {
-      //   return alert("Unsuccessfull");
-      // }
-      // this.setState((state) => ({
-      //   isLogined: true,
-      //   accessToken: response.accessToken,
-      // }));
     }
   }
-  // componentWillMount() {
-  //   hashHistory.push("/adminPortal");
-  // }
   logout(response) {
     this.setState((state) => ({
       isLogined: false,

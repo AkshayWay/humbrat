@@ -39,7 +39,6 @@ function IdleTimeContainer() {
   };
 
   const logOut = () => {
-    debugger;
     setModalIsOpen(false);
     localStorage.clear();
     setIsLoggedIn(false);
