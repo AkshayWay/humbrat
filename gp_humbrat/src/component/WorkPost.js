@@ -23,16 +23,33 @@ export default class WorkPost extends Component {
       });
   }
   render() {
-    let workPostList = this.state.workPostArray.map(function (workPost, i) {
-      return (
-        <div
-          className="col-6 col-md-4 shadow-sm bg-light rounded"
-          style={{ paddingTop: "20px" }}
-        >
-          <WorkCard workPost={workPost} key={i} />
+    let workPostList =
+      this.state.workPostArray == 0 ? (
+        <div>
+          <h3>माहिती उपलब्ध नाही</h3>
         </div>
+      ) : (
+        this.state.workPostArray.map(function (workPost, i) {
+          return (
+            <div
+              className="col-6 col-md-4 shadow-sm bg-light rounded"
+              style={{ paddingTop: "20px" }}
+            >
+              <WorkCard workPost={workPost} key={i} />
+            </div>
+          );
+        })
       );
-    });
+    // let workPostList =this.state.workPostArray.map(function (workPost, i) {
+    //   return (
+    //     <div
+    //       className="col-6 col-md-4 shadow-sm bg-light rounded"
+    //       style={{ paddingTop: "20px" }}
+    //     >
+    //       <WorkCard workPost={workPost} key={i} />
+    //     </div>
+    //   );
+    // });
     return (
       <div style={{ minHeight: "calc(100vh - 70px)" }}>
         <h2 style={{ margin: "20px" }}>ग्रामपंचायत कार्य</h2>

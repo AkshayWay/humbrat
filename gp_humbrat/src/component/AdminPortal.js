@@ -16,38 +16,38 @@ import Pagination from "react-js-pagination";
 
 import { store } from "react-notifications-component";
 
-const NewsList = (props) => (
-  <tr
-    className={
-      props.NewsInfo.tbl_news_is_active == 1 ? "table-success" : "null"
-    }
-  >
-    <td>{props.NewsInfo.tbl_news_title}</td>
-    <td>
-      <Moment format="DD/MM/YYYY">
-        {props.NewsInfo.tbl_news_created_date}
-      </Moment>
-    </td>
+// const NewsList = (props) => (
+//   <tr
+//     className={
+//       props.NewsInfo.tbl_news_is_active == 1 ? "table-success" : "null"
+//     }
+//   >
+//     <td>{props.NewsInfo.tbl_news_title}</td>
+//     <td>
+//       <Moment format="DD/MM/YYYY">
+//         {props.NewsInfo.tbl_news_created_date}
+//       </Moment>
+//     </td>
 
-    <td>
-      <Moment format="DD/MM/YYYY">
-        {props.NewsInfo.tbl_news_updated_date}
-      </Moment>
-    </td>
+//     <td>
+//       <Moment format="DD/MM/YYYY">
+//         {props.NewsInfo.tbl_news_updated_date}
+//       </Moment>
+//     </td>
 
-    <td>
-      <Link
-        className="btn btn-primary"
-        to={"/editNews/" + props.NewsInfo.tbl_news_id}
-      >
-        बातमी बदल
-      </Link>
-    </td>
-    <td>
-      <DeleteNewsInfo variant={props.NewsInfo} />
-    </td>
-  </tr>
-);
+//     <td>
+//       <Link
+//         className="btn btn-primary"
+//         to={"/editNews/" + props.NewsInfo.tbl_news_id}
+//       >
+//         बातमी बदल
+//       </Link>
+//     </td>
+//     <td>
+//       <DeleteNewsInfo variant={props.NewsInfo} />
+//     </td>
+//   </tr>
+// );
 
 // const BannerInfo = (props) => (
 //   <tr
@@ -586,45 +586,45 @@ function ViewWork(props) {
   );
 }
 
-function DeleteNewsInfo(props) {
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const deleteAndClose = () => {
-    axios
-      .post(
-        "http://localhost:4500/humbrat/news_panel/delete/" +
-          props.variant.tbl_news_id
-      )
-      .then((res) => console.log(res.data), window.location.reload(true));
-    setShow(false);
-  };
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        काढून टाका
-      </Button>
+// function DeleteNewsInfo(props) {
+//   const [show, setShow] = React.useState(false);
+//   const handleClose = () => setShow(false);
+//   const handleShow = () => setShow(true);
+//   const deleteAndClose = () => {
+//     axios
+//       .post(
+//         "http://localhost:4500/humbrat/news_panel/delete/" +
+//           props.variant.tbl_news_id
+//       )
+//       .then((res) => console.log(res.data), window.location.reload(true));
+//     setShow(false);
+//   };
+//   return (
+//     <>
+//       <Button variant="primary" onClick={handleShow}>
+//         काढून टाका
+//       </Button>
 
-      <Modal show={show} onHide={handleClose} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>बातमी काढून टाका</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          तुम्ही नक्की '<b>{props.variant.tbl_news_title}</b>' हि बातमी काढून
-          टाकू इच्चीता?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={deleteAndClose}>
-            काढून टाका
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            बंद करा
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
+//       <Modal show={show} onHide={handleClose} animation={false}>
+//         <Modal.Header closeButton>
+//           <Modal.Title>बातमी काढून टाका</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           तुम्ही नक्की '<b>{props.variant.tbl_news_title}</b>' हि बातमी काढून
+//           टाकू इच्चीता?
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="primary" onClick={deleteAndClose}>
+//             काढून टाका
+//           </Button>
+//           <Button variant="secondary" onClick={handleClose}>
+//             बंद करा
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </>
+//   );
+// }
 
 // function DeleteInstructionInfo(props) {
 //   const [show, setShow] = React.useState(false);
@@ -900,19 +900,19 @@ export default class AdminPortal extends Component {
       console.log("Error: ", error);
     }
   }
-  NewsAlertList() {
-    if (this.state.newsInformationArr.length > 0) {
-      return this.state.newsInformationArr.map(function (currentNewsInfo, i) {
-        return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
-      });
-    } else {
-      return (
-        <tr>
-          <td colSpan="8">माहिती उपलब्ध नाही</td>
-        </tr>
-      );
-    }
-  }
+  // NewsAlertList() {
+  //   if (this.state.newsInformationArr.length > 0) {
+  //     return this.state.newsInformationArr.map(function (currentNewsInfo, i) {
+  //       return <NewsList NewsInfo={currentNewsInfo} key={i}></NewsList>;
+  //     });
+  //   } else {
+  //     return (
+  //       <tr>
+  //         <td colSpan="8">माहिती उपलब्ध नाही</td>
+  //       </tr>
+  //     );
+  //   }
+  // }
 
   // bannerList(e) {
   //   if (this.state.bannerImages.length > 0) {
@@ -1609,6 +1609,7 @@ export default class AdminPortal extends Component {
         .put("http://localhost:4500/humbrat/WorkDetails/delete", obj)
         .then((res) => {
           console.log(res);
+          debugger;
 
           const rows = [...this.state.workPostArr];
           rows.splice(idx, 1);
@@ -1618,14 +1619,14 @@ export default class AdminPortal extends Component {
           rowsTemp.splice(idx, 1);
 
           let workID = this.state.currentWorkData[idx].tbl_work_id;
-          const elementsIndex = this.state.workPostArr.findIndex(
+          const elementsIndex = this.state.currentWorkData.findIndex(
             (element) => element.tbl_work_id == workID
           );
 
-          const rowsOriginal = [...this.state.workPostArr];
-          rowsOriginal.splice(elementsIndex, 1);
+          // const rowsOriginal = [...this.state.workPostArr];
+          // rowsOriginal.splice(elementsIndex, 1);
           this.setState({
-            workPostArr: rowsOriginal,
+            //   workPostArr: rowsOriginal,
             currentWorkData: rowsTemp,
           });
 
@@ -1920,6 +1921,7 @@ export default class AdminPortal extends Component {
         <svg
           width="1em"
           height="1em"
+          color="black"
           viewBox="0 0 16 16"
           className="bi bi-chevron-double-up"
           fill="currentColor"
@@ -1941,6 +1943,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -1962,6 +1965,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -1982,6 +1986,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2003,6 +2008,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2023,6 +2029,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2044,6 +2051,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2064,6 +2072,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2085,6 +2094,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2105,6 +2115,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2126,6 +2137,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2146,6 +2158,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2167,6 +2180,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2187,6 +2201,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2208,6 +2223,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2228,6 +2244,7 @@ export default class AdminPortal extends Component {
           width="1em"
           height="1em"
           viewBox="0 0 16 16"
+          color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -2270,7 +2287,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseNewsDiv"
             onClick={() => this.collapseDiv(1)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             बातम्या
             {newsIcon}
@@ -2393,7 +2410,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseBannerDiv"
             onClick={() => this.collapseDiv(2)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             मुख्य पृष्ठ छायाचित्र
             {bannerIcon}
@@ -2523,7 +2540,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseInstructionDiv"
             onClick={() => this.collapseDiv(3)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             सूचना
             {instructionIcon}
@@ -2631,7 +2648,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseWorkPostDiv"
             onClick={() => this.collapseDiv(4)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             ग्रामपंचायत कार्य
             {workIcon}
@@ -2690,6 +2707,7 @@ export default class AdminPortal extends Component {
                 <thead>
                   <tr>
                     <th>माहिती</th>
+                    <th>छायाचित्र</th>
                     <th colSpan="2">कृती</th>
                   </tr>
                 </thead>
@@ -2772,7 +2790,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseFeatureDiv"
             onClick={() => this.collapseDiv(5)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             वैशिष्ठे
             {featureIcon}
@@ -2911,7 +2929,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseAddOfficersDiv"
             onClick={() => this.collapseDiv(6)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             अधिकारी
             {officerIcon}
@@ -3020,7 +3038,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseEmployeeDiv"
             onClick={() => this.collapseDiv(7)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             कर्मचारी
             {employeeIcon}
@@ -3111,7 +3129,7 @@ export default class AdminPortal extends Component {
             aria-expanded="false"
             aria-controls="collapseDesignationDiv"
             onClick={() => this.collapseDiv(8)}
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", color: "black" }}
           >
             पद
             {designationIcon}
