@@ -182,15 +182,12 @@ export default class HomePage extends Component {
                 This card has supporting text below as a natural lead-in to
                 additional content.
               </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
             </div>
           </div>
           <div className="card" style={marginBottom}>
             <img src={gp_connectivity} className="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">स्वच्छता</h5>
+              <h5 className="card-title">आरोग्य आणि स्वच्छता</h5>
               <p className="card-text">
                 गावपातळीवर आरोग्य आणि स्वच्छतेसाठी बरेच कार्यक्रम आणि जनजागृती
                 केली जाते. त्याचाच एक भाग म्हणून गाव मध्ये प्लास्टिक बंदीचे पालन
