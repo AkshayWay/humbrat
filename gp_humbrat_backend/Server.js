@@ -13,6 +13,7 @@ app.use("/feature", express.static("feature"));
 app.use("/work", express.static("work"));
 app.use("/elected_person", express.static("elected_person"));
 app.use("/employees", express.static("employees"));
+app.use("/trash", express.static("trash"));
 app.use(bodyParser.json());
 app.use("/humbrat", Gp_Humbrat_Route);
 
