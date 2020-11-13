@@ -7,6 +7,8 @@ const multer = require("multer");
 const fs = require("fs");
 const mysqlConnection = require("../db_connection");
 
+const path = require("path");
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -190,11 +192,7 @@ Router.get("/home/news_panel", (req, res) => {
 // News section end
 //Adding banner to dashboard
 Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
-  //console.log(req.body.imageDesciption);
   let newBanner = req.file;
-  // let bannerDesc = req.file.bannerImgDesc;
-  // console.log(req.body.abc);
-  //console.log("Data ", req.body);
   var sqlQuery =
     "SET @tbl_banner_title=?; SET @tbl_banner_src=?;SET @tbl_banner_is_active=?;" +
     "SET @tbl_banner_is_deleted=?;SET @tbl_banner_img_desc=?;" +
@@ -206,20 +204,6 @@ Router.post("/dashboard_banner", upload.single("bannerImg"), (req, res) => {
     [newBanner.filename, newBanner.path, 1, 0, req.body.imageDesciption],
     (err, rows) => {
       if (!err) {
-        // res.status(201).json({
-        //   message: "Created dashboard successfully",
-        //   createdImage: {
-        //     id: rows.tbl_banner_id,
-        //     name: rows.tbl_banner_title,
-        //     src: rows.tbl_banner_src,
-        //     isActive: rows.tbl_banner_is_active,
-        //     isDeleted: rows.tbl_banner_is_deleted,
-        //     request: {
-        //       type: "GET",
-        //       url: "http://localhost:3000/products/" + rows._id,
-        //     },
-        //   },
-        // });
         if (!err) {
           mySqlConnection.query(
             "select tbl_banner_id,tbl_banner_title from tbl_dashboard_banner order by tbl_banner_id desc limit 1;",
@@ -428,17 +412,36 @@ Router.put("/dashboard_banner/delete", (req, res) => {
     "SET @tbl_banner_id=?;CALL sp_dashboard_banner_delete(@tbl_banner_id)";
   mySqlConnection.query(sqlQuery, [req.body.tbl_banner_id], (err, rows) => {
     if (!err) {
-      const path = "./uploads/" + req.body.tbl_banner_title;
-      if (fs.existsSync(path)) {
-        try {
-          fs.unlinkSync(path);
-          res.status(201).json({
-            message: "Banner info deleted successfully",
-          });
-        } catch (err) {
-          console.error(err);
-        }
+      //const path = "./uploads/" + req.body.tbl_banner_title;
+
+      const currentPath = path.join("./uploads/", req.body.tbl_banner_title);
+      if (fs.existsSync(currentPath)) {
+        const newPath = path.join("./trash/", req.body.tbl_banner_title);
+
+        fs.rename(currentPath, newPath, function (err) {
+          if (err) {
+            throw err;
+          } else {
+            res.status(201).json({
+              message: "Banner info deleted successfully",
+            });
+          }
+        });
+      } else {
+        res.status(201).json({
+          message: "Banner info deleted successfully",
+        });
       }
+      // if (fs.existsSync(path)) {
+      //   try {
+      //     fs.unlinkSync(path);
+      //     res.status(201).json({
+      //       message: "Banner info deleted successfully",
+      //     });
+      //   } catch (err) {
+      //     console.error(err);
+      //   }
+      // }
     } else {
       console.log("Error :" + err);
     }
@@ -591,7 +594,6 @@ Router.put("/WorkDetails/add_edit/:id", (req, res) => {
 //Update work post end
 //Delete work post
 Router.put("/WorkDetails/delete", (req, res) => {
-  console.log("Body:", req.body);
   var sqlQuery =
     "Update tbl_work set tbl_work_is_deleted=1 where tbl_work_id=?";
   mySqlConnection.query(sqlQuery, [req.body.tbl_work_id], (err, rows) => {
@@ -603,36 +605,73 @@ Router.put("/WorkDetails/delete", (req, res) => {
           if (!err) {
             const workImageData = rows[0];
             var imageString = workImageData.tbl_work_images_title.toString();
-            var mutipleImage = imageString.includes("world");
+            var mutipleImage = imageString.includes(",");
             if (mutipleImage == true) {
               const workArr = imageString.toString().split(",");
+              let result = 0;
               for (var i = 0; i < workArr.length; i++) {
-                const path = "./work/" + workArr[i];
-                if (fs.existsSync(path)) {
-                  try {
-                    fs.unlinkSync(path);
+                const currentPath = path.join("./work/", workArr[i]);
+                if (fs.existsSync(currentPath)) {
+                  const newPath = path.join("./trash/", workArr[i]);
+
+                  fs.rename(currentPath, newPath, function (err) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      result = result + 1;
+                    }
+                  });
+                } else {
+                  result = result + 1;
+                }
+                //     if (fs.existsSync(path)) {
+                //       try {
+                //         fs.unlinkSync(path);
+                //         res.status(201).json({
+                //           message: "Work post info Updated/Deleted successfully",
+                //         });
+                //       } catch (err) {
+                //         console.error(err);
+                //       }
+                //     }
+              }
+              if (result > 0) {
+                res.status(201).json({
+                  message: "Work post info Updated/Deleted successfully",
+                });
+              }
+            } else {
+              //   const path = "./work/" + imageString;
+              //   if (fs.existsSync(path)) {
+              //     try {
+              //       fs.unlinkSync(path);
+              //       res.status(201).json({
+              //         message: "Work post info Updated/Deleted successfully",
+              //       });
+              //     } catch (err) {
+              //       console.error(err);
+              //     }
+              //   }
+
+              const currentPath = path.join("./work/", imageString);
+              if (fs.existsSync(currentPath)) {
+                const newPath = path.join("./trash/", imageString);
+
+                fs.rename(currentPath, newPath, function (err) {
+                  if (err) {
+                    throw err;
+                  } else {
                     res.status(201).json({
                       message: "Work post info Updated/Deleted successfully",
                     });
-                  } catch (err) {
-                    console.error(err);
                   }
-                }
-              }
-            } else {
-              const path = "./work/" + imageString;
-              if (fs.existsSync(path)) {
-                try {
-                  fs.unlinkSync(path);
-                  res.status(201).json({
-                    message: "Work post info Updated/Deleted successfully",
-                  });
-                } catch (err) {
-                  console.error(err);
-                }
+                });
+              } else {
+                res.status(201).json({
+                  message: "No image found",
+                });
               }
             }
-            // if (req.body.tbl_employee_img != "") {
           } else {
             console.log("Error :" + err);
           }
