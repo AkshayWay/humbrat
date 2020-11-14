@@ -624,16 +624,6 @@ Router.put("/WorkDetails/delete", (req, res) => {
                 } else {
                   result = result + 1;
                 }
-                //     if (fs.existsSync(path)) {
-                //       try {
-                //         fs.unlinkSync(path);
-                //         res.status(201).json({
-                //           message: "Work post info Updated/Deleted successfully",
-                //         });
-                //       } catch (err) {
-                //         console.error(err);
-                //       }
-                //     }
               }
               if (result > 0) {
                 res.status(201).json({
@@ -641,18 +631,6 @@ Router.put("/WorkDetails/delete", (req, res) => {
                 });
               }
             } else {
-              //   const path = "./work/" + imageString;
-              //   if (fs.existsSync(path)) {
-              //     try {
-              //       fs.unlinkSync(path);
-              //       res.status(201).json({
-              //         message: "Work post info Updated/Deleted successfully",
-              //       });
-              //     } catch (err) {
-              //       console.error(err);
-              //     }
-              //   }
-
               const currentPath = path.join("./work/", imageString);
               if (fs.existsSync(currentPath)) {
                 const newPath = path.join("./trash/", imageString);
@@ -677,31 +655,7 @@ Router.put("/WorkDetails/delete", (req, res) => {
           }
         }
       );
-    }
-    //   const workImageData = req.body.tbl_work_images_title;
-
-    //   console.log("workImageData:" + workImageData);
-    //   const workArr = workImageData.split(",");
-    //   console.log("Work array length:" + workArr.length);
-    //   // if (req.body.tbl_employee_img != "") {
-    //   for (var i = 0; i < workArr.length; i++) {
-    //     const path = "./employees/" + req.body.tbl_work_images_title;
-    //     if (fs.existsSync(path)) {
-    //       try {
-    //         fs.unlinkSync(path);
-    //         //file removed
-    //       } catch (err) {
-    //         console.error(err);
-    //       }
-    //     }
-    //   }
-    // }
-
-    // res.status(201).json({
-    //   message: "Work post deleted successfully",
-    // });
-    //  }
-    else {
+    } else {
       console.log("Error :" + err);
     }
   });
@@ -739,7 +693,6 @@ Router.get("/village_features", (req, res) => {
 //Features of the village end
 //Feature of the village edit
 Router.put("/village_features/:id", (req, res) => {
-  console.log("Feature id:" + req.body.tbl_features_id);
   var sqlQuery =
     "SET @tbl_features_id=?;SET @tbl_features_file_name=?; SET @tbl_features_title=?;SET @tbl_features_description=?;" +
     "SET @tbl_features_is_deleted=?;CALL sp_features_add(@tbl_features_id,@tbl_features_file_name,@tbl_features_title," +
@@ -760,13 +713,18 @@ Router.put("/village_features/:id", (req, res) => {
           req.body.tbl_features_file_name != "" &&
           req.body.tbl_features_file_name != undefined
         ) {
-          const path = "./feature/" + req.body.tbl_features_file_name;
-          if (fs.existsSync(path)) {
-            try {
-              fs.unlinkSync(path);
-            } catch (err) {
-              console.error(err);
-            }
+          const currentPath = "./feature/" + req.body.tbl_features_file_name;
+          if (fs.existsSync(currentPath)) {
+            const newPath = path.join(
+              "./trash/",
+              req.body.tbl_features_file_name
+            );
+
+            fs.rename(currentPath, newPath, function (err) {
+              if (err) {
+                throw err;
+              }
+            });
           }
         }
         res.status(201).json({
@@ -856,13 +814,15 @@ Router.put(
       (err, rows) => {
         if (!err) {
           if (req.body.previousImg != "" && ElectedPersonImg != "No image") {
-            const path = "./elected_person/" + req.body.previousImg;
-            if (fs.existsSync(path)) {
-              try {
-                fs.unlinkSync(path);
-              } catch (err) {
-                console.error(err);
-              }
+            const currentPath = "./elected_person/" + req.body.previousImg;
+            if (fs.existsSync(currentPath)) {
+              const newPath = path.join("./trash/", req.body.previousImg);
+
+              fs.rename(currentPath, newPath, function (err) {
+                if (err) {
+                  throw err;
+                }
+              });
             }
           }
           res.status(201).json({
@@ -889,14 +849,20 @@ Router.put("/delete_elected_person", (req, res) => {
     [req.body.tbl_elected_person_id, "", 0, "", "", "", 0],
     (err, rows) => {
       if (!err) {
-        if (req.body.previousImg) {
-          const path = "./elected_person/" + req.body.previousImg;
-          if (fs.existsSync(path)) {
-            try {
-              fs.unlinkSync(path);
-            } catch (err) {
-              console.error(err);
-            }
+        if (req.body.tbl_elected_person_img) {
+          const currentPath =
+            "./elected_person/" + req.body.tbl_elected_person_img;
+          if (fs.existsSync(currentPath)) {
+            const newPath = path.join(
+              "./trash/",
+              req.body.tbl_elected_person_img
+            );
+
+            fs.rename(currentPath, newPath, function (err) {
+              if (err) {
+                throw err;
+              }
+            });
           }
         }
         res.status(201).json({
@@ -989,13 +955,23 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
     (err, rows) => {
       if (!err) {
         if (req.body.tbl_employee_img != "" && EmployeeImg != "No image") {
-          const path = "./employees/" + req.body.tbl_employee_img;
-          if (fs.existsSync(path)) {
-            try {
-              fs.unlinkSync(path);
-            } catch (err) {
-              console.error(err);
-            }
+          // const path = "./employees/" + req.body.tbl_employee_img;
+          // if (fs.existsSync(path)) {
+          //   try {
+          //     fs.unlinkSync(path);
+          //   } catch (err) {
+          //     console.error(err);
+          //   }
+          // }
+          const currentPath = "./employees/" + req.body.tbl_employee_img;
+          if (fs.existsSync(currentPath)) {
+            const newPath = path.join("./trash/", req.body.tbl_employee_img);
+
+            fs.rename(currentPath, newPath, function (err) {
+              if (err) {
+                throw err;
+              }
+            });
           }
         }
         // res.send(rows);
@@ -1060,14 +1036,15 @@ Router.put("/delete_employee", (req, res) => {
       if (!err) {
         // res.send(rows);
         if (req.body.tbl_employee_img != "") {
-          const path = "./employees/" + req.body.tbl_employee_img;
-          if (fs.existsSync(path)) {
-            try {
-              fs.unlinkSync(path);
-              //file removed
-            } catch (err) {
-              console.error(err);
-            }
+          const currentPath = "./employees/" + req.body.tbl_employee_img;
+          if (fs.existsSync(currentPath)) {
+            const newPath = path.join("./trash/", req.body.tbl_employee_img);
+
+            fs.rename(currentPath, newPath, function (err) {
+              if (err) {
+                throw err;
+              }
+            });
           }
         }
         res.status(201).json({
