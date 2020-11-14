@@ -1054,7 +1054,7 @@ export default class AdminPortal extends Component {
           message: "नवीन मुखपृष्ठ जतन करण्यात आले आहे",
           type: "success",
           insert: "top",
-          container: "top-right",
+          container: "top-center",
           animationIn: ["animate__animated", "animate__fadeIn"],
           animationOut: ["animate__animated", "animate__fadeOut"],
           dismiss: {
@@ -1148,7 +1148,7 @@ export default class AdminPortal extends Component {
             message: "गावाचे नवीन वैशिष्ठ जतन करण्यात आले आहे",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
@@ -1208,7 +1208,7 @@ export default class AdminPortal extends Component {
             message: "गावाचे नवीन वैशिष्ठ जतन करण्यात आले आहे",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
@@ -1390,7 +1390,7 @@ export default class AdminPortal extends Component {
             message: "गावाची वैशिष्ट्य काढून टाकण्यात आली आहे",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
@@ -1438,7 +1438,7 @@ export default class AdminPortal extends Component {
               message: "बातमी काढून टाकण्यात आली आहे.",
               type: "success",
               insert: "top",
-              container: "top-right",
+              container: "top-center",
               animationIn: ["animate__animated", "animate__fadeIn"],
               animationOut: ["animate__animated", "animate__fadeOut"],
               dismiss: {
@@ -1454,7 +1454,7 @@ export default class AdminPortal extends Component {
               message: "पेज रिफ्रेश करून कृपया पुन्हा प्रयत्न करा. ",
               type: "danger",
               insert: "top",
-              container: "top-right",
+              container: "top-center",
               animationIn: ["animate__animated", "animate__fadeIn"],
               animationOut: ["animate__animated", "animate__fadeOut"],
               dismiss: {
@@ -1511,7 +1511,7 @@ export default class AdminPortal extends Component {
               message: "सूचना काढून टाकण्यात आली आहे.",
               type: "success",
               insert: "top",
-              container: "top-right",
+              container: "top-center",
               animationIn: ["animate__animated", "animate__fadeIn"],
               animationOut: ["animate__animated", "animate__fadeOut"],
               dismiss: {
@@ -1527,7 +1527,7 @@ export default class AdminPortal extends Component {
               message: "पेज रिफ्रेश करून कृपया पुन्हा प्रयत्न करा. ",
               type: "danger",
               insert: "top",
-              container: "top-right",
+              container: "top-center",
               animationIn: ["animate__animated", "animate__fadeIn"],
               animationOut: ["animate__animated", "animate__fadeOut"],
               dismiss: {
@@ -1578,7 +1578,7 @@ export default class AdminPortal extends Component {
         message: "सूचना काढून टाकण्यात आली आहे.",
         type: "success",
         insert: "top",
-        container: "top-right",
+        container: "top-center",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -1610,7 +1610,6 @@ export default class AdminPortal extends Component {
         .then((res) => {
           console.log(res);
           debugger;
-
           const rows = [...this.state.workPostArr];
           rows.splice(idx, 1);
           this.setState({ workPostArr: rows });
@@ -1635,7 +1634,7 @@ export default class AdminPortal extends Component {
             message: "गावाचं काम काढून टाकण्यात आल आहे",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
@@ -1675,7 +1674,7 @@ export default class AdminPortal extends Component {
             message: "अधिकारी माहिती काढून टाकण्यात आली आहे",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
@@ -1714,7 +1713,7 @@ export default class AdminPortal extends Component {
         message: "कर्मचारी माहिती काढून टाकण्यात आली आहे",
         type: "success",
         insert: "top",
-        container: "top-right",
+        container: "top-center",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -1759,7 +1758,7 @@ export default class AdminPortal extends Component {
         message: "पद काढून टाकण्यात आल आहे",
         type: "success",
         insert: "top",
-        container: "top-right",
+        container: "top-center",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {

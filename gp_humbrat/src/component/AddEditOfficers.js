@@ -159,7 +159,7 @@ export default class AddEditOfficers extends Component {
             message: "नवीन अधिकाऱ्याची माहिती यशस्वीपणे जतन झाली आहे.",
             type: "success",
             insert: "top",
-            container: "top-right",
+            container: "top-center",
             animationIn: ["animate__animated", "animate__fadeIn"],
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
