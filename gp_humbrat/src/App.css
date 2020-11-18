@@ -63,6 +63,15 @@ footer {
   width: 80%;
   max-height: 550px !important;
   vertical-align: middle;
+
+  /*display: flex; justify-content: center; object-fit: cover; */
+}
+.carousel-item {
+  height: 550px;
+  /*width: 50%; */
+  margin: auto;
+  /* width: auto !important; */
+  /* margin: auto; */
 }
 
 .table-responsive {
