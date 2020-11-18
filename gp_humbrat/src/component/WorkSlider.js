@@ -7,7 +7,6 @@ export default class WorkSlider extends Component {
     super(props);
   }
   render() {
-    console.log("this.props.workImages", this.props.workImages);
     return (
       <Carousel>
         <Carousel.Item>

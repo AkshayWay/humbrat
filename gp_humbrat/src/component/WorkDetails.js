@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import WorkSlider from "./WorkSlider";
 import { Carousel } from "react-bootstrap";
 import "../App.css";
+import { Prev } from "react-bootstrap/esm/PageItem";
 
 export default class WorkDetails extends Component {
   constructor(props) {
@@ -25,7 +26,6 @@ export default class WorkDetails extends Component {
             this.props.match.params.id
         )
         .then((response) => {
-          console.log(response);
           this.setState({
             workImageStrng: response.data[0].tbl_work_images_title,
             workTitle: response.data[0].tbl_work_title,
@@ -81,12 +81,16 @@ export default class WorkDetails extends Component {
             <Carousel>
               {this.state.workImageArr.map((images) => (
                 <Carousel.Item>
+                  {/* <div className="center-block"> */}
                   <img
                     className="d-block w-100"
                     src={"/work/" + images}
                     alt={images}
-                    style={{ maxHeight: "550px" }}
+                    style={{
+                      height: "100%",
+                    }}
                   />
+                  {/* </div> */}
                 </Carousel.Item>
               ))}
             </Carousel>
@@ -110,7 +114,7 @@ export default class WorkDetails extends Component {
                 {this.state.workDate}
               </div>
             </div>
-            <p>
+            <p style={{ whiteSpace: "pre-line" }}>
               <label>
                 <b>सविस्तर माहिती</b>
               </label>

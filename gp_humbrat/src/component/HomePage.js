@@ -13,8 +13,9 @@ import gp_bachatgath from "../assets/images/Bachatgath_Card.png";
 import AppCSS from "../App.css";
 import axios from "axios";
 import Moment from "react-moment";
+// import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 
-export default class HomePage extends Component {
+class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -150,7 +151,9 @@ export default class HomePage extends Component {
             <div className="col-md-12">
               <div className="card-body">
                 <h5 className="card-title">{this.state.newsTitle}</h5>
-                <p className="card-text">{this.state.newsDesc}</p>
+                <p className="card-text" style={{ whiteSpace: "pre-line" }}>
+                  {this.state.newsDesc}
+                </p>
                 <p className="card-text">
                   <small className="text-muted">
                     <Moment format="DD/MM/YYYY">{newsDate}</Moment>
@@ -175,15 +178,18 @@ export default class HomePage extends Component {
             </div>
           </div>
           <div className="card" style={marginBottom}>
-            <img src={gp_literacy} className="card-img-top" alt="..." />
+            <img src={gp_bachatgath} className="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">साक्षरता</h5>
+              <h5 className="card-title">बचतगट</h5>
               <p className="card-text">
-                This card has supporting text below as a natural lead-in to
-                additional content.
+                बचत गट हे महिलांना आर्थिकदृष्टया सबल बनवण्यासाठी उत्तम संधी
+                असते. रोजगार आणि आत्मसन्मान या गोष्टी साध्या होतात त्याच बरोबर
+                संघभावनाही यातून जोपासली जाते. एकूण २७ सक्रिय बचतगट गावात
+                कार्यरत आहेत
               </p>
             </div>
           </div>
+
           <div className="card" style={marginBottom}>
             <img src={gp_connectivity} className="card-img-top" alt="..." />
             <div className="card-body">
@@ -198,18 +204,6 @@ export default class HomePage extends Component {
           </div>
         </div>
         <div className="card-deck">
-          <div className="card" style={marginBottom}>
-            <img src={gp_bachatgath} className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">बचतगट</h5>
-              <p className="card-text">
-                बचत गट हे महिलांना आर्थिकदृष्टया सबल बनवण्यासाठी उत्तम संधी
-                असते. रोजगार आणि आत्मसन्मान या गोष्टी साध्या होतात त्याच बरोबर
-                संघभावनाही यातून जोपासली जाते. एकूण २७ सक्रिय बचतगट गावात
-                कार्यरत आहेत
-              </p>
-            </div>
-          </div>
           <div className="card" style={marginBottom}>
             <img src={gp_literacy} className="card-img-top" alt="..." />
             <div className="card-body">
@@ -234,8 +228,32 @@ export default class HomePage extends Component {
               </p>
             </div>
           </div>
+          <div className="card" style={marginBottom}>
+            <img src={gp_literacy} className="card-img-top" alt="..." />
+            <div className="card-body">
+              <h5 className="card-title">भौगोलिक स्थान</h5>
+              <p className="card-text">
+                हुंबरट गाव सिंधुदुर्ग जिल्ह्यातील कणकवली तालुक्यात आहे.
+                शहरापासून सहा किलोमीटर अंतरावर असलेले हे गाव मुंबई-गोवा महामार्ग
+                तसेच राज्यमार्गशी जोडलेला आहे.
+              </p>
+            </div>
+            {/* <Map google={this.props.google} zoom={14}>
+              <Marker onClick={this.onMarkerClick} name={"Current location"} />
+
+              <InfoWindow onClose={this.onInfoWindowClose}>
+              
+              </InfoWindow>
+            </Map> */}
+          </div>
         </div>
       </div>
     );
   }
 }
+
+export default HomePage;
+
+// export default GoogleApiWrapper({
+//   apiKey: "AIzaSyCPNiAn8G9RoNU8zIjtJj4sFKGPoxXy8_Q",
+// })(HomePage);

@@ -42,7 +42,7 @@ export default class Features extends Component {
               <div className="col-md-8">
                 <div className="card-body">
                   <h4 className="card-title">{features.tbl_features_title}</h4>
-                  <p className="card-text">
+                  <p className="card-text" style={{ whiteSpace: "pre-line" }}>
                     {features.tbl_features_description}
                   </p>
                 </div>
