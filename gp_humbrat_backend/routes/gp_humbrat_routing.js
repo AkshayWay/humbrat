@@ -281,8 +281,8 @@ Router.post(
 
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
-      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?; SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
-      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?; SET @tbl_elected_person_is_active=?;SET @tbl_elected_person_sequence=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active,@tbl_elected_person_sequence)";
 
     mySqlConnection.query(
       sqlQuery,
@@ -294,6 +294,7 @@ Router.post(
         req.body.tbl_elected_person_contact_no,
         ElectedPersonImg,
         1,
+        req.body.tbl_elected_person_sequence,
       ],
       (err, rows) => {
         if (!err) {
@@ -759,7 +760,7 @@ Router.get("/elected_person_list", (req, res) => {
       " Inner Join tbl_designation as tbl2 ON" +
       " tbl1.tbl_elected_person_designation=tbl2.tbl_designation_id" +
       " where tbl1.tbl_elected_person_is_active <> 0" +
-      " order by tbl2.tbl_designation_id ASC;",
+      " order by tbl1.tbl_elected_person_sequence ASC;",
     (err, rows) => {
       if (!err) {
         res.send(rows);
@@ -797,8 +798,8 @@ Router.put(
     }
     var sqlQuery =
       "SET @tbl_elected_person_id=?;SET @tbl_elected_person_fullname=?; SET @tbl_elected_person_designation=?;SET @tbl_elected_person_ward=?;" +
-      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
-      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active)";
+      "SET @tbl_elected_person_contact_no=?;SET @tbl_elected_person_img=?;SET @tbl_elected_person_is_active=?;SET @tbl_elected_person_sequence=?;CALL sp_elected_person(@tbl_elected_person_id,@tbl_elected_person_fullname,@tbl_elected_person_designation," +
+      "@tbl_elected_person_ward,@tbl_elected_person_contact_no,@tbl_elected_person_img, @tbl_elected_person_is_active,@tbl_elected_person_sequence)";
 
     mySqlConnection.query(
       sqlQuery,
@@ -810,6 +811,7 @@ Router.put(
         req.body.tbl_elected_person_contact_no,
         ElectedPersonImg,
         1,
+        req.body.tbl_elected_person_sequence,
       ],
       (err, rows) => {
         if (!err) {
@@ -897,14 +899,11 @@ Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
     let newEmployee = req.file;
     EmployeeImg = newEmployee.filename;
   }
-  console.log(
-    "req.body.tbl_employee_designation:" + req.body.tbl_employee_designation
-  );
   var sqlQuery =
     "SET @tbl_employee_id=?;SET @tbl_employee_fullName=?; SET @tbl_employee_designation=?;" +
-    "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;CALL sp_employee" +
+    "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;SET @tbl_employees_sequence=?;CALL sp_employee" +
     "(@tbl_employee_id,@tbl_employee_fullName,@tbl_employee_designation," +
-    "@tbl_employee_contact_no,@tbl_employee_img, @tbl_employee_is_active)";
+    "@tbl_employee_contact_no,@tbl_employee_img, @tbl_employee_is_active,@tbl_employees_sequence)";
 
   mySqlConnection.query(
     sqlQuery,
@@ -915,6 +914,7 @@ Router.post("/employee", upload_employee.single("employeeImg"), (req, res) => {
       req.body.tbl_employee_contact_no,
       EmployeeImg,
       1,
+      req.body.tbl_employees_sequence,
     ],
     (err, rows) => {
       if (!err) {
@@ -938,9 +938,9 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
 
   var sqlQuery =
     "SET @tbl_employee_id=?;SET @tbl_employee_fullName=?; SET @tbl_employee_designation=?;" +
-    "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?;CALL sp_employee" +
+    "SET @tbl_employee_contact_no=?;SET @tbl_employee_img=?; SET @tbl_employee_is_active=?; SET @tbl_employees_sequence=?;CALL sp_employee" +
     "(@tbl_employee_id,@tbl_employee_fullName,@tbl_employee_designation," +
-    "@tbl_employee_contact_no,@tbl_employee_img, @tbl_employee_is_active)";
+    "@tbl_employee_contact_no,@tbl_employee_img, @tbl_employee_is_active, @tbl_employees_sequence)";
 
   mySqlConnection.query(
     sqlQuery,
@@ -951,6 +951,7 @@ Router.put("/employee", upload_employee.single("employeeImg"), (req, res) => {
       req.body.tbl_employee_contact_no,
       EmployeeImg,
       1,
+      req.body.tbl_employees_sequence,
     ],
     (err, rows) => {
       if (!err) {
@@ -993,7 +994,7 @@ Router.get("/employee_list", (req, res) => {
       " Inner Join tbl_designation as tbl2 ON" +
       " tbl1.tbl_employee_designation=tbl2.tbl_designation_id" +
       " where tbl1.tbl_employee_is_active<> 0" +
-      " order by tbl2.tbl_designation_id ASC;",
+      " order by tbl1.tbl_employees_sequence ASC;",
     (err, rows) => {
       if (!err) {
         res.send(rows);
