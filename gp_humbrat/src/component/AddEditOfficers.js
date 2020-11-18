@@ -7,6 +7,7 @@ const DesignationList = (props) => (
     {props.DesignationList.tbl_designation_name}
   </option>
 );
+
 export default class AddEditOfficers extends Component {
   constructor(props) {
     super();
@@ -20,6 +21,7 @@ export default class AddEditOfficers extends Component {
       selectedFile: null,
       ElectedPersonImg: "",
       imgDisplay: "none",
+      sequence: 0,
     };
   }
 
@@ -31,7 +33,6 @@ export default class AddEditOfficers extends Component {
           designationArr: response.data,
           designation: response.data[0].tbl_designation_id,
         });
-        console.log("Designation selected:" + this.state.designation);
       })
       .catch(function (error) {
         console.log(error);
@@ -50,6 +51,7 @@ export default class AddEditOfficers extends Component {
             phoneNumber: response.data[0].tbl_elected_person_contact_no,
             designation: response.data[0].tbl_elected_person_designation,
             ElectedPersonImg: response.data[0].tbl_elected_person_img,
+            sequence: response.data[0].tbl_elected_person_sequence,
             imgDisplay: "inline",
           });
         })
@@ -90,6 +92,12 @@ export default class AddEditOfficers extends Component {
       designation: e.target.value,
     });
   };
+  onSequenceChange = (e) => {
+    var selectedSeq = parseInt(e.target.value);
+    this.setState({
+      sequence: selectedSeq,
+    });
+  };
   onElectedPersonImageChange = (e) => {
     this.setState({
       //  selectedFiles: [...this.state.files, ...e.target.files],
@@ -116,6 +124,7 @@ export default class AddEditOfficers extends Component {
     electedPerson.append("tbl_elected_person_id", this.state.electedPersonId);
     electedPerson.append("tbl_elected_person_fullname", this.state.fullName);
     electedPerson.append("tbl_elected_person_ward", this.state.electedWord);
+    electedPerson.append("tbl_elected_person_sequence", this.state.sequence);
     electedPerson.append(
       "tbl_elected_person_designation",
       this.state.designation
@@ -138,7 +147,7 @@ export default class AddEditOfficers extends Component {
             designation: this.state.designation,
             selectedFile: null,
           });
-          window.location.reload();
+          // window.location.reload();
         });
       window.location.reload();
     } else {
@@ -243,10 +252,6 @@ export default class AddEditOfficers extends Component {
               <label>पद</label>
               <select
                 className="form-control"
-                // value={this.state.designationArr.filter(
-                //   ({ tbl_designation_id }) =>
-                //     tbl_designation_id === this.state.selectedDesignation
-                // )}
                 value={this.state.designation}
                 onChange={this.onDesignationChange}
               >
@@ -262,6 +267,39 @@ export default class AddEditOfficers extends Component {
                 //multiple
                 onChange={this.onElectedPersonImageChange}
               />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <label>क्रम</label>
+              <select
+                className="form-control"
+                value={this.state.sequence}
+                onChange={this.onSequenceChange}
+                required
+              >
+                <option value="0">Open this select menu</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
             </div>
           </div>
           <div className="text-center">
