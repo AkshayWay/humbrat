@@ -21,6 +21,7 @@ export default class AddEditEmployees extends Component {
       selectedFile: null,
       ElectedPersonImg: "",
       imgDisplay: "none",
+      sequenceEmp: 0,
     };
   }
   componentDidMount() {
@@ -48,6 +49,7 @@ export default class AddEditEmployees extends Component {
             phoneNumber: response.data[0].tbl_employee_contact_no,
             designation: response.data[0].tbl_employee_designation,
             ElectedPersonImg: response.data[0].tbl_employee_img,
+            sequenceEmp: response.data[0].tbl_employees_sequence,
             imgDisplay: "inline",
           });
         })
@@ -83,6 +85,11 @@ export default class AddEditEmployees extends Component {
       designation: e.target.value,
     });
   };
+  onsequenceEmpChange = (e) => {
+    this.setState({
+      sequenceEmp: e.target.value,
+    });
+  };
   onEmployeeImageChange = (e) => {
     this.setState({
       selectedFile: e.target.files[0],
@@ -108,6 +115,7 @@ export default class AddEditEmployees extends Component {
     employee.append("tbl_employee_designation", this.state.designation);
     employee.append("tbl_employee_contact_no", this.state.phoneNumber);
     employee.append("tbl_employee_img", this.state.ElectedPersonImg);
+    employee.append("tbl_employees_sequence", this.state.sequenceEmp);
     if (this.state.employeeId > 0) {
       axios
         .put("http://localhost:4500/humbrat/employee", employee)
@@ -119,6 +127,7 @@ export default class AddEditEmployees extends Component {
             phoneNumber: this.state.phoneNumber,
             designation: this.state.designation,
             selectedFile: "",
+            sequenceEmp: this.state.sequenceEmp,
             //   ElectedPersonImg: this.state.selectedFile.name,
           });
           window.location.reload();
@@ -134,6 +143,7 @@ export default class AddEditEmployees extends Component {
             phoneNumber: "",
             designation: "",
             selectedFile: null,
+            sequenceEmp: 0,
           });
           store.addNotification({
             title: "नवीन कर्मचारी",
@@ -177,7 +187,7 @@ export default class AddEditEmployees extends Component {
               src={"/employees/" + this.state.ElectedPersonImg}
               className="rounded mx-auto d-block"
               alt="Employees image"
-              // style={{ width: "300px", height: "300px" }}
+              style={{ width: "300px", height: "300px" }}
             />
           )}
         </div>
@@ -225,6 +235,37 @@ export default class AddEditEmployees extends Component {
                 className="form-control-file"
                 onChange={this.onEmployeeImageChange}
               />
+            </div>
+            <div className="form-group col-md-6">
+              <label>क्रम</label>
+              <select
+                className="form-control"
+                value={this.state.sequenceEmp}
+                onChange={this.onsequenceEmpChange}
+                required
+              >
+                <option value="0">Open this select menu</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
             </div>
           </div>
           <div className="text-center">
