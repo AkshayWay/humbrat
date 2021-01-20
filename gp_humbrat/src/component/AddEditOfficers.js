@@ -27,7 +27,8 @@ export default class AddEditOfficers extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:4500/humbrat/designation")
+      // .get("http://localhost:4500/humbrat/designation")
+      .get("http://humbrat.co.in/humbrat/designation")
       .then((response) => {
         this.setState({
           designationArr: response.data,
@@ -39,8 +40,12 @@ export default class AddEditOfficers extends Component {
       });
     if (this.props.match.params.id > 0) {
       axios
+        // .get(
+        //   "http://localhost:4500/humbrat/elected_person_list/" +
+        //     this.props.match.params.id
+        // )
         .get(
-          "http://localhost:4500/humbrat/elected_person_list/" +
+          "http://humbrat.co.in/humbrat/elected_person_list/" +
             this.props.match.params.id
         )
         .then((response) => {
@@ -136,7 +141,8 @@ export default class AddEditOfficers extends Component {
     electedPerson.append("previousImg", this.state.ElectedPersonImg);
     if (this.state.electedPersonId > 0) {
       axios
-        .put("http://localhost:4500/humbrat/elected_person", electedPerson)
+        // .put("http://localhost:4500/humbrat/elected_person", electedPerson)
+        .put("http://humbrat.co.in/humbrat/elected_person", electedPerson)
         .then((res) => {
           console.log(res);
           this.setState({
@@ -152,7 +158,8 @@ export default class AddEditOfficers extends Component {
       window.location.reload();
     } else {
       axios
-        .post("http://localhost:4500/humbrat/elected_person", electedPerson)
+        // .post("http://localhost:4500/humbrat/elected_person", electedPerson)
+        .post("http://humbrat.co.in/humbrat/elected_person", electedPerson)
         .then((res) => {
           console.log(res);
           this.setState({

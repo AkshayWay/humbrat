@@ -35,8 +35,10 @@ class GoogleBtn extends Component {
 
     if (response.accessToken) {
       var obj = { tbl_user_email: response.profileObj.email };
+      console.log("Email:" + obj.tbl_user_email);
       axios
-        .post("http://localhost:4500/humbrat/check_user", obj)
+        // .post("http://localhost:4500/humbrat/check_user", obj) https://dev.humbrat.co.in/sign_in
+        .post("http://localhost:3306/humbrat/check_user", obj)
         .then((res) => {
           console.log("Is user there:", res.data.message);
           if (res.data.message == 1) {
@@ -75,11 +77,41 @@ class GoogleBtn extends Component {
   }
 
   handleLoginFailure(response) {
-    alert("Failed to log in");
+    store.addNotification({
+      title: "लॉग इन माहिती तपासून पहा",
+      message:
+        "तुमचा ई-मेल किंवा पासवर्ड तपासून बघा.अथवा तुम्ही वैध व्यक्ती नाही आहात.",
+      type: "danger",
+      insert: "top",
+      container: "top-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 4000,
+        onScreen: true,
+        showIcon: true,
+      },
+      width: 600,
+    });
   }
 
   handleLogoutFailure(response) {
-    alert("Failed to log out");
+    store.addNotification({
+      title: "लॉग इन माहिती तपासून पहा",
+      message:
+        "तुमचा ई-मेल किंवा पासवर्ड तपासून बघा.अथवा तुम्ही वैध व्यक्ती नाही आहात.",
+      type: "danger",
+      insert: "top",
+      container: "top-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 4000,
+        onScreen: true,
+        showIcon: true,
+      },
+      width: 600,
+    });
   }
 
   render() {

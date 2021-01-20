@@ -53,7 +53,7 @@ class HomePage extends Component {
   async componentDidMount() {
     try {
       const newsPanel = await axios
-        .get("http://localhost:4500/humbrat/home/news_panel")
+        .get("http://humbrat.co.in/humbrat/home/news_panel")
         .then((response) => {
           if (response.data.length > 0) {
             this.setState({
@@ -70,7 +70,7 @@ class HomePage extends Component {
         });
 
       const bannerImage = await axios
-        .get("http://localhost:4500/humbrat/dashboard_banner/getbanner")
+        .get("http://humbrat.co.in/humbrat/dashboard_banner/getbanner")
         .then((response) => {
           if (response.data.length > 0) {
             this.setState({
@@ -81,7 +81,7 @@ class HomePage extends Component {
         });
 
       const instructionMarquee = await axios
-        .get("http://localhost:4500/humbrat/get_instructions")
+        .get("http://humbrat.co.in/humbrat/get_instructions")
         .then((response) => {
           if (response.data.length > 0) {
             this.setState({

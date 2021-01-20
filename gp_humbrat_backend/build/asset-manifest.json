@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4eac80ca.chunk.css",
+    "main.js": "/static/js/main.bc95f6a3.chunk.js",
+    "main.js.map": "/static/js/main.bc95f6a3.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.0900c890.js",
+    "runtime-main.js.map": "/static/js/runtime-main.0900c890.js.map",
+    "static/css/2.bcfdce62.chunk.css": "/static/css/2.bcfdce62.chunk.css",
+    "static/js/2.ed86e2af.chunk.js": "/static/js/2.ed86e2af.chunk.js",
+    "static/js/2.ed86e2af.chunk.js.map": "/static/js/2.ed86e2af.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.bcfdce62.chunk.css.map": "/static/css/2.bcfdce62.chunk.css.map",
+    "static/css/main.4eac80ca.chunk.css.map": "/static/css/main.4eac80ca.chunk.css.map",
+    "static/js/2.ed86e2af.chunk.js.LICENSE.txt": "/static/js/2.ed86e2af.chunk.js.LICENSE.txt",
+    "static/media/Bachatgath_Card.4836522c.png": "/static/media/Bachatgath_Card.4836522c.png",
+    "static/media/Connectivity_Card.6dd4e0c8.png": "/static/media/Connectivity_Card.6dd4e0c8.png",
+    "static/media/Literacy_card.0e4b305f.png": "/static/media/Literacy_card.0e4b305f.png",
+    "static/media/Logo_humbrat.3b6fe86c.png": "/static/media/Logo_humbrat.3b6fe86c.png",
+    "static/media/Population_Card.b24b6888.png": "/static/media/Population_Card.b24b6888.png",
+    "static/media/Sign_In_Image.b23298e0.png": "/static/media/Sign_In_Image.b23298e0.png",
+    "static/media/gp_banner.06b82abb.jpg": "/static/media/gp_banner.06b82abb.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0900c890.js",
+    "static/css/2.bcfdce62.chunk.css",
+    "static/js/2.ed86e2af.chunk.js",
+    "static/css/main.4eac80ca.chunk.css",
+    "static/js/main.bc95f6a3.chunk.js"
+  ]
+}

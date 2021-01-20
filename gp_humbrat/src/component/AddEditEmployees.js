@@ -26,7 +26,8 @@ export default class AddEditEmployees extends Component {
   }
   componentDidMount() {
     axios
-      .get("http://localhost:4500/humbrat/emp_designation")
+      // .get("http://localhost:4500/humbrat/emp_designation")
+      .get("http://humbrat.co.in/humbrat/emp_designation")
       .then((response) => {
         this.setState({
           designationArr: response.data,
@@ -38,8 +39,12 @@ export default class AddEditEmployees extends Component {
       });
     if (this.props.match.params.id > 0) {
       axios
+        // .get(
+        //   "http://localhost:4500/humbrat/employee_list/" +
+        //     this.props.match.params.id
+        // )
         .get(
-          "http://localhost:4500/humbrat/employee_list/" +
+          "http://humbrat.co.in/humbrat/employee_list/" +
             this.props.match.params.id
         )
         .then((response) => {
@@ -118,7 +123,8 @@ export default class AddEditEmployees extends Component {
     employee.append("tbl_employees_sequence", this.state.sequenceEmp);
     if (this.state.employeeId > 0) {
       axios
-        .put("http://localhost:4500/humbrat/employee", employee)
+        // .put("http://localhost:4500/humbrat/employee", employee)
+        .put("http://humbrat.co.in/humbrat/employee", employee)
         .then((res) => {
           console.log(res);
           this.setState({
@@ -134,7 +140,8 @@ export default class AddEditEmployees extends Component {
         });
     } else {
       axios
-        .post("http://localhost:4500/humbrat/employee", employee)
+        // .post("http://localhost:4500/humbrat/employee", employee)
+        .post("http://humbrat.co.in/humbrat/employee", employee)
         .then((res) => {
           console.log(res);
           this.setState({

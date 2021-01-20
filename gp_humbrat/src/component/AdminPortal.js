@@ -194,7 +194,7 @@ import { store } from "react-notifications-component";
 //   const deleteAndClose = () => {
 //     axios
 //       .put(
-//         "http://localhost:4500/humbrat/WorkDetails/delete/" +
+//         "https://dev.humbrat.co.in/humbrat/WorkDetails/delete/" +
 //           props.variant.tbl_work_id
 //       )
 //       .then((res) => console.log(res.data), window.location.reload(true));
@@ -242,7 +242,7 @@ import { store } from "react-notifications-component";
 //     };
 //     axios
 //       .put(
-//         "http://localhost:4500/humbrat/village_features/" +
+//         "https://dev.humbrat.co.in/humbrat/village_features/" +
 //           props.variant.tbl_features_id,
 //         obj
 //       )
@@ -310,8 +310,13 @@ function ViewBanner(props) {
       tbl_banner_img_desc: imgDescInput,
     };
     axios
+      // .put(
+      //   "http://localhost:3306/humbrat/dashboard_banner/edit/" +
+      //     props.variant.tbl_banner_id,
+      //   obj
+      // )
       .put(
-        "http://localhost:4500/humbrat/dashboard_banner/edit/" +
+        "http://humbrat.co.in/humbrat/dashboard_banner/edit/" +
           props.variant.tbl_banner_id,
         obj
       )
@@ -405,7 +410,7 @@ function ViewFeature(props) {
     };
     axios
       .put(
-        "http://localhost:4500/humbrat/village_features/" +
+        "http://localhost:3306/humbrat/village_features/" +
           props.variant.tbl_features_id,
         obj
       )
@@ -521,7 +526,7 @@ function ViewWork(props) {
     };
     axios
       .put(
-        "http://localhost:4500/humbrat/WorkDetails/add_edit/" +
+        "http://localhost:3306/humbrat/WorkDetails/add_edit/" +
           props.variant.tbl_work_id,
         obj
       )
@@ -593,7 +598,7 @@ function ViewWork(props) {
 //   const deleteAndClose = () => {
 //     axios
 //       .post(
-//         "http://localhost:4500/humbrat/news_panel/delete/" +
+//         "https://dev.humbrat.co.in/humbrat/news_panel/delete/" +
 //           props.variant.tbl_news_id
 //       )
 //       .then((res) => console.log(res.data), window.location.reload(true));
@@ -633,7 +638,7 @@ function ViewWork(props) {
 //   const deleteAndClose = () => {
 //     axios
 //       .put(
-//         "http://localhost:4500/humbrat/instructions/delete/" +
+//         "https://dev.humbrat.co.in/humbrat/instructions/delete/" +
 //           props.variant.tbl_instructions_id
 //       )
 //       .then((res) => console.log(res.data), window.location.reload(true));
@@ -787,7 +792,7 @@ export default class AdminPortal extends Component {
     }
     try {
       const newsPanel = await axios
-        .get("http://localhost:4500/humbrat/news_panel")
+        .get("http://localhost:3306/humbrat/news_panel")
         .then((response) => {
           this.setState({
             newsInformationArr: response.data,
@@ -801,7 +806,7 @@ export default class AdminPortal extends Component {
         });
 
       const bannerImage = await axios
-        .get("http://localhost:4500/humbrat/dashboard_banner/all_img")
+        .get("http://localhost:3306/humbrat/dashboard_banner/all_img")
         .then((response) => {
           this.setState({
             bannerImagesArr: response.data,
@@ -815,7 +820,7 @@ export default class AdminPortal extends Component {
         });
 
       const instruction = await axios
-        .get("http://localhost:4500/humbrat/instructions")
+        .get("http://localhost:3306/humbrat/instructions")
         .then((response) => {
           this.setState({
             instructionArr: response.data,
@@ -829,7 +834,7 @@ export default class AdminPortal extends Component {
         });
 
       const work = await axios
-        .get("http://localhost:4500/humbrat/work_thumbnails")
+        .get("http://localhost:3306/humbrat/work_thumbnails")
         .then((response) => {
           this.setState({
             workPostArr: response.data,
@@ -843,7 +848,7 @@ export default class AdminPortal extends Component {
         });
 
       const features = await axios
-        .get("http://localhost:4500/humbrat/village_features")
+        .get("http://localhost:3306/humbrat/village_features")
         .then((response) => {
           this.setState({
             featureArr: response.data,
@@ -857,7 +862,7 @@ export default class AdminPortal extends Component {
         });
 
       const elected_person = await axios
-        .get("http://localhost:4500/humbrat/elected_person_list")
+        .get("http://localhost:3306/humbrat/elected_person_list")
         .then((response) => {
           this.setState({
             electedPersonArr: response.data,
@@ -865,7 +870,7 @@ export default class AdminPortal extends Component {
         });
 
       const employess = await axios
-        .get("http://localhost:4500/humbrat/employee_list")
+        .get("http://localhost:3306/humbrat/employee_list")
         .then((response) => {
           this.setState({
             employeesArr: response.data,
@@ -873,7 +878,7 @@ export default class AdminPortal extends Component {
         });
 
       const designation = await axios
-        .get("http://localhost:4500/humbrat/designation")
+        .get("http://localhost:3306/humbrat/designation")
         .then((response) => {
           this.setState({
             designationArr: response.data,
@@ -998,7 +1003,7 @@ export default class AdminPortal extends Component {
     bannerImg.append("imageDesciption", this.state.bannerImgDesc);
 
     axios
-      .post("http://localhost:4500/humbrat/dashboard_banner", bannerImg)
+      .post("http://localhost:3306/humbrat/dashboard_banner", bannerImg)
       .then((res) => {
         console.log(res.data);
         const elementsIndex = this.state.bannerImagesArr.findIndex(
@@ -1087,7 +1092,7 @@ export default class AdminPortal extends Component {
       workImgs.append("workTitle", this.state.workTitle);
       workImgs.append("workDate", this.state.workDate);
       axios
-        .post("http://localhost:4500/humbrat/work_details", workImgs)
+        .post("http://localhost:3306/humbrat/work_details", workImgs)
         .then((res) => {
           // console.log(res);
           //setTimeout("alert('Successfully inserted')", 1000);
@@ -1114,7 +1119,7 @@ export default class AdminPortal extends Component {
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
       axios
-        .post("http://localhost:4500/humbrat/village_features", featureImg)
+        .post("http://localhost:3306/humbrat/village_features", featureImg)
         .then((res) => {
           let newId = res.data[0].tbl_features_id;
           const newItem = {
@@ -1170,7 +1175,7 @@ export default class AdminPortal extends Component {
       featureImg.append("feature_title", this.state.featureTitle);
       featureImg.append("feature_desc", this.state.featureDesc);
       axios
-        .post("http://localhost:4500/humbrat/village_features", featureImg)
+        .post("httpss://dev.humbrat.co.in/humbrat/village_features", featureImg)
         .then((res) => {
           console.log(res);
           //window.location.reload(true);
@@ -1280,7 +1285,7 @@ export default class AdminPortal extends Component {
     };
     if (this.state.editDesignation == true) {
       axios
-        .put("http://localhost:4500/humbrat/edit_designation", obj)
+        .put("http://localhost:3306/humbrat/edit_designation", obj)
         .then((res) => {
           console.log(res);
           let newArray = [...this.state.currentDesignationData];
@@ -1311,7 +1316,7 @@ export default class AdminPortal extends Component {
     } else {
       const newId = this.state.designationArr[0].tbl_designation_id + 1;
       axios
-        .post("http://localhost:4500/humbrat/new_designation", obj)
+        .post("http://localhost:3306/humbrat/new_designation", obj)
         .then((res) => {
           console.log(res);
 
@@ -1364,7 +1369,7 @@ export default class AdminPortal extends Component {
         tbl_features_file_name: villageFeatureImg,
       };
       axios
-        .put("http://localhost:4500/humbrat/village_features/" + featureId, obj)
+        .put("http://localhost:3306/humbrat/village_features/" + featureId, obj)
         .then((res) => {
           console.log(res);
           // const rows = [...this.state.featureArr];
@@ -1414,7 +1419,7 @@ export default class AdminPortal extends Component {
     ) {
       debugger;
       axios
-        .put("http://localhost:4500/humbrat/news_panel/delete/" + newsId)
+        .put("http://localhost:3306/humbrat/news_panel/delete/" + newsId)
         .then((res) => {
           console.log(res.data.message);
           if (res.data.message == "News deleted successfully") {
@@ -1483,7 +1488,7 @@ export default class AdminPortal extends Component {
         // tbl_work_images_title: workPostImg,
       };
       axios
-        .put("http://localhost:4500/humbrat/dashboard_banner/delete", obj)
+        .put("http://localhost:3306/humbrat/dashboard_banner/delete", obj)
         .then((res) => {
           console.log(res.data.message);
           if (res.data.message == "Banner info deleted successfully") {
@@ -1551,7 +1556,7 @@ export default class AdminPortal extends Component {
       )
     ) {
       axios.put(
-        "http://localhost:4500/humbrat/instructions/delete/" + instructionId
+        "http://localhost:3306/humbrat/instructions/delete/" + instructionId
       );
       const rows = [...this.state.instructionArr];
       rows.splice(idx, 1);
@@ -1606,7 +1611,7 @@ export default class AdminPortal extends Component {
         tbl_work_images_title: workPostImg,
       };
       axios
-        .put("http://localhost:4500/humbrat/WorkDetails/delete", obj)
+        .put("http://localhost:3306/humbrat/WorkDetails/delete", obj)
         .then((res) => {
           console.log(res);
           debugger;
@@ -1662,7 +1667,7 @@ export default class AdminPortal extends Component {
         tbl_elected_person_img: officerImg,
       };
       axios
-        .put("http://localhost:4500/humbrat/delete_elected_person/", obj)
+        .put("http://localhost:3306/humbrat/delete_elected_person/", obj)
         .then((res) => {
           console.log(res);
           const rows = [...this.state.electedPersonArr];
@@ -1701,7 +1706,7 @@ export default class AdminPortal extends Component {
         tbl_employee_img: employeeImg,
       };
       axios
-        .put("http://localhost:4500/humbrat/delete_employee/", obj)
+        .put("http://localhost:3306/humbrat/delete_employee/", obj)
         .then((res) => {
           console.log(res);
           const rows = [...this.state.employeesArr];
@@ -1734,7 +1739,7 @@ export default class AdminPortal extends Component {
       )
     ) {
       axios
-        .delete("http://localhost:4500/humbrat/delete_designation/" + deleteID)
+        .delete("http://localhost:3306/humbrat/delete_designation/" + deleteID)
         .then((res) => {
           console.log(res);
           const rowsTemp = [...this.state.currentDesignationData];
@@ -1924,14 +1929,14 @@ export default class AdminPortal extends Component {
           viewBox="0 0 16 16"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -1945,14 +1950,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -1967,14 +1972,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -1988,14 +1993,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2010,14 +2015,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2031,14 +2036,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2053,14 +2058,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2074,14 +2079,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2096,14 +2101,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2117,14 +2122,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2139,14 +2144,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2160,14 +2165,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2182,14 +2187,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2203,14 +2208,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>
@@ -2225,14 +2230,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-up"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
           />
         </svg>
@@ -2246,14 +2251,14 @@ export default class AdminPortal extends Component {
           color="black"
           className="bi bi-chevron-double-down"
           fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
           />
         </svg>

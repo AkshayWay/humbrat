@@ -52,7 +52,7 @@ const Main = withRouter(({ location }) => {
       <Route path="/officer" component={Officers}></Route>
       {localStorage.getItem("userEmail") != null ? (
         <div>
-          <Route path="/adminPortal" component={AdminPortal}></Route>
+          {/* <Route path="/adminPortal" component={AdminPortal}></Route> */}
           <Route path="/editNews/:id" component={EditNews}></Route>
           <Route path="/add_officers/:id" component={AddEditOfficers}></Route>
           <Route path="/edit_officers/:id" component={AddEditOfficers}></Route>
@@ -62,7 +62,7 @@ const Main = withRouter(({ location }) => {
           <IdleTimeout></IdleTimeout>
         </div>
       ) : null}
-
+      <Route path="/adminPortal" component={AdminPortal}></Route>
       <Route path="/WorkPost" component={WorkPost}></Route>
       <Route path="/WorkDetails/:id" component={WorkDetails}></Route>
       <Route path="/sign_in" component={Login}></Route>

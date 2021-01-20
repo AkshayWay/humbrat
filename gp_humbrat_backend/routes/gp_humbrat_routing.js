@@ -665,7 +665,7 @@ Router.put("/WorkDetails/delete", (req, res) => {
 //Check user login
 Router.post("/check_user", (req, res) => {
   var user = req.body;
-  // console.log("user", user);
+  console.log("user", user.tbl_user_email);
   var sqlQuery = "SET @tbl_user_email=?; CALL sp_check_user(@tbl_user_email);";
   mySqlConnection.query(sqlQuery, [user.tbl_user_email], (err, rows) => {
     if (!err) {

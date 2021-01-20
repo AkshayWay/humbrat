@@ -1,5 +1,6 @@
 {
   "name": "gp_humbrat",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -46,5 +47,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4500"
+  "proxy": "http://humbrat.co.in"
 }
